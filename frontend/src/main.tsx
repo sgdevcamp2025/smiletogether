@@ -1,10 +1,22 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import './index.css'; // TailwindCSS 및 기본 스타일
+import './index.css';
 import App from './App.tsx';
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>
-);
+async function enableMocking() {
+  // 개발 환경에서만 MSW를 활성화
+  if (!import.meta.env.DEV) {
+    return;
+  }
+
+  const { worker } = await import('./mocks/browser.ts');
+  await worker.start();
+}
+
+enableMocking().then(() => {
+  createRoot(document.getElementById('root')!).render(
+    <StrictMode>
+      <App />
+    </StrictMode>
+  );
+});

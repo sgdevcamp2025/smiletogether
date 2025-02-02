@@ -10,6 +10,8 @@ const __dirname = path.dirname(__filename);
 
 export default defineConfig({
   plugins: [react()],
+  publicDir: 'public', // Service Worker 파일을 호스팅할 디렉토리
+
   css: {
     postcss: {
       plugins: [tailwindcss],
