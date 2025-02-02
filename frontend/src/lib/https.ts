@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const https = axios.create({
-  baseURL: 'http://localhost:3000', // api 나오면 연결 || api
+  baseURL: '/', // api 나오면 연결 || api
   withCredentials: true,
   timeout: 10000,
 });

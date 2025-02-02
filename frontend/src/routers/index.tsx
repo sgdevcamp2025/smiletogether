@@ -1,4 +1,4 @@
-import { WorkspaceListPage } from '@/pages/workspace/WorkspaceListPage';
+import { WorkSpaceListPage } from '@/pages/workspace/WorkSpaceListPage';
 import { createBrowserRouter } from 'react-router-dom';
 
 export const router = createBrowserRouter([
@@ -8,6 +8,6 @@ export const router = createBrowserRouter([
   },
   {
     path: '/workspaces',
-    element: <WorkspaceListPage />,
+    element: <WorkSpaceListPage />,
   },
 ]);
