@@ -4,13 +4,14 @@ import './index.css';
 import App from './App.tsx';
 
 async function enableMocking() {
-  // 개발 환경에서만 MSW를 활성화
   if (!import.meta.env.DEV) {
     return;
   }
 
-  const { worker } = await import('./mocks/browser.ts');
-  await worker.start();
+  const { worker } = await import('./mocks/browser');
+  await worker.start({
+    onUnhandledRequest: 'bypass',
+  });
 }
 
 enableMocking().then(() => {
