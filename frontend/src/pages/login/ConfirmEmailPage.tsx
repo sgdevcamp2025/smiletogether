@@ -1,8 +1,15 @@
 import { InputCodeForm } from '@/components/login/InputCodeForm';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const ConfirmEmailPage = () => {
   const [code, setCode] = useState<string>('');
+
+  useEffect(() => {
+    if (code.length === 6) {
+      //코드 확인
+      console.log(code);
+    }
+  }, [code]);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-white p-4">
