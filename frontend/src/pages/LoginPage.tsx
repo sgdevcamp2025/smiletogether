@@ -1,16 +1,13 @@
 import { LoginForm } from '@/components/login/LoginForm';
-import { FormEvent, useState } from 'react';
+import { FormEvent } from 'react';
 
 const LoginPage = () => {
-  const [isEmailSent, setIsEmailSent] = useState<boolean>(false);
-
   const handleEmailSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     //이메일 전송
     const formData = new FormData(e.currentTarget);
     const email = formData.get('email') as string;
     console.log(email);
-    setIsEmailSent(true);
   };
 
   return (
