@@ -1,13 +1,18 @@
 import { LoginForm } from '@/components/login/LoginForm';
 import { FormEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
+  const navigate = useNavigate();
+
   const handleEmailSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     //이메일 전송
     const formData = new FormData(e.currentTarget);
     const email = formData.get('email') as string;
     console.log(email);
+
+    navigate('/confirmemail');
   };
 
   return (
