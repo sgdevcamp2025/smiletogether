@@ -1,4 +1,4 @@
-import { useWorkSpaceQuery } from '@/hooks/workspace/useWorkSpaceQuery';
+import { useWorkSpaceQuery } from '@/hooks/WorkSpace/useWorkSpaceQuery';
 
 export const WorkSpaceListPage = () => {
   const { data, isError, isLoading } = useWorkSpaceQuery();
