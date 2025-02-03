@@ -1,4 +1,4 @@
-import { useWorkSpaceQuery } from '@/hooks/WorkSpace/useWorkSpaceQuery';
+import { useWorkSpaceQuery } from '@/hooks/workspace/useWorkSpaceQuery';
 
 export const WorkSpaceListPage = () => {
   const { data, isError, isLoading } = useWorkSpaceQuery();
@@ -7,8 +7,8 @@ export const WorkSpaceListPage = () => {
   if (isError) return <div>에러 발생</div>;
 
   return (
-    <div>
-      {data ? JSON.stringify(data, null, 2) : '데이터가 없습니다.'}ㅇㅇㅇ
+    <div className="h-screen flex items-center justify-center flex-col">
+      {data ? JSON.stringify(data) : '데이터가 없습니다.'}
     </div>
   );
 };
