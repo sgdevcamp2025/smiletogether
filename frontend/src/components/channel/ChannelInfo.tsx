@@ -1,6 +1,6 @@
 import UserHoverCard from '../common/UserHoverCard';
 
-interface ChatInfoProps {
+interface ChannelInfoProps {
   channelName: string;
   displayName: string;
   createdBy: string;
@@ -8,13 +8,13 @@ interface ChatInfoProps {
   isPrivate: boolean;
 }
 
-const ChatInfo = ({
+const ChannelInfo = ({
   channelName,
   displayName,
   createdBy,
   createdAt,
   isPrivate,
-}: ChatInfoProps) => {
+}: ChannelInfoProps) => {
   const date = new Date(createdAt);
 
   const month = date.getMonth() + 1;
@@ -49,4 +49,4 @@ const ChatInfo = ({
   );
 };
 
-export default ChatInfo;
+export default ChannelInfo;
