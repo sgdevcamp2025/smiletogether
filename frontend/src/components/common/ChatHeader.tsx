@@ -1,3 +1,4 @@
+import { User } from '@/types/uset';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,21 +13,11 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 
-interface Member {
-  userId: string;
-  username: string;
-  displayName: string;
-  profileImage: string;
-  position: string;
-  isActive: boolean;
-  statusMessage: string;
-}
-
 interface ChatHeaderProps {
   name: string;
   isPrivate?: boolean;
   totalMembers?: number;
-  members?: Member[];
+  members?: User[];
 }
 
 const ChatHeader = ({
@@ -59,6 +50,7 @@ const ChatHeader = ({
                   <div className="flex gap-1">
                     {displayMembers.map(item => (
                       <img
+                        key={item.userId}
                         className="w-5 h-5 rounded-sm -ml-3 first:ml-0"
                         src={item.profileImage}
                       />

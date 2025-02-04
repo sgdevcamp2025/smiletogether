@@ -5,15 +5,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from '../ui/hover-card';
-
-interface UserHoverCardProps {
-  username: string;
-  displayName: string;
-  profileImage: string;
-  statusMessage?: string;
-  isActive: boolean;
-  isMessage?: boolean;
-}
+import { User } from '@/types/uset';
 
 const UserHoverCard = ({
   username,
@@ -22,7 +14,7 @@ const UserHoverCard = ({
   statusMessage,
   isActive,
   isMessage,
-}: UserHoverCardProps) => {
+}: User) => {
   return (
     <HoverCard>
       <HoverCardTrigger

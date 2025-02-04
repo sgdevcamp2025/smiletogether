@@ -1,13 +1,7 @@
 import { formatTime } from '@/lib/date';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import UserHoverCard from './UserHoverCard';
-
-interface User {
-  userId: string;
-  username: string;
-  displayName: string;
-  profileImage: string;
-}
+import { User } from '@/types/uset';
 
 interface MessageProps {
   user: User;
@@ -25,6 +19,7 @@ const Message = ({ user, content, createdAt }: MessageProps) => {
       <div>
         <div className="flex gap-2 items-center">
           <UserHoverCard
+            userId={user.userId}
             username={user.username}
             displayName={user.displayName}
             profileImage="https://github.com/shadcn.png"
