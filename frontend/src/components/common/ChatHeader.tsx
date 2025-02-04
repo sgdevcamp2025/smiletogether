@@ -38,7 +38,7 @@ const ChatHeader = ({
   const displayMembers = members ? members?.slice(0, 3) : [];
 
   return (
-    <header className="flex flex-col w-full px-5 pt-3 pb-0 gap-4 border-b">
+    <header className="flex flex-col w-full px-5 pt-3 pb-0 gap-4 border-b border-zinc-200">
       <div className="flex justify-between items-center">
         <div className="flex gap-2 items-center">
           {isPrivate && (
