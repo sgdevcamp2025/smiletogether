@@ -12,6 +12,7 @@ interface UserHoverCardProps {
   profileImage: string;
   statusMessage?: string;
   isActive: boolean;
+  isMessage?: boolean;
 }
 
 const UserHoverCard = ({
@@ -20,17 +21,25 @@ const UserHoverCard = ({
   profileImage,
   statusMessage,
   isActive,
+  isMessage,
 }: UserHoverCardProps) => {
   return (
     <HoverCard>
-      <HoverCardTrigger className="text-blue-600 bg-blue-100 rounded-sm p-1">
-        @{displayName}
+      <HoverCardTrigger
+        className={clsx(
+          'rounded-sm',
+          isMessage
+            ? 'text-zinc-950 bg-white font-bold'
+            : 'text-blue-600 bg-blue-100 p-1'
+        )}
+      >
+        {isMessage ? displayName : `@${displayName}`}
       </HoverCardTrigger>
       <HoverCardContent className="flex flex-col gap-4">
         <div className="flex items-center gap-3">
           <Avatar className="rounded-lg w-14 h-14">
             <AvatarImage src={profileImage} alt="유저의 프로필이미지" />
-            <AvatarFallback>CN</AvatarFallback>
+            <AvatarFallback>{username}</AvatarFallback>
           </Avatar>
           <h1 className="font-semibold">{username}</h1>
           <div
