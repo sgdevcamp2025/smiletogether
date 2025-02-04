@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 
 export const useWorkSpaceQuery = () => {
   const { data, isError, isLoading } = useQuery({
-    queryKey: ['worksapce'],
+    queryKey: ['workspace'],
     queryFn: getWorkSpaceList,
   });
 
