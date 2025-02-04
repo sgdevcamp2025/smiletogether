@@ -1,5 +1,6 @@
 import ConfirmEmailPage from '@/pages/login/ConfirmEmailPage';
 import LoginPage from '@/pages/login/LoginPage';
+import { WorkSpaceListPage } from '@/pages/workspace/WorkSpaceListPage';
 import { createBrowserRouter } from 'react-router-dom';
 
 export const router = createBrowserRouter([
@@ -10,5 +11,9 @@ export const router = createBrowserRouter([
   {
     path: '/confirmemail',
     element: <ConfirmEmailPage />,
+  },
+  {
+    path: '/workspaces',
+    element: <WorkSpaceListPage />,
   },
 ]);
