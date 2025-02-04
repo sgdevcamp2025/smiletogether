@@ -33,6 +33,7 @@ export const WorkSpaceListPage = () => {
                     profileImage={item.profile_image}
                     memberCount={item.member_count}
                     members={item.workspace_members}
+                    workspaceId={item.workspace_id}
                   />
                 );
               })}

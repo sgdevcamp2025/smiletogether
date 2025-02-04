@@ -10,4 +10,8 @@ export const router = createBrowserRouter([
     path: '/workspaces',
     element: <WorkSpaceListPage />,
   },
+  {
+    path: `/client/:workspaceID`,
+    element: <div>ss</div>,
+  },
 ]);
