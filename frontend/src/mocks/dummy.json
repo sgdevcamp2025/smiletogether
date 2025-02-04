@@ -1,47 +1,76 @@
 {
-  "users": [
-    { "id": "1", "firstName": "Lee", "lastName": "Joo" },
-    { "id": "2", "firstName": "Kim", "lastName": "Soo" }
-  ],
-  "workspaces": [
+  "userProfiles": [
     {
-      "workspace_id": "workspace_12345",
-      "name": "Home",
-      "profile_image": "https://example.com/home.png",
-      "member_count": 1,
-      "workspace_members": [
-        {
-          "user_id": "user_12345",
-          "profile_image": "https://example.com/user_12345.png"
-        }
-      ]
+      "userId": "2",
+      "username": "Subin Kim",
+      "displayName": "",
+      "profileImage": "https://example.com/profile/subin.jpg",
+      "position": "인재영입팀 김수빈 과장 (DevRel)",
+      "isActive": true,
+      "statusMessage": "고민이 있다면 언제든 메시지 주세요!"
     },
     {
-      "workspace_id": "workspace_67890",
-      "name": "Smilegate DevCamp Community",
-      "profile_image": "https://example.com/smilegate.png",
-      "member_count": 71,
-      "workspace_members": [
-        {
-          "user_id": "user_67890",
-          "profile_image": "https://example.com/user_67890.png"
-        },
-        {
-          "user_id": "user_23456",
-          "profile_image": "https://example.com/user_23456.png"
-        },
-        {
-          "user_id": "user_34567",
-          "profile_image": "https://example.com/user_34567.png"
-        }
-      ]
-    },
-    {
-      "workspace_id": "workspace_13579",
-      "name": "새 워크스페이스",
-      "profile_image": "https://example.com/new.png",
-      "member_count": 0,
-      "workspace_members": []
+      "userId": "3",
+      "username": "John Doe",
+      "displayName": "Johnny",
+      "profileImage": "https://example.com/profile/john.jpg",
+      "position": "마케팅팀 리더",
+      "isActive": false,
+      "statusMessage": "미팅 중입니다. 메시지를 남겨주세요!"
     }
-  ]
+  ],
+  "userWorkspaces": {
+    "userId": "2",
+    "emails": [
+      {
+        "email": "star9207@naver.com",
+        "workspaces": [
+          {
+            "workspace_id": "workspace_12345",
+            "name": "Home",
+            "profile_image": "https://example.com/home.png",
+            "member_count": 1,
+            "workspace_members": [
+              {
+                "user_id": "user_12345",
+                "profile_image": "https://example.com/user_12345.png"
+              }
+            ]
+          },
+          {
+            "workspace_id": "workspace_67890",
+            "name": "Smilegate DevCamp Community",
+            "profile_image": "https://example.com/smilegate.png",
+            "member_count": 71,
+            "workspace_members": [
+              {
+                "user_id": "user_67890",
+                "profile_image": "https://example.com/user_67890.png"
+              },
+              {
+                "user_id": "user_23456",
+                "profile_image": "https://example.com/user_23456.png"
+              },
+              {
+                "user_id": "user_34567",
+                "profile_image": "https://example.com/user_34567.png"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "email": "whwhwhwh61@gmail.com",
+        "workspaces": [
+          {
+            "workspace_id": "workspace_13579",
+            "name": "새 워크스페이스",
+            "profile_image": "https://example.com/new.png",
+            "member_count": 0,
+            "workspace_members": []
+          }
+        ]
+      }
+    ]
+  }
 }

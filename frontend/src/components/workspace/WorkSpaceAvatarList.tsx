@@ -1,8 +1,8 @@
 import { Avatar } from '@/components/common/Avatar';
-import { memberProps } from '@/components/workspace/WorkSpaceListItem';
+import { MemberProps } from '@/components/workspace/WorkSpaceListItem';
 
 interface WorkSpaceAvatarListProps {
-  members: memberProps[];
+  members: MemberProps[];
 }
 
 export const WorkSpaceAvatarList = ({ members }: WorkSpaceAvatarListProps) => {

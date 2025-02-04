@@ -6,10 +6,10 @@ interface WorkSpaceListItemProps {
   name: string;
   profileImage: string;
   memberCount: number;
-  members: memberProps[];
+  members: MemberProps[];
 }
 
-export interface memberProps {
+export interface MemberProps {
   user_id: string;
   profile_image: string;
 }
@@ -21,7 +21,7 @@ export const WorkSpaceListItem = ({
   members,
 }: WorkSpaceListItemProps) => {
   return (
-    <div className="flex items-center mt-8 px-6 py-4 w-full max-w-lg border rounded-lg shadow hover:bg-gray-50">
+    <div className="flex items-center px-6 py-4 w-full max-w-lg border  shadow hover:bg-gray-50">
       <Avatar src={profileImage} alt="workspace_profile_image" fallback="CN" />
       <WorkSpaceListItemDetail
         name={name}

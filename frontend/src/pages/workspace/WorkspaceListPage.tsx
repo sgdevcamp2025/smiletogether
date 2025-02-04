@@ -15,27 +15,30 @@ export const WorkSpaceListPage = () => {
         워크스페이스 생성
       </Button>
       <blockquote className="mt-4 text-gray-400 italic">
-        "After all," he said, "everyone enjoys a good joke, so it's only fair
-        that they should pay for the privilege."
+        아래에서 워크스페이스를 선택하여 팀과 계속 협업하세요.
       </blockquote>
-      <Card className="w-full max-w-lg mt-6 px-6 py-4">
-        <div className="text-center ">
-          <h1 className="text-lg font-semibold">user</h1>
-          <div className="text-gray-600">님의 워크스페이스 관리 </div>
-        </div>
-        {data &&
-          data.map(item => {
-            return (
-              <WorkSpaceListItem
-                key={item.workspace_id}
-                name={item.name}
-                profileImage={item.profile_image}
-                memberCount={item.member_count}
-                members={item.workspace_members}
-              />
-            );
-          })}
-      </Card>
+      {data &&
+        data.emails.map(item => {
+          return (
+            <Card className="w-full max-w-lg mt-5">
+              <div className="flex items-center px-6 py-4 w-full max-w-lg border  shadow hover:bg-gray-50">
+                <h1 className="text-lg font-semibold">{item.email}</h1>
+                <div className="text-gray-600">님의 워크스페이스 관리 </div>
+              </div>
+              {item.workspaces.map(item => {
+                return (
+                  <WorkSpaceListItem
+                    key={item.workspace_id}
+                    name={item.name}
+                    profileImage={item.profile_image}
+                    memberCount={item.member_count}
+                    members={item.workspace_members}
+                  />
+                );
+              })}
+            </Card>
+          );
+        })}
     </div>
   );
 };

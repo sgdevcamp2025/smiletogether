@@ -1,9 +1,9 @@
 import { WorkSpaceAvatarList } from '@/components/workspace/WorkSpaceAvatarList';
-import { memberProps } from '@/components/workspace/WorkSpaceListItem';
+import { MemberProps } from '@/components/workspace/WorkSpaceListItem';
 
 interface WorkSpaceListItemDetailProps {
   name: string;
-  members: memberProps[];
+  members: MemberProps[];
   memberCount: number;
 }
 
