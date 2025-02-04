@@ -1,5 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
-import { IoPersonSharp } from 'react-icons/io5';
+import { Avatar } from '@/components/common/Avatar';
 
 interface WorkSpaceListItemProps {
   name: string;
@@ -21,10 +20,7 @@ export const WorkSpaceListItem = ({
 }: WorkSpaceListItemProps) => {
   return (
     <div className="flex items-center mt-8 px-6 py-4 w-full max-w-lg border rounded-lg shadow hover:bg-gray-50">
-      <Avatar>
-        <AvatarImage className="w-10 h-10" src={profileImage} alt="@shadcn" />
-        <AvatarFallback>CN</AvatarFallback>
-      </Avatar>
+      <Avatar src={profileImage} alt="workspace_profile_image" fallback="CN" />
       <div className="pl-2 flex flex-col">
         <h2 className="font-medium">{name}</h2>
         <div className="flex">
@@ -32,16 +28,7 @@ export const WorkSpaceListItem = ({
             {members &&
               members.map(item => {
                 return (
-                  <Avatar>
-                    <AvatarImage
-                      className="w-10 h-10"
-                      src={item.profile_image}
-                      alt="@shadcn"
-                    />
-                    <AvatarFallback>
-                      <IoPersonSharp />
-                    </AvatarFallback>
-                  </Avatar>
+                  <Avatar src={item.profile_image} alt="user_profile_image" />
                 );
               })}
           </div>
