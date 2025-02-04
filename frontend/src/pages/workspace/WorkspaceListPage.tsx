@@ -11,10 +11,10 @@ export const WorkSpaceListPage = () => {
 
   return (
     <div className="h-screen flex items-center justify-center flex-col">
-      <Button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+      <Button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 ">
         워크스페이스 생성
       </Button>
-      <blockquote className="mt-4 text-gray-400 italic">
+      <blockquote className="my-10 text-gray-400 italic">
         아래에서 워크스페이스를 선택하여 팀과 계속 협업하세요.
       </blockquote>
       {data &&

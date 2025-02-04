@@ -6,11 +6,11 @@ interface WorkSpaceAvatarListProps {
 }
 
 export const WorkSpaceAvatarList = ({ members }: WorkSpaceAvatarListProps) => {
-  return members.map(item => {
-    return (
-      <div className="flex">
+  return (
+    <div className="flex -space-x-1">
+      {members.slice(0, 5).map(item => (
         <Avatar src={item.profile_image} alt="user_profile_image" />
-      </div>
-    );
-  });
+      ))}
+    </div>
+  );
 };

@@ -41,8 +41,32 @@
             "workspace_id": "workspace_67890",
             "name": "Smilegate DevCamp Community",
             "profile_image": "https://example.com/smilegate.png",
-            "member_count": 71,
+            "member_count": 9,
             "workspace_members": [
+              {
+                "user_id": "user_67890",
+                "profile_image": "https://example.com/user_67890.png"
+              },
+              {
+                "user_id": "user_23456",
+                "profile_image": "https://example.com/user_23456.png"
+              },
+              {
+                "user_id": "user_34567",
+                "profile_image": "https://example.com/user_34567.png"
+              },
+              {
+                "user_id": "user_67890",
+                "profile_image": "https://example.com/user_67890.png"
+              },
+              {
+                "user_id": "user_23456",
+                "profile_image": "https://example.com/user_23456.png"
+              },
+              {
+                "user_id": "user_34567",
+                "profile_image": "https://example.com/user_34567.png"
+              },
               {
                 "user_id": "user_67890",
                 "profile_image": "https://example.com/user_67890.png"
