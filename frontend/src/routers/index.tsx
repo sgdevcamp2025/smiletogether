@@ -1,5 +1,6 @@
-import { WorkSpaceListPage } from '@/pages/workspace/WorkSpaceListPage';
 import { createBrowserRouter } from 'react-router-dom';
+import MainFrame from '@/components/Frame/MainFrame';
+import WorkSpaceListPage from '@/pages/workspace/WorkspaceListPage';
 
 export const router = createBrowserRouter([
   {
@@ -9,5 +10,17 @@ export const router = createBrowserRouter([
   {
     path: '/workspaces',
     element: <WorkSpaceListPage />,
+  },
+  {
+    element: <MainFrame />,
+    children: [
+      {
+        path: '/workspace/create',
+        element: <div>dadasss</div>,
+      },
+      {
+        path: `/client/:workspaceID`,
+      },
+    ],
   },
 ]);
