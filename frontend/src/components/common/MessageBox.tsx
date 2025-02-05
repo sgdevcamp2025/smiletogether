@@ -47,7 +47,7 @@ const MessageBox = ({ channelName }: MessageBoxProps) => {
     <div className="fixed bottom-5 left-0 px-5 w-full">
       <div className="flex flex-col gap-3 bg-white border px-3 py-2 rounded-lg shadow-sm">
         <Textarea
-          className="flex-grow h-auto resize-none border-none shadow-none focus-visible:ring-0"
+          className="flex-grow h-auto resize-none border-none shadow-none focus-visible:ring-0 px-0"
           placeholder={`${channelName}에 메시지 보내기`}
           onChange={handleChange}
         />
