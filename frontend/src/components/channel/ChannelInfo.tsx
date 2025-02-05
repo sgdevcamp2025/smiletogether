@@ -1,6 +1,7 @@
 import UserHoverCard from '../common/UserHoverCard';
 
 interface ChannelInfoProps {
+  userId: string;
   channelName: string;
   displayName: string;
   createdBy: string;
@@ -9,6 +10,7 @@ interface ChannelInfoProps {
 }
 
 const ChannelInfo = ({
+  userId,
   channelName,
   displayName,
   createdBy,
@@ -28,6 +30,7 @@ const ChannelInfo = ({
       </div>
       <h6 className="text-sm text-zinc-500">
         <UserHoverCard
+          userId={userId}
           username={createdBy}
           displayName={displayName}
           profileImage="https://github.com/shadcn.png"
