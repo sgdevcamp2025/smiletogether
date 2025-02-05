@@ -1,43 +1,100 @@
 {
-  "users": [
-    { "id": "1", "firstName": "Lee", "lastName": "Joo" },
-    { "id": "2", "firstName": "Kim", "lastName": "Soo" }
-  ],
-  "workspaces": [
+  "userProfiles": [
     {
-      "workspaceId": "workspace_001",
-      "name": "Team Workspace",
-      "profileImage": "https://example.com/image.jpg",
-      "defaultChannel": "general",
-      "createdAt": "2025-01-25T10:00:00Z",
-      "memberCount": 10,
-      "recentMembers": [
-        {
-          "userId": "user_12345",
-          "nickname": "John",
-          "profileImage": "https://example.com/user1.jpg"
-        },
-        {
-          "userId": "user_67890",
-          "nickname": "Alice",
-          "profileImage": "https://example.com/user2.jpg"
-        }
-      ]
+      "userId": "2",
+      "username": "Subin Kim",
+      "displayName": "",
+      "profileImage": "https://example.com/profile/subin.jpg",
+      "position": "인재영입팀 김수빈 과장 (DevRel)",
+      "isActive": true,
+      "statusMessage": "고민이 있다면 언제든 메시지 주세요!"
     },
     {
-      "workspaceId": "workspace_002",
-      "name": "Project Workspace",
-      "profileImage": "https://example.com/project.jpg",
-      "defaultChannel": "general",
-      "createdAt": "2025-01-20T14:30:00Z",
-      "memberCount": 5,
-      "recentMembers": [
-        {
-          "userId": "user_54321",
-          "nickname": "Mike",
-          "profileImage": "https://example.com/user3.jpg"
-        }
-      ]
+      "userId": "3",
+      "username": "John Doe",
+      "displayName": "Johnny",
+      "profileImage": "https://example.com/profile/john.jpg",
+      "position": "마케팅팀 리더",
+      "isActive": false,
+      "statusMessage": "미팅 중입니다. 메시지를 남겨주세요!"
     }
-  ]
+  ],
+  "userWorkspaces": {
+    "userId": "2",
+    "emails": [
+      {
+        "email": "star9207@naver.com",
+        "workspaces": [
+          {
+            "workspace_id": "workspace_12345",
+            "name": "Home",
+            "profile_image": "https://example.com/home.png",
+            "member_count": 1,
+            "workspace_members": [
+              {
+                "user_id": "user_12345",
+                "profile_image": "https://example.com/user_12345.png"
+              }
+            ]
+          },
+          {
+            "workspace_id": "workspace_67890",
+            "name": "Smilegate DevCamp Community",
+            "profile_image": "https://example.com/smilegate.png",
+            "member_count": 9,
+            "workspace_members": [
+              {
+                "user_id": "user_67890",
+                "profile_image": "https://example.com/user_67890.png"
+              },
+              {
+                "user_id": "user_23456",
+                "profile_image": "https://example.com/user_23456.png"
+              },
+              {
+                "user_id": "user_34567",
+                "profile_image": "https://example.com/user_34567.png"
+              },
+              {
+                "user_id": "user_67890",
+                "profile_image": "https://example.com/user_67890.png"
+              },
+              {
+                "user_id": "user_23456",
+                "profile_image": "https://example.com/user_23456.png"
+              },
+              {
+                "user_id": "user_34567",
+                "profile_image": "https://example.com/user_34567.png"
+              },
+              {
+                "user_id": "user_67890",
+                "profile_image": "https://example.com/user_67890.png"
+              },
+              {
+                "user_id": "user_23456",
+                "profile_image": "https://example.com/user_23456.png"
+              },
+              {
+                "user_id": "user_34567",
+                "profile_image": "https://example.com/user_34567.png"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "email": "whwhwhwh61@gmail.com",
+        "workspaces": [
+          {
+            "workspace_id": "workspace_13579",
+            "name": "새 워크스페이스",
+            "profile_image": "https://example.com/new.png",
+            "member_count": 0,
+            "workspace_members": []
+          }
+        ]
+      }
+    ]
+  }
 }

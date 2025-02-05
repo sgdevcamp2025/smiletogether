@@ -1,5 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { User } from '@/types/uset';
+import { User } from '@/types/user';
 
 interface DMListProps {
   participants: User;

@@ -1,4 +1,4 @@
-import { User } from '@/types/uset';
+import { User } from '@/types/user';
 import {
   DropdownMenu,
   DropdownMenuContent,
