@@ -7,7 +7,6 @@ const MainFrame = () => {
     <div className="flex h-screen flex-col">
       <header className="p-4 bg-yellow-400 w-full h-12"></header>
       <div className="flex flex-1">
-        // 사이드바
         <div className=" min-w-16 bg-yellow-400 text-white flex py-2 flex-col items-center gap-6">
           <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center">
             <span className="text-sm font-semibold">p</span>
