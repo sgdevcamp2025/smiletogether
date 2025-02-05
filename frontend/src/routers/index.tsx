@@ -1,4 +1,4 @@
-import { WorkSpaceListPage } from '@/pages/workspace/WorkSpaceListPage';
+import { WorkSpaceListPage } from '@/pages/workspace/WorkspaceListPage';
 import { createBrowserRouter } from 'react-router-dom';
 
 export const router = createBrowserRouter([
