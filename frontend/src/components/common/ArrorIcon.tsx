@@ -2,7 +2,7 @@ import { cn } from '@/lib/utils';
 
 interface ArrorIconProps {
   size?: 'small' | 'medium' | 'large';
-  className?: 'string';
+  className?: string;
 }
 
 const ArrorIcon = ({ size = 'medium', className }: ArrorIconProps) => {
