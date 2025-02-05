@@ -1,6 +1,21 @@
 version: "3.9"
 
 services:
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    ports:
+      - "50000:8080"  # 웹 UI에 접근할 포트 (MSA 환경이라 8080 대신 50000 사용)
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=LocalKafka  # 클러스터 이름 (웹 UI에서 보일 이름)
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka-single-broker:9092  # Kafka 클러스터의 브로커 주소 (✅ 수정됨)
+      - DYNAMIC_CONFIG_ENABLED=true  # 동적 설정 활성화
+    depends_on:
+      - kafka
+    networks:
+      - kafka-network
+
+
   kafka:
     image: bitnami/kafka:3.6.1-debian-11-r0
     container_name: kafka-single-broker
