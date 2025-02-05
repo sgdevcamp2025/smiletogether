@@ -1,3 +1,4 @@
+import DMPage from '@/pages/dm/DMPage';
 import { WorkSpaceListPage } from '@/pages/workspace/WorkspaceListPage';
 import { createBrowserRouter } from 'react-router-dom';
 
@@ -9,5 +10,9 @@ export const router = createBrowserRouter([
   {
     path: '/workspaces',
     element: <WorkSpaceListPage />,
+  },
+  {
+    path: '/dm',
+    element: <DMPage />,
   },
 ]);
