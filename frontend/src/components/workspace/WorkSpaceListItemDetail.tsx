@@ -1,6 +1,6 @@
-import WorkSpaceAvatarList from '@/components/workspace/WorkspaceAvatarList';
-import { MemberProps } from '@/components/workspace/WorkspaceListItem';
 import { IoPersonSharp } from 'react-icons/io5';
+import { MemberProps } from '@/components/workspace/WorkspaceListItem';
+import WorkSpaceAvatarList from '@/components/workspace/WorkspaceAvatarList';
 
 interface WorkSpaceListItemDetailProps {
   name: string;
