@@ -5,7 +5,7 @@ interface ArrorIconProps {
   className?: 'string';
 }
 
-export const ArrorIcon = ({ size = 'medium', className }: ArrorIconProps) => {
+const ArrorIcon = ({ size = 'medium', className }: ArrorIconProps) => {
   const sizeClasses = {
     small: 'w-5 h-5',
     medium: 'w-8 h-8',
@@ -28,3 +28,5 @@ export const ArrorIcon = ({ size = 'medium', className }: ArrorIconProps) => {
     </svg>
   );
 };
+
+export default ArrorIcon;

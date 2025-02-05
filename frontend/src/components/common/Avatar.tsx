@@ -14,7 +14,7 @@ interface AvatarProps {
   className?: string;
 }
 
-export const Avatar = ({
+const Avatar = ({
   src,
   alt = 'Avatar',
   size = 'small',
@@ -36,3 +36,5 @@ export const Avatar = ({
     </RadixAvatar>
   );
 };
+
+export default Avatar;

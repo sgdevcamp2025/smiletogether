@@ -1,7 +1,7 @@
 import { getWorkSpaceList } from '@/apis/workspace/worksapce';
 import { useQuery } from '@tanstack/react-query';
 
-export const useWorkSpaceQuery = () => {
+const useWorkSpaceQuery = () => {
   const { data, isError, isLoading } = useQuery({
     queryKey: ['workspace'],
     queryFn: getWorkSpaceList,
@@ -9,3 +9,5 @@ export const useWorkSpaceQuery = () => {
 
   return { data, isError, isLoading };
 };
+
+export default useWorkSpaceQuery;

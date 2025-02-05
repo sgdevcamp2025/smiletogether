@@ -1,5 +1,5 @@
-import { WorkSpaceAvatarList } from '@/components/workspace/WorkSpaceAvatarList';
-import { MemberProps } from '@/components/workspace/WorkSpaceListItem';
+import WorkSpaceAvatarList from '@/components/workspace/WorkspaceAvatarList';
+import { MemberProps } from '@/components/workspace/WorkspaceListItem';
 import { IoPersonSharp } from 'react-icons/io5';
 
 interface WorkSpaceListItemDetailProps {
@@ -8,7 +8,7 @@ interface WorkSpaceListItemDetailProps {
   memberCount: number;
 }
 
-export const WorkSpaceListItemDetail = ({
+const WorkSpaceListItemDetail = ({
   name,
   members,
   memberCount,
@@ -27,3 +27,5 @@ export const WorkSpaceListItemDetail = ({
     </div>
   );
 };
+
+export default WorkSpaceListItemDetail;

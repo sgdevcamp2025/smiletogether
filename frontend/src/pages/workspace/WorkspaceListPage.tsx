@@ -1,9 +1,9 @@
-import { Button } from '@/components/ui/button';
-import { useWorkSpaceQuery } from '@/hooks/WorkSpace/useWorkSpaceQuery';
 import { Card } from '@/components/ui/card';
-import { WorkSpaceListItem } from '@/components/workspace/WorkSpaceListItem';
+import { Button } from '@/components/ui/button';
+import useWorkSpaceQuery from '@/hooks/WorkSpace/useWorkSpaceQuery';
+import WorkSpaceListItem from '@/components/workspace/WorkspaceListItem';
 
-export const WorkSpaceListPage = () => {
+const WorkSpaceListPage = () => {
   const { data, isError, isLoading } = useWorkSpaceQuery();
 
   if (isLoading) return <div>로딩중...</div>;
@@ -43,3 +43,5 @@ export const WorkSpaceListPage = () => {
     </div>
   );
 };
+
+export default WorkSpaceListPage;

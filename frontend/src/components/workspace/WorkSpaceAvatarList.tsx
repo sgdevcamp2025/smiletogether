@@ -1,11 +1,11 @@
-import { Avatar } from '@/components/common/Avatar';
-import { MemberProps } from '@/components/workspace/WorkSpaceListItem';
+import Avatar from '@/components/common/Avatar';
+import { MemberProps } from '@/components/workspace/WorkspaceListItem';
 
 interface WorkSpaceAvatarListProps {
   members: MemberProps[];
 }
 
-export const WorkSpaceAvatarList = ({ members }: WorkSpaceAvatarListProps) => {
+const WorkSpaceAvatarList = ({ members }: WorkSpaceAvatarListProps) => {
   return (
     <div className="flex -space-x-1">
       {members.slice(0, 5).map(item => (
@@ -14,3 +14,5 @@ export const WorkSpaceAvatarList = ({ members }: WorkSpaceAvatarListProps) => {
     </div>
   );
 };
+
+export default WorkSpaceAvatarList;

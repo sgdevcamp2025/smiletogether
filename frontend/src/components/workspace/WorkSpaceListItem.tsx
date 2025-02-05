@@ -1,7 +1,7 @@
-import { Avatar } from '@/components/common/Avatar';
-import { WorkSpaceListItemDetail } from '@/components/workspace/WorkSpaceListItemDetail';
-import { ArrorIcon } from '@/components/common/ArrorIcon';
 import { useNavigate } from 'react-router';
+import Avatar from '@/components/common/Avatar';
+import ArrorIcon from '@/components/common/ArrorIcon';
+import WorkSpaceListItemDetail from '@/components/workspace/WorkspaceListItemDetail';
 
 interface WorkSpaceListItemProps {
   name: string;
@@ -16,7 +16,7 @@ export interface MemberProps {
   profile_image: string;
 }
 
-export const WorkSpaceListItem = ({
+const WorkSpaceListItem = ({
   name,
   profileImage,
   memberCount,
@@ -48,3 +48,5 @@ export const WorkSpaceListItem = ({
     </div>
   );
 };
+
+export default WorkSpaceListItem;
