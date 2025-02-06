@@ -1,5 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom';
-import MainFrame from '@/components/Frame/MainFrame';
+import WorkspaceFrame from '@/components/frame/workspace/WorkspaceFrame';
 import WorkSpaceListPage from '@/pages/workspace/WorkspaceListPage';
 
 export const router = createBrowserRouter([
@@ -12,7 +12,7 @@ export const router = createBrowserRouter([
     element: <WorkSpaceListPage />,
   },
   {
-    element: <MainFrame />,
+    element: <WorkspaceFrame />,
     children: [
       {
         path: '/workspace/create',
