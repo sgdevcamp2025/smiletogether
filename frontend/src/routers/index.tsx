@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 import WorkspaceFrame from '@/components/frame/workspace/WorkspaceFrame';
 import WorkSpaceListPage from '@/pages/workspace/WorkspaceListPage';
+import WorkspaceCreationProcess from '@/components/workspace/WorkspaceCreationProcess';
 
 export const router = createBrowserRouter([
   {
@@ -16,7 +17,7 @@ export const router = createBrowserRouter([
     children: [
       {
         path: '/workspace/create',
-        element: <div>dadasss</div>,
+        element: <WorkspaceCreationProcess />,
       },
       {
         path: `/client/:workspaceID`,

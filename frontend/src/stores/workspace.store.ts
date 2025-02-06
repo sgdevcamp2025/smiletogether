@@ -1,62 +1,28 @@
 import { create } from 'zustand';
 
-interface newWorkspaceInfoProps {
+interface WorkspaceCreationState {
+  step: number;
   workspaceName: string;
   userName: string;
-  profileImage: string;
-  inviteUserList: string[];
+  invitedUsers: string[];
+  setStep: (step: number) => void;
+  setWorkspaceName: (name: string) => void;
+  setUserName: (name: string) => void;
+  setInvitedUsers: (users: string[]) => void;
+  initWorkspaceStore: () => void;
 }
 
-interface WorkspaceCreationStoreProps {
-  step: number;
-  newWorkspaceInfo: newWorkspaceInfoProps;
-  init: () => void;
-  setStep: () => void;
-  setNewWorkspaceName: (name: string) => void;
-  setProfile: (userName: string, profileImage: string) => void;
-  setInviteUsers: (inviteUserList: string[]) => void;
-}
-
-export const workspaceCreationStore = create<WorkspaceCreationStoreProps>(
+export const useWorkspaceCreationStore = create<WorkspaceCreationState>(
   set => ({
     step: 1,
-    newWorkspaceInfo: {
-      workspaceName: '',
-      userName: '',
-      profileImage: '',
-      inviteUserList: [],
-    },
-    init: () =>
-      set(() => ({
-        newWorkspaceInfo: {
-          workspaceName: '',
-          userName: '',
-          profileImage: '',
-          inviteUserList: [],
-        },
-      })),
-    setStep: () => set(state => ({ step: state.step + 1 })),
-    setNewWorkspaceName: (name: string) =>
-      set(state => ({
-        newWorkspaceInfo: {
-          ...state.newWorkspaceInfo,
-          workspaceName: name,
-        },
-      })),
-    setProfile: (userName: string, profileImage: string) =>
-      set(state => ({
-        newWorkspaceInfo: {
-          ...state.newWorkspaceInfo,
-          userName,
-          profileImage,
-        },
-      })),
-    setInviteUsers: (inviteUserList: string[]) =>
-      set(state => ({
-        newWorkspaceInfo: {
-          ...state.newWorkspaceInfo,
-          inviteUserList,
-        },
-      })),
+    workspaceName: '',
+    userName: '',
+    invitedUsers: [],
+    setStep: step => set({ step }),
+    setWorkspaceName: name => set({ workspaceName: name }),
+    setUserName: name => set({ userName: name }),
+    setInvitedUsers: users => set({ invitedUsers: users }),
+    initWorkspaceStore: () =>
+      set({ step: 1, workspaceName: '', userName: '', invitedUsers: [] }),
   })
 );
