@@ -1,7 +1,7 @@
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import useWorkSpaceQuery from '@/hooks/WorkSpace/useWorkSpaceQuery';
-import WorkSpaceListItem from '@/components/workspace/WorkspaceListItem';
+import WorkspaceListItem from '@/components/workspace/WorkspaceListItem';
 
 const WorkSpaceListPage = () => {
   const { data, isError, isLoading } = useWorkSpaceQuery();
@@ -27,7 +27,7 @@ const WorkSpaceListPage = () => {
               </div>
               {item.workspaces.map(item => {
                 return (
-                  <WorkSpaceListItem
+                  <WorkspaceListItem
                     key={item.workspace_id}
                     name={item.name}
                     profileImage={item.profile_image}

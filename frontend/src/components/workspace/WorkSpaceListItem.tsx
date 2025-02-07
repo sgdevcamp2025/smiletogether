@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router';
 import Avatar from '@/components/common/Avatar';
 import ArrorIcon from '@/components/common/ArrorIcon';
-import WorkSpaceListItemDetail from '@/components/workspace/WorkspaceListItemDetail';
+import WorkspaceListItemDetail from '@/components/workspace/WorkSpaceListItemDetail';
 
-interface WorkSpaceListItemProps {
+interface WorkspaceListItemProps {
   name: string;
   profileImage: string;
   memberCount: number;
@@ -16,13 +16,13 @@ export interface MemberProps {
   profile_image: string;
 }
 
-const WorkSpaceListItem = ({
+const WorkspaceListItem = ({
   name,
   profileImage,
   memberCount,
   members,
   workspaceId,
-}: WorkSpaceListItemProps) => {
+}: WorkspaceListItemProps) => {
   const navigate = useNavigate();
 
   const handleNavigate = (workspaceId: string) => {
@@ -32,7 +32,7 @@ const WorkSpaceListItem = ({
   return (
     <div className="flex items-center px-6 py-4 w-full max-w-lg border  shadow hover:bg-gray-50">
       <Avatar src={profileImage} alt="workspace_profile_image" fallback="CN" />
-      <WorkSpaceListItemDetail
+      <WorkspaceListItemDetail
         name={name}
         members={members}
         memberCount={memberCount}
@@ -49,4 +49,4 @@ const WorkSpaceListItem = ({
   );
 };
 
-export default WorkSpaceListItem;
+export default WorkspaceListItem;

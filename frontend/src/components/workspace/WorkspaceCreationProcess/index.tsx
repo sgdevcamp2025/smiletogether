@@ -1,17 +1,34 @@
+import StepSetWorkspaceName from '@/components/workspace/WorkspaceCreationProcess/StepSetWorkspaceName';
+import StepSetUserName from '@/components/workspace/WorkspaceCreationProcess/StepSetUserName';
+import StepSetInviteUsers from '@/components/workspace/WorkspaceCreationProcess/StepSetInviteUsers';
+import { stepData } from '@/lib/workspace';
+import { useWorkspaceCreationStore } from '@/stores/workspace.store';
+
 const WorkspaceCreationProcess = () => {
-  return <div></div>;
+  const { step, workspaceName } = useWorkspaceCreationStore();
+  const render = () => {
+    switch (step) {
+      case 1:
+        return <StepSetWorkspaceName />;
+      case 2:
+        return <StepSetUserName />;
+      case 3:
+        return <StepSetInviteUsers />;
+    }
+  };
+  const currentStep = stepData[step];
+  return (
+    <div className="mx-20 mt-20">
+      <span className="text-gray-400">{step}/3 단계</span>
+      <h1 className="mt-2 text-3xl font-extrabold tracking-tight text-gray-800 lg:text-5xl">
+        {typeof currentStep.title === 'function'
+          ? currentStep.title(workspaceName)
+          : currentStep.title}
+      </h1>
+      <p className="mt-8">{currentStep.description}</p>
+      {render()}
+    </div>
+  );
 };
 
 export default WorkspaceCreationProcess;
-
-const StepWorkspaceName = () => {
-  return <div>1</div>;
-};
-
-const StepUserName = () => {
-  return <div>2</div>;
-};
-
-const StepInviteUsers = () => {
-  return <div>3</div>;
-};
