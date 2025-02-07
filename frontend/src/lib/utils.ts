@@ -10,3 +10,8 @@ export const isValidEmail = (emailAddress: string) => {
   if (!email_regex.test(emailAddress)) return false;
   return true;
 };
+
+export const isValidKoreanEnglish = (text: string): boolean => {
+  const koreanEnglishRegex = /^[가-힣a-zA-Z]+$/; // 한글 + 영어만 허용
+  return koreanEnglishRegex.test(text);
+};

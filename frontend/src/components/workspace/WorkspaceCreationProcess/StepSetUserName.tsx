@@ -4,6 +4,7 @@ import { useWorkspaceCreationStore } from '@/stores/workspace.store';
 
 const StepSetUserName = () => {
   const { step, setStep, userName, setUserName } = useWorkspaceCreationStore();
+
   return (
     <div>
       <div className="mt-6">
