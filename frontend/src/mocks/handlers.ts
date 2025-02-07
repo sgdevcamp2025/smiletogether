@@ -8,4 +8,7 @@ export const handlers = [
   http.get('/api/workspaces', () => {
     return HttpResponse.json(dummy.userWorkspaces);
   }),
+  http.post('/api/workspaces', () => {
+    return HttpResponse.json(dummy.userWorkspaces);
+  }),
 ];

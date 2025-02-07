@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import WorkspaceFrame from '@/components/frame/workspace/WorkspaceFrame';
 import WorkSpaceListPage from '@/pages/workspace/WorkspaceListPage';
 import WorkspaceCreationProcess from '@/components/workspace/WorkspaceCreationProcess';
+import WorkspaceDashboard from '@/components/workspace/WorkspaceDashboard';
 
 export const router = createBrowserRouter([
   {
@@ -20,7 +21,8 @@ export const router = createBrowserRouter([
         element: <WorkspaceCreationProcess />,
       },
       {
-        path: `/client/:workspaceID`,
+        path: `/workspace/:workspaceID`,
+        element: <WorkspaceDashboard />,
       },
     ],
   },

@@ -1,14 +1,24 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { useWorkspaceCreationStore } from '@/stores/workspace.store';
-import { isValidEmail } from '@/lib/utils';
 import { IoIosLink } from 'react-icons/io';
+import { isValidEmail } from '@/lib/utils';
+import { useCreateWorkspace } from '@/hooks/WorkSpace/useCreateWorkspace';
+import { useWorkspaceCreationStore } from '@/stores/workspace.store';
+import { useNavigate } from 'react-router';
 
 const StepSetInviteUsers = () => {
-  const { initWorkspaceStore, invitedUsers, setInvitedUsers } =
-    useWorkspaceCreationStore();
+  const {
+    workspaceName,
+    userName,
+    workspaceProfileImage,
+    invitedUsers,
+    setInvitedUsers,
+    initWorkspaceStore,
+  } = useWorkspaceCreationStore();
   const [validEmail, setValidEmail] = useState(false);
   const [emailInput, setEmailInput] = useState('');
+  const { mutate } = useCreateWorkspace();
+  const navigate = useNavigate();
 
   const removeLastTagOnBackspace = (
     e: React.KeyboardEvent<HTMLInputElement>
@@ -42,8 +52,23 @@ const StepSetInviteUsers = () => {
   };
 
   const submitWorkspaceInfo = () => {
-    initWorkspaceStore();
     alert('제출 완료');
+    mutate(
+      {
+        workspace_name: workspaceName,
+        owner_id: '1',
+        user_name: userName,
+        profile_image: workspaceProfileImage,
+        invite_user_list: invitedUsers,
+      },
+      {
+        onSuccess: data => {
+          console.log('s', data);
+          navigate(`/workspace/${data.workspaceId}`); // ✅ 워크스페이스 페이지로 이동
+          initWorkspaceStore();
+        },
+      }
+    );
   };
 
   return (
