@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useWorkspaceCreationStore } from '@/stores/workspace.store';
 import { isValidEmail } from '@/lib/utils';
@@ -8,28 +8,30 @@ const StepSetInviteUsers = () => {
   const { initWorkspaceStore, invitedUsers, setInvitedUsers } =
     useWorkspaceCreationStore();
   const [validEmail, setValidEmail] = useState(false);
-  const [inputValue, setInputValue] = useState('');
+  const [emailInput, setEmailInput] = useState('');
 
-  const handleBackspace = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const removeLastTagOnBackspace = (
+    e: React.KeyboardEvent<HTMLInputElement>
+  ) => {
     if (
       e.key === 'Backspace' &&
       invitedUsers.length > 0 &&
-      inputValue.length > 0
+      emailInput.length > 0
     ) {
       setInvitedUsers(invitedUsers.slice(0, -1));
     }
   };
 
-  const handleEnterPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const addEmailOnEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      if (!isValidEmail(inputValue)) {
+      if (!isValidEmail(emailInput)) {
         setValidEmail(true);
         return;
       }
 
-      if (inputValue !== '' && !invitedUsers.includes(inputValue)) {
-        setInvitedUsers([...invitedUsers, inputValue]);
-        setInputValue('');
+      if (emailInput !== '' && !invitedUsers.includes(emailInput)) {
+        setInvitedUsers([...invitedUsers, emailInput]);
+        setEmailInput('');
         setValidEmail(false);
       }
     }
@@ -68,8 +70,8 @@ const StepSetInviteUsers = () => {
           <input
             className="flex-1 border-none outline-none focus:border-none focus-visible:outline-none focus:ring-0"
             onKeyUp={e => {
-              handleBackspace(e);
-              handleEnterPress(e);
+              removeLastTagOnBackspace(e);
+              addEmailOnEnter(e);
             }}
             placeholder={
               invitedUsers.length > 0
@@ -77,7 +79,7 @@ const StepSetInviteUsers = () => {
                 : '예: elis@naver.com, maria@naver.com'
             }
             onChange={e => {
-              setInputValue(e.target.value);
+              setEmailInput(e.target.value);
             }}
           />
         </div>

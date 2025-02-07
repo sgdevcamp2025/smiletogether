@@ -5,6 +5,7 @@ import { useWorkspaceCreationStore } from '@/stores/workspace.store';
 const StepSetWorkspaceName = () => {
   const { step, setStep, workspaceName, setWorkspaceName } =
     useWorkspaceCreationStore();
+
   return (
     <div>
       <div className="mt-6">
