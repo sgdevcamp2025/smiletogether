@@ -1,28 +1,41 @@
 import WorkspaceCreationInput from '@/components/workspace/WorkspaceCreationInput';
 import WorkspaceNextButton from '@/components/workspace/WorkspaceNextButton';
+import { isValidKoreanEnglish } from '@/lib/utils';
 import { useWorkspaceCreationStore } from '@/stores/workspace.store';
+import { useState } from 'react';
 
 const StepSetUserName = () => {
-  const { step, setStep, userName, setUserName } = useWorkspaceCreationStore();
+  const { step, setStep, setUserName } = useWorkspaceCreationStore();
+  const [userNameInput, setUserNameInput] = useState<string>('');
+  const [isInvalidName, setIsInvalidName] = useState(false);
+
+  const submitUserName = () => {
+    const trimmedValue = userNameInput.trim();
+    if (trimmedValue === '') {
+      return;
+    }
+    if (!isValidKoreanEnglish(trimmedValue)) {
+      setIsInvalidName(true);
+      return;
+    }
+    setUserName(trimmedValue);
+    setStep(step + 1);
+  };
 
   return (
     <div>
       <div className="mt-6">
         <WorkspaceCreationInput
-          value={userName}
+          value={userNameInput}
           onChange={e => {
-            setUserName(e.target.value);
+            setUserNameInput(e.target.value);
+            setIsInvalidName(false);
           }}
         />
       </div>
+      {isInvalidName && <div>정확한 한글 또는 영어로 입력해주세요</div>}
       <div className="mt-6">
-        <WorkspaceNextButton
-          onClick={() => {
-            setStep(step + 1);
-          }}
-        >
-          다음
-        </WorkspaceNextButton>
+        <WorkspaceNextButton onClick={submitUserName}>다음</WorkspaceNextButton>
       </div>
     </div>
   );
