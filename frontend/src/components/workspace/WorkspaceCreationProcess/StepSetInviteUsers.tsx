@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useWorkspaceCreationStore } from '@/stores/workspace.store';
 import { isValidEmail } from '@/lib/utils';
@@ -8,26 +8,30 @@ const StepSetInviteUsers = () => {
   const { initWorkspaceStore, invitedUsers, setInvitedUsers } =
     useWorkspaceCreationStore();
   const [validEmail, setValidEmail] = useState(false);
+  const [inputValue, setInputValue] = useState('');
 
-  const addTags = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    const inputValue = e.currentTarget.value;
-
-    if (e.keyCode === 13 && !isValidEmail(inputValue)) {
-      setValidEmail(true);
-      return;
-    }
-
-    if (e.keyCode === 8 && invitedUsers.length > 0) {
+  const handleBackspace = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (
+      e.key === 'Backspace' &&
+      invitedUsers.length > 0 &&
+      inputValue.length > 0
+    ) {
       setInvitedUsers(invitedUsers.slice(0, -1));
     }
-    if (
-      e.keyCode === 13 &&
-      inputValue !== '' &&
-      !invitedUsers.includes(inputValue)
-    ) {
-      setInvitedUsers([...invitedUsers, inputValue]);
-      e.currentTarget.value = '';
-      setValidEmail(false);
+  };
+
+  const handleEnterPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      if (!isValidEmail(inputValue)) {
+        setValidEmail(true);
+        return;
+      }
+
+      if (inputValue !== '' && !invitedUsers.includes(inputValue)) {
+        setInvitedUsers([...invitedUsers, inputValue]);
+        setInputValue('');
+        setValidEmail(false);
+      }
     }
   };
 
@@ -64,22 +68,24 @@ const StepSetInviteUsers = () => {
           <input
             className="flex-1 border-none outline-none focus:border-none focus-visible:outline-none focus:ring-0"
             onKeyUp={e => {
-              addTags(e);
+              handleBackspace(e);
+              handleEnterPress(e);
             }}
             placeholder={
               invitedUsers.length > 0
                 ? ''
                 : '예: elis@naver.com, maria@naver.com'
             }
+            onChange={e => {
+              setInputValue(e.target.value);
+            }}
           />
         </div>
       </div>
       {validEmail && <div>올바르지 않은 이메일 형식입니다.</div>}
       <div className=" mt-6 flex  gap-4">
         <Button
-          onClick={() => {
-            submitWorkspaceInfo();
-          }}
+          onClick={submitWorkspaceInfo}
           disabled={!(invitedUsers.length > 0)}
           className="px-8"
         >
