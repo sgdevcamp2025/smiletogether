@@ -6,6 +6,6 @@ export class WorkspaceService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async findAll() {
-    return this.prismaService.user.findMany();
+    return this.prismaService.workspace.findMany();
   }
 }
