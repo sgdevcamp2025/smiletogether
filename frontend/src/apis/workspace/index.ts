@@ -1,7 +1,6 @@
 import {
   GetUserWorkspacListeResponse,
   PostNewWorkspaceRequestDto,
-  PostNewWorkspaceResponseDto,
 } from '@/apis/workspace/dto';
 import https from '@/lib/https';
 
@@ -13,7 +12,7 @@ export const getWorkSpaceList =
 
 export const postWorkspace = async (
   workspaceInfo: PostNewWorkspaceRequestDto
-): Promise<PostNewWorkspaceResponseDto> => {
+) => {
   const { data } = await https.post('/api/workspaces', workspaceInfo);
   return data;
 };

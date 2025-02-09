@@ -6,9 +6,10 @@ export const handlers = [
     return HttpResponse.json(dummy.userProfiles);
   }),
   http.get('/api/workspaces', () => {
-    return HttpResponse.json(dummy.userWorkspaces);
+    return HttpResponse.json(dummy.workspaces);
   }),
-  http.post('/api/workspaces', () => {
-    return HttpResponse.json(dummy.userWorkspaces);
+  http.post('/api/workspaces', async ({ request }) => {
+    const newPost = await request.json();
+    return HttpResponse.json(newPost, { status: 201 });
   }),
 ];
