@@ -34,5 +34,5 @@ export interface PostNewWorkspaceResponseDto {
     success: string[] | null;
     failed: string[] | null;
   };
-  createdAt: string;
+  createdAt: Date;
 }
