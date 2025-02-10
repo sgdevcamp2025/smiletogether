@@ -1,12 +1,12 @@
-import WorkspaceCreationInput from '@/components/workspace/WorkspaceCreationInput';
-import WorkspaceNextButton from '@/components/workspace/WorkspaceNextButton';
-import { isValidKoreanEnglish } from '@/lib/utils';
-import { useWorkspaceCreationStore } from '@/stores/workspace.store';
 import { useState } from 'react';
 import useProfileImageRef from '@/hooks/WorkSpace/useProfileImageRef';
-import WorkspaceProfileModal from '@/components/workspace/WorkspaceProfileModal';
 import { Button } from '@/components/ui/button';
 import { IoPersonSharp } from 'react-icons/io5';
+import WorkspaceCreationInput from '@/components/workspace/WorkspaceCreationInput';
+import WorkspaceNextButton from '@/components/workspace/WorkspaceNextButton';
+import WorkspaceProfileModal from '@/components/workspace/WorkspaceProfileModal';
+import { isValidKoreanEnglish } from '@/lib/utils';
+import { useWorkspaceCreationStore } from '@/stores/workspace.store';
 const StepSetUserName = () => {
   const { step, setStep, setUserName } = useWorkspaceCreationStore();
   const [userNameInput, setUserNameInput] = useState<string>('');
