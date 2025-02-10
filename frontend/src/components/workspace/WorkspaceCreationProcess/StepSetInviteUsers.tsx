@@ -63,7 +63,6 @@ const StepSetInviteUsers = () => {
       },
       {
         onSuccess: data => {
-          console.log('s', data);
           navigate(`/workspace/${data.workspaceId}`); // ✅ 워크스페이스 페이지로 이동
           initWorkspaceStore();
         },
