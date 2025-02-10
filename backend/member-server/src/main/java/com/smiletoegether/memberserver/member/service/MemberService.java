@@ -25,4 +25,13 @@ public class MemberService {
         }
         return SIGN_UP_VALID_EMAIL;
     }
+
+    // 인증 코드 발송
+    @Transactional
+    public String sendCode(String email) {
+        if (memberRepository.findByEmail(email).isPresent()) {
+            throw new RuntimeException("중복 이메일");
+        }
+        return emailService.sendCode(email);
+    }
 }
