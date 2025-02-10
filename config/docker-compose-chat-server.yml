@@ -1,0 +1,47 @@
+version: "3.9"
+
+services:
+  kafka:
+    image: bitnami/kafka:3.6.1-debian-11-r0
+    container_name: kafka-single-broker
+    restart: unless-stopped
+    ports:
+      - "9092:9092"
+      - "9094:9094"
+    environment:
+      # Kafka 노드 ID 및 클러스터 설정
+      - KAFKA_NODE_ID=0
+      - KAFKA_PROCESS_ROLES=broker,controller  # 브로커 + 컨트롤러 역할 수행
+      - KAFKA_KRAFT_CLUSTER_ID=hPThGFTUS4u1FxH9KPznxg==  # 클러스터 ID (Base64 인코딩된 UUID)
+
+      # KRaft 모드 필수 환경 변수 추가
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka-single-broker:9093  # 컨트롤러 노드 정보
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER  # 컨트롤러 리스너 설정
+
+      # 리스너 및 보안 설정
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_LISTENERS=INTERNAL://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093,EXTERNAL://0.0.0.0:9094
+      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka-single-broker:9092,EXTERNAL://localhost:9094
+      - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
+    networks:
+      - chat-network
+
+  chat-server:
+    image: openjdk:21-jdk
+    container_name: chat-server
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka-single-broker:9092
+      - SPRING_DATASOURCE_URL=jdbc:h2:mem:testdb
+    networks:
+      - chat-network
+    volumes:
+      - ../bin:/app/bin
+    working_dir: /app
+    command: ["java", "-jar", "/app/bin/chat-server-0.0.1-SNAPSHOT.jar"]
+
+networks:
+  chat-network:
+    driver: bridge
