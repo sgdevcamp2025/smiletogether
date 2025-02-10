@@ -2,6 +2,8 @@ package com.smiletoegether.memberserver.member.service;
 
 import com.smiletoegether.memberserver.email.service.EmailService;
 import com.smiletoegether.memberserver.member.repository.MemberRepository;
+import com.smiletoegether.memberserver.member.service.dto.CertificationEmailRequest;
+import com.smiletoegether.memberserver.member.service.dto.CommonEmailCodeResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -33,5 +35,17 @@ public class MemberService {
             throw new RuntimeException("중복 이메일");
         }
         return emailService.sendCode(email);
+    }
+
+    // 인증코드 확인
+    @Transactional
+    public CommonEmailCodeResponse CertificateEmail(CertificationEmailRequest certificationEmailRequest) {
+        boolean isVerified = emailService.verifyCode(certificationEmailRequest.email(), certificationEmailRequest.code());
+
+        if (!isVerified) {
+            return new CommonEmailCodeResponse("400", "이메일 인증 코드가 일치하지 않습니다.");
+        }
+
+        return new CommonEmailCodeResponse("200", "이메일 인증 코드 확인이 완료되었습니다.");
     }
 }
