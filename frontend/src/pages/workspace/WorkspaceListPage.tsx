@@ -1,7 +1,7 @@
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import useWorkSpaceQuery from '@/hooks/WorkSpace/useWorkSpaceQuery';
-import WorkSpaceListItem from '@/components/workspace/WorkspaceListItem';
+import WorkspaceListItem from '@/components/workspace/WorkspaceListItem';
 
 const WorkSpaceListPage = () => {
   const { data, isError, isLoading } = useWorkSpaceQuery();
@@ -17,29 +17,25 @@ const WorkSpaceListPage = () => {
       <blockquote className="my-10 text-gray-400 italic">
         아래에서 워크스페이스를 선택하여 팀과 계속 협업하세요.
       </blockquote>
-      {data &&
-        data.emails.map(item => {
-          return (
-            <Card className="w-full max-w-lg mt-5">
-              <div className="flex items-center px-6 py-4 w-full max-w-lg border  shadow hover:bg-gray-50">
-                <h1 className="text-lg font-semibold">{item.email}</h1>
-                <div className="text-gray-600">님의 워크스페이스 관리 </div>
-              </div>
-              {item.workspaces.map(item => {
-                return (
-                  <WorkSpaceListItem
-                    key={item.workspace_id}
-                    name={item.name}
-                    profileImage={item.profile_image}
-                    memberCount={item.member_count}
-                    members={item.workspace_members}
-                    workspaceId={item.workspace_id}
-                  />
-                );
-              })}
-            </Card>
-          );
-        })}
+      <Card className="w-full max-w-lg mt-5">
+        <div className="flex items-center px-6 py-4 w-full max-w-lg border  shadow hover:bg-gray-50">
+          <h1 className="text-lg font-semibold">{data && data.email}</h1>
+          <div className="text-gray-600">님의 워크스페이스 관리 </div>
+        </div>
+        {data &&
+          data.workspaces.map(item => {
+            return (
+              <WorkspaceListItem
+                key={item.workspace_id}
+                name={item.name}
+                profileImage={item.profile_image}
+                memberCount={item.member_count}
+                members={item.workspace_members}
+                workspaceId={item.workspace_id}
+              />
+            );
+          })}
+      </Card>
     </div>
   );
 };
