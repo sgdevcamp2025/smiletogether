@@ -59,4 +59,14 @@ public class EmailService {
         message.setText(text);
         return message;
     }
+
+    // 이메일 발송 메서드
+    private void sendEmail(String email, String title, String text) {
+        SimpleMailMessage emailForm = createEmailForm(email, title, text);
+        try {
+            emailSender.send(emailForm);
+        } catch (RuntimeException e) {
+            throw new RuntimeException("메일을 보낼 수 없습니다.");
+        }
+    }
 }
