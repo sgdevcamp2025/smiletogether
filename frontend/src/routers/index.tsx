@@ -3,6 +3,7 @@ import ConfirmEmailPage from '@/pages/login/ConfirmEmailPage';
 import LoginPage from '@/pages/login/LoginPage';
 import MainFrame from '@/components/Frame/MainFrame';
 import WorkSpaceListPage from '@/pages/workspace/WorkspaceListPage';
+import DMPage from '@/pages/dm/DMPage';
 
 export const router = createBrowserRouter([
   {
@@ -17,6 +18,7 @@ export const router = createBrowserRouter([
     path: '/workspaces',
     element: <WorkSpaceListPage />,
   },
+  { path: '/dm', element: <DMPage /> },
   {
     element: <MainFrame />,
     children: [
