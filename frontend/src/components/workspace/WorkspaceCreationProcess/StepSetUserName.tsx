@@ -2,10 +2,11 @@ import WorkspaceCreationInput from '@/components/workspace/WorkspaceCreationInpu
 import WorkspaceNextButton from '@/components/workspace/WorkspaceNextButton';
 import { isValidKoreanEnglish } from '@/lib/utils';
 import { useWorkspaceCreationStore } from '@/stores/workspace.store';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import useProfileImageRef from '@/hooks/WorkSpace/useProfileImageRef';
 import WorkspaceProfileModal from '@/components/workspace/WorkspaceProfileModal';
-
+import { Button } from '@/components/ui/button';
+import { IoPersonSharp } from 'react-icons/io5';
 const StepSetUserName = () => {
   const { step, setStep, setUserName } = useWorkspaceCreationStore();
   const [userNameInput, setUserNameInput] = useState<string>('');
@@ -26,9 +27,6 @@ const StepSetUserName = () => {
     setStep(step + 1);
   };
 
-  const onPorofileModal = () => {
-    setProfileModal(true);
-  };
   const offPorifileModal = () => {
     setProfileModal(false);
   };
@@ -55,13 +53,23 @@ const StepSetUserName = () => {
         <span className="text-gray-400">(옵션)</span>
       </div>
 
-      <input
-        type="file"
-        accept="image/*"
-        id="profileImg"
-        onChange={handleImageUpload}
-        ref={imgRef}
-      />
+      <Button
+        onClick={() => {
+          imgRef.current?.click();
+        }}
+        className="bg-white text-black mt-2 shadow-none border-2 hover:bg-yellow-300"
+      >
+        <IoPersonSharp />
+        <span>사진 업로드</span>
+        <input
+          type="file"
+          accept="image/*"
+          id="profileImg"
+          onChange={handleImageUpload}
+          ref={imgRef}
+          className="hidden"
+        />
+      </Button>
 
       <div className="mt-6">
         <WorkspaceNextButton onClick={submitUserName}>다음</WorkspaceNextButton>
