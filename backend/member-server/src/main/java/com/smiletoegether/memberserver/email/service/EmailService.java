@@ -36,6 +36,18 @@ public class EmailService {
     @Value("${spring.mail.auth-code-expiration-millis}")
     private long authCodeExpirationMillis;
 
+    public String sendCode(String email) {
+        String code = createCode();
+        sendEmail(email, EMAIL_TITLE_OF_VERIFICATION, code);
+        verificationCodes.put(email, code);
+
+        scheduler.schedule(() -> {
+            verificationCodes.remove(email);
+        }, authCodeExpirationMillis, TimeUnit.MILLISECONDS);
+
+        return EMAIL_SUCCESS_OF_VERIFICATION;
+    }
+
     // 인증 코드 생성
     private String createCode() {
         int length = 6;
