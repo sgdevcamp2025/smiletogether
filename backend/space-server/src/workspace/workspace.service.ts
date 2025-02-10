@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
 import { CreateWorkspaceDto } from './dto/create-workspace.dto';
 import { WorkspaceResponseDto } from './dto/workspcae-response.dto';
+import { WorkspaceSearchResponseDto } from './dto/search-workspace.dto';
 
 @Injectable()
 export class WorkspaceService {
@@ -113,5 +114,35 @@ export class WorkspaceService {
       this.logger.error('Failed to create workspace:', error);
       throw error;
     }
+  }
+
+  async searchWorkspacesByName(
+    name: string,
+  ): Promise<WorkspaceSearchResponseDto> {
+    const workspaces = await this.prismaService.workspace.findMany({
+      where: {
+        name: {
+          contains: name,
+          mode: 'insensitive', //대소문자 구문 x
+        },
+      },
+      include: {
+        WorkspaceUser: {
+          where: {
+            role: 'admin',
+          },
+          take: 1,
+        },
+      },
+    });
+
+    return {
+      workspaces: workspaces.map((workspace) => ({
+        workspace_id: workspace.workspace_id,
+        name: workspace.name,
+        owner_id: workspace.WorkspaceUser[0].user_id,
+        nickname: workspace.WorkspaceUser[0].profile_name,
+      })),
+    };
   }
 }
