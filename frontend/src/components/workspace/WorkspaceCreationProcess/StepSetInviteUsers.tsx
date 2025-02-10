@@ -113,7 +113,7 @@ const StepSetInviteUsers = () => {
           />
         </div>
       </div>
-      {validEmail && <div>올바르지 않은 이메일 형식입니다.</div>}
+      {validEmail && <p>올바르지 않은 이메일 형식입니다.</p>}
       <div className=" mt-6 flex  gap-4">
         <Button
           onClick={submitWorkspaceInfo}

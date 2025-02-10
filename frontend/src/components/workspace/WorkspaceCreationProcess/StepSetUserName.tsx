@@ -47,7 +47,7 @@ const StepSetUserName = () => {
           }}
         />
       </div>
-      {isInvalidName && <div>정확한 한글 또는 영어로 입력해주세요</div>}
+      {isInvalidName && <p>정확한 한글 또는 영어로 입력해주세요</p>}
       <div className="pt-6">
         <span className="font-bold">내 프로필 사진</span>
         <span className="text-gray-400">(옵션)</span>

@@ -34,7 +34,7 @@ const StepSetWorkspaceName = () => {
           placeholder="예: Acme 마케틸 또는 Acme"
         />
       </div>
-      {isInvalidName && <div>정확한 한글 또는 영어로 입력해주세요</div>}
+      {isInvalidName && <p>정확한 한글 또는 영어로 입력해주세요</p>}
       <div className="mt-6">
         <WorkspaceNextButton onClick={submitWorkspaceName}>
           다음
