@@ -1,8 +1,9 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
 import { CreateWorkspaceDto } from './dto/create-workspace.dto';
 import { WorkspaceResponseDto } from './dto/workspcae-response.dto';
 import { WorkspaceSearchResponseDto } from './dto/search-workspace.dto';
+import { WorkspaceDetailResponseDto } from './dto/workspace-detail.dto';
 
 @Injectable()
 export class WorkspaceService {
@@ -78,7 +79,7 @@ export class WorkspaceService {
                 workspace_id: workspace.workspace_id,
                 user_id: userId,
                 role: 'member',
-                profile_name: `${userId}번 유저`, // 사용자 DB에서 이름 가져오기
+                profile_name: `${userId}번 유저`, // 추후 사용자 DB에서 이름 가져오기
                 profile_image: 'default.jpg',
               },
             });
@@ -143,6 +144,47 @@ export class WorkspaceService {
         owner_id: workspace.WorkspaceUser[0].user_id,
         nickname: workspace.WorkspaceUser[0].profile_name,
       })),
+    };
+  }
+
+  async getWorkspaceById(
+    workspaceId: number,
+  ): Promise<WorkspaceDetailResponseDto> {
+    const workspace = await this.prismaService.workspace.findUnique({
+      where: {
+        workspace_id: workspaceId,
+      },
+      include: {
+        WorkspaceUser: {
+          select: {
+            user_id: true,
+            profile_name: true,
+            role: true,
+          },
+          orderBy: {
+            role: 'desc', // admin이 먼저 오도록 정렬
+          },
+        },
+      },
+    });
+
+    if (!workspace) {
+      throw new NotFoundException(`Workspace with ID ${workspaceId} not found`);
+    }
+
+    return {
+      workspace_id: workspace.workspace_id,
+      name: workspace.name,
+      owner_id: workspace.WorkspaceUser.find((user) => user.role === 'admin')
+        ?.user_id,
+      profile_image: workspace.workspace_image,
+      users: workspace.WorkspaceUser.map((user) => ({
+        user_id: user.user_id,
+        nickname: user.profile_name,
+        role: user.role,
+      })),
+      created_at: workspace.created_at,
+      updated_at: workspace.updated_at,
     };
   }
 }

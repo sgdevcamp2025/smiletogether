@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { WorkspaceService } from './workspace.service';
 import { CreateWorkspaceDto } from './dto/create-workspace.dto';
 import { WorkspaceResponseDto } from './dto/workspcae-response.dto';
 import { WorkspaceSearchResponseDto } from './dto/search-workspace.dto';
+import { WorkspaceDetailResponseDto } from './dto/workspace-detail.dto';
 
 @Controller('workspaces')
 export class WorkspaceController {
@@ -25,5 +26,15 @@ export class WorkspaceController {
     @Query('name') name: string,
   ): Promise<WorkspaceSearchResponseDto> {
     return this.workspaceService.searchWorkspacesByName(name);
+  }
+
+  @Get(':workspace_id')
+  async getWorkspaceById(
+    @Param('workspace_id') workspaceId: number,
+  ): Promise<WorkspaceDetailResponseDto> {
+    const workspace = await this.workspaceService.getWorkspaceById(
+      Number(workspaceId),
+    );
+    return workspace;
   }
 }
