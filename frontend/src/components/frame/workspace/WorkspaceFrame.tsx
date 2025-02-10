@@ -24,10 +24,11 @@ const MainFrameHeader = () => {
 
 const WorkspaceSideBar = () => {
   const { workspaceName } = useWorkspaceCreationStore();
+  const name = workspaceName ? workspaceName[0].toUpperCase() : 'W';
   return (
     <div className=" min-w-16 bg-yellow-400 text-white flex py-2 flex-col items-center gap-6">
       <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center">
-        <span className="text-sm font-semibold">{workspaceName}</span>
+        <span className="text-sm font-semibold">{name}</span>
       </div>
       <div className="w-8 h-8 flex items-center justify-center rounded">
         <IoHomeOutline className="w-5 h-5" />
