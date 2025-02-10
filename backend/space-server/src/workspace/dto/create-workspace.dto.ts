@@ -1,11 +1,19 @@
-// src/workspace/dto/create-workspace.dto.ts
-import { IsString, IsOptional } from 'class-validator';
+import { IsString, IsOptional, IsArray, IsInt } from 'class-validator';
 
 export class CreateWorkspaceDto {
   @IsString()
-  name: string;
+  workspace_name: string;
+
+  @IsInt()
+  owner_id: number;
+
+  @IsString()
+  user_name: string;
 
   @IsOptional()
-  @IsString()
-  workspace_image?: string;
+  profile_image?: string;
+
+  @IsArray()
+  @IsInt({ each: true })
+  invite_user_list: number[];
 }
