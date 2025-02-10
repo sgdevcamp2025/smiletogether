@@ -1,6 +1,8 @@
 package com.smiletogether.chatserver.service;
 
-import com.smiletogether.chatserver.service.dto.MessageDto;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.smiletogether.chatserver.service.dto.ChannelChatDto;
+import com.smiletogether.chatserver.service.dto.MessageResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -12,14 +14,31 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class MessageConsumer {
 
-    private final SimpMessagingTemplate messagingTemplate;
+  private final SimpMessagingTemplate messagingTemplate;
+  private final ObjectMapper objectMapper; // JSON 변환 객체 추가
 
-    // 💡 Kafka 메시지를 MessageDto 객체로 직접 받을 수 있도록 변경
-    @KafkaListener(topics = "test-topic", groupId = "test-group")
-    public void consume(MessageDto message) {
-        log.info("Received Message from Kafka: {}", message);
+  @KafkaListener(topics = "chat-topic", groupId = "chat-server-group", containerFactory = "kafkaListenerContainerFactory")
+  public void consume(String messageJson) {
+    try {
+      // JSON 문자열을 ChannelChatDto 객체로 변환
+      ChannelChatDto channelChatDto = objectMapper.readValue(messageJson, ChannelChatDto.class);
+      log.info("Received Message from Kafka: {}", channelChatDto);
 
-        // WebSocket을 통해 클라이언트에게 메시지 전송
-        messagingTemplate.convertAndSend("/topic/public", message);
+      MessageResponse message = new MessageResponse(
+          channelChatDto.user(),
+          channelChatDto.content(),
+          channelChatDto.createdAt(),
+          channelChatDto.updatedAt()
+      );
+
+      // WebSocket을 통해 클라이언트에게 메시지 전송
+      messagingTemplate.convertAndSend(
+          "/sub/workspaces/" + channelChatDto.workspaceId() + "/channels/" + channelChatDto.channelId(),
+          message
+      );
+
+    } catch (Exception e) {
+      log.error("Failed to deserialize Kafka message", e);
     }
+  }
 }
