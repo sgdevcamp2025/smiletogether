@@ -15,20 +15,24 @@ const StepSetInviteUsers = () => {
     setInvitedUsers,
     initWorkspaceStore,
   } = useWorkspaceCreationStore();
-  const [validEmail, setValidEmail] = useState(false);
   const [emailInput, setEmailInput] = useState('');
+  const [validEmail, setValidEmail] = useState(false);
+  const [pendingDelete, setPendingDelete] = useState(false);
   const { mutate } = useCreateWorkspace();
   const navigate = useNavigate();
 
   const removeLastTagOnBackspace = (
     e: React.KeyboardEvent<HTMLInputElement>
   ) => {
-    if (
-      e.key === 'Backspace' &&
-      invitedUsers.length > 0 &&
-      emailInput.length > 0
-    ) {
+    if (e.key === 'Backspace' && emailInput === '') {
+      if (!pendingDelete) {
+        setPendingDelete(true);
+        return;
+      }
       setInvitedUsers(invitedUsers.slice(0, -1));
+      setPendingDelete(false);
+    } else {
+      setPendingDelete(false);
     }
   };
 
@@ -63,7 +67,7 @@ const StepSetInviteUsers = () => {
       },
       {
         onSuccess: data => {
-          navigate(`/workspace/${data.workspaceId}`); // ✅ 워크스페이스 페이지로 이동
+          navigate(`/workspace/${data.workspaceId}`);
           initWorkspaceStore();
         },
       }
@@ -102,6 +106,7 @@ const StepSetInviteUsers = () => {
                 ? ''
                 : '예: elis@naver.com, maria@naver.com'
             }
+            value={emailInput}
             onChange={e => {
               setEmailInput(e.target.value);
             }}
@@ -121,7 +126,10 @@ const StepSetInviteUsers = () => {
           <IoIosLink />
           <span>초대 링크 복사</span>
         </Button>
-        <Button className="bg-white text-gray-400 border-none shadow-none hover:bg-white">
+        <Button
+          className="bg-white text-gray-400 border-none shadow-none hover:bg-white"
+          onClick={submitWorkspaceInfo}
+        >
           이 단계 건너 뛰기
         </Button>
       </div>
