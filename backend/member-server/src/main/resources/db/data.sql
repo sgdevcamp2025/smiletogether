@@ -1,0 +1,16 @@
+INSERT INTO member (username, email, created_at, updated_at) VALUES
+        ('test1', 'test1@example.com', NOW(), NOW()),
+        ('test2', 'test2@example.com', NOW(), NOW()),
+        ('test3', 'test3@example.com', NOW(), NOW()),
+        ('test4', 'test4@example.com', NOW(), NOW()),
+        ('test5', 'test5@example.com', NOW(), NOW()),
+        ('test6', 'test6@example.com', NOW(), NOW()),
+        ('test7', 'test7@example.com', NOW(), NOW()),
+        ('test8', 'test8@example.com', NOW(), NOW()),
+        ('test9', 'test9@example.com', NOW(), NOW()),
+        ('test10', 'test10@example.com', NOW(), NOW()),
+        ('test11', 'test11@example.com', NOW(), NOW()),
+        ('test12', 'test12@example.com', NOW(), NOW()),
+        ('test13', 'test13@example.com', NOW(), NOW()),
+        ('test14', 'test14@example.com', NOW(), NOW()),
+        ('test15', 'test15@example.com', NOW(), NOW());
