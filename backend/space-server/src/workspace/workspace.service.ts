@@ -10,10 +10,6 @@ export class WorkspaceService {
   constructor(private readonly prismaService: PrismaService) {}
   private readonly logger = new Logger(WorkspaceService.name);
 
-  async findAll() {
-    return this.prismaService.workspace.findMany();
-  }
-
   async createWorkspace(
     createWorkspaceDto: CreateWorkspaceDto,
   ): Promise<WorkspaceResponseDto> {
