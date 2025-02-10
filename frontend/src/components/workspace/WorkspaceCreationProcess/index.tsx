@@ -3,18 +3,14 @@ import StepSetUserName from '@/components/workspace/WorkspaceCreationProcess/Ste
 import StepSetInviteUsers from '@/components/workspace/WorkspaceCreationProcess/StepSetInviteUsers';
 import { stepData } from '@/lib/workspace';
 import { useWorkspaceCreationStore } from '@/stores/workspace.store';
+import { JSX } from 'react/jsx-runtime';
 
 const WorkspaceCreationProcess = () => {
   const { step, workspaceName } = useWorkspaceCreationStore();
-  const render = () => {
-    switch (step) {
-      case 1:
-        return <StepSetWorkspaceName />;
-      case 2:
-        return <StepSetUserName />;
-      case 3:
-        return <StepSetInviteUsers />;
-    }
+  const workspaceProcessComponents: Record<number, JSX.Element> = {
+    1: <StepSetWorkspaceName />,
+    2: <StepSetUserName />,
+    3: <StepSetInviteUsers />,
   };
   const currentStep = stepData[step];
   return (
@@ -26,7 +22,7 @@ const WorkspaceCreationProcess = () => {
           : currentStep.title}
       </h1>
       <p className="mt-8">{currentStep.description}</p>
-      {render()}
+      {workspaceProcessComponents[step]}
     </div>
   );
 };
