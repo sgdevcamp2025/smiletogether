@@ -50,4 +50,13 @@ public class EmailService {
             throw new RuntimeException(ERROR_MESSAGE);
         }
     }
+
+    // 이메일 전송 폼 생성
+    private SimpleMailMessage createEmailForm(String email, String title, String text) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(email);
+        message.setSubject(title);
+        message.setText(text);
+        return message;
+    }
 }
