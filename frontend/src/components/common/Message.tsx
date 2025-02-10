@@ -1,7 +1,7 @@
 import { formatTime } from '@/lib/date';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import UserHoverCard from './UserHoverCard';
-import { User } from '@/types/uset';
+import { User } from '@/types/user';
 
 interface MessageProps {
   user: User;

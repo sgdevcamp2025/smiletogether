@@ -5,7 +5,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from '@/components/ui/hover-card';
-import { User } from '@/types/uset';
+import { User } from '@/types/user';
 
 const UserHoverCard = ({
   username,
