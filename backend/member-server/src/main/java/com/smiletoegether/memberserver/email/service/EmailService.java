@@ -35,4 +35,19 @@ public class EmailService {
 
     @Value("${spring.mail.auth-code-expiration-millis}")
     private long authCodeExpirationMillis;
+
+    // 인증 코드 생성
+    private String createCode() {
+        int length = 6;
+        try {
+            Random random = SecureRandom.getInstanceStrong();
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < length; i++) {
+                sb.append(random.nextInt(10));
+            }
+            return sb.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(ERROR_MESSAGE);
+        }
+    }
 }
