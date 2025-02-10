@@ -35,7 +35,8 @@ public class EmailService {
 
     @Value("${spring.mail.auth-code-expiration-millis}")
     private long authCodeExpirationMillis;
-
+    
+    // 인증 코드 발송 및 메모리 저장
     public String sendCode(String email) {
         String code = createCode();
         sendEmail(email, EMAIL_TITLE_OF_VERIFICATION, code);
@@ -46,6 +47,16 @@ public class EmailService {
         }, authCodeExpirationMillis, TimeUnit.MILLISECONDS);
 
         return EMAIL_SUCCESS_OF_VERIFICATION;
+    }
+
+    // 인증 코드 확인
+    public boolean verifyCode(String email, String codeInput) {
+        String storedCode = verificationCodes.get(email);
+
+        if (storedCode == null) {
+            throw new RuntimeException("잘못된 이메일이거나 인증 코드가 만료되었습니다.");
+        }
+        return storedCode.equals(codeInput);
     }
 
     // 인증 코드 생성
