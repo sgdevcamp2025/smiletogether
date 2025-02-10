@@ -1,9 +1,12 @@
 package com.smiletoegether.memberserver.member.service;
 
 import com.smiletoegether.memberserver.email.service.EmailService;
+import com.smiletoegether.memberserver.member.domain.Member;
 import com.smiletoegether.memberserver.member.repository.MemberRepository;
 import com.smiletoegether.memberserver.member.service.dto.CertificationEmailRequest;
 import com.smiletoegether.memberserver.member.service.dto.CommonEmailCodeResponse;
+import com.smiletoegether.memberserver.member.service.dto.SignUpRequest;
+import com.smiletoegether.memberserver.member.service.dto.SignUpResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -47,5 +50,24 @@ public class MemberService {
         }
 
         return new CommonEmailCodeResponse("200", "이메일 인증 코드 확인이 완료되었습니다.");
+    }
+
+    // 회원가입
+    @Transactional
+    public SignUpResponse SingUp(SignUpRequest signUpRequest) {
+
+        Member member = initMember(signUpRequest);
+
+        return new SignUpResponse("201", "회원가입 완료", member);
+    }
+
+    private Member initMember(SignUpRequest signUpRequest) {
+        Member member = Member.builder()
+                .email(signUpRequest.email())
+                .username(signUpRequest.username())
+                .build();
+
+        memberRepository.save(member);
+        return member;
     }
 }
