@@ -32,9 +32,12 @@ public class MessageConsumer {
       );
 
       // WebSocket을 통해 클라이언트에게 메시지 전송
+      // JSON을 직접 변환하여 WebSocket으로 전송
+      String formattedJson = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(message);
+
       messagingTemplate.convertAndSend(
           "/sub/workspaces/" + channelChatDto.workspaceId() + "/channels/" + channelChatDto.channelId(),
-          message
+          formattedJson
       );
 
     } catch (Exception e) {
