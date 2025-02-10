@@ -9,7 +9,7 @@ import { isValidKoreanEnglish } from '@/lib/utils';
 import { useWorkspaceCreationStore } from '@/stores/workspace.store';
 const StepSetUserName = () => {
   const { step, setStep, setUserName } = useWorkspaceCreationStore();
-  const [userNameInput, setUserNameInput] = useState<string>('');
+  const [userNameInput, setUserNameInput] = useState('');
   const [isInvalidName, setIsInvalidName] = useState(false);
   const { imgFile, saveImg, imgRef } = useProfileImageRef();
   const [profileModal, setProfileModal] = useState(false);

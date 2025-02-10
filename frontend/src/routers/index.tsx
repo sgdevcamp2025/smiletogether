@@ -1,18 +1,26 @@
 import { createBrowserRouter } from 'react-router-dom';
+import DMPage from '@/pages/dm/DMPage';
+import LoginPage from '@/pages/login/LoginPage';
 import WorkspaceFrame from '@/components/frame/workspace/WorkspaceFrame';
+import ConfirmEmailPage from '@/pages/login/ConfirmEmailPage';
 import WorkSpaceListPage from '@/pages/workspace/WorkspaceListPage';
-import WorkspaceCreationProcess from '@/components/workspace/WorkspaceCreationProcess';
 import WorkspaceDashboard from '@/components/workspace/WorkspaceDashboard';
+import WorkspaceCreationProcess from '@/components/workspace/WorkspaceCreationProcess';
 
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: <div className="text-red-400">홈 입니다</div>,
+    element: <LoginPage />,
+  },
+  {
+    path: '/confirmemail',
+    element: <ConfirmEmailPage />,
   },
   {
     path: '/workspaces',
     element: <WorkSpaceListPage />,
   },
+  { path: '/dm', element: <DMPage /> },
   {
     element: <WorkspaceFrame />,
     children: [

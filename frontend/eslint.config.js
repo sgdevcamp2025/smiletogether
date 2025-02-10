@@ -40,7 +40,12 @@ export default [
         { allowConstantExport: true },
       ],
       '@typescript-eslint/no-unused-vars': ['warn'], // 사용되지 않은 변수 경고
-      'prettier/prettier': 'error', // Prettier 에러 처리
+      'prettier/prettier': [
+        'error',
+        {
+          endOfLine: 'auto',
+        },
+      ], // Prettier 에러 처리
       'no-console': ['warn'], // console 사용 시 워닝
     },
   },
