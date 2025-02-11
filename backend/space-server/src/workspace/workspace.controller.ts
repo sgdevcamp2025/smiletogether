@@ -8,6 +8,7 @@ import {
   Query,
   Req,
   UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
 import { Request } from 'express';
 import { WorkspaceService } from './workspace.service';
@@ -16,6 +17,8 @@ import { WorkspaceResponseDto } from './dto/workspcae-response.dto';
 import { WorkspaceSearchResponseDto } from './dto/search-workspace.dto';
 import { WorkspaceDetailResponseDto } from './dto/workspace-detail.dto';
 import { JwtService } from '@nestjs/jwt';
+import { UserId } from 'src/decorators/user-id.decorator';
+import { AuthGuard } from 'src/guards/auth.guard';
 
 @Controller('workspaces')
 export class WorkspaceController {
@@ -24,7 +27,7 @@ export class WorkspaceController {
     private readonly workspaceService: WorkspaceService,
   ) {}
 
-  @Get('test')
+  @Get('testjwt')
   async testJWT(@Req() req: Request): Promise<any> {
     const authHeader = req.headers.authorization;
     if (!authHeader) {
@@ -36,6 +39,13 @@ export class WorkspaceController {
     const userId = decoded.userId;
 
     console.log('token: ', decoded, userId);
+    return userId;
+  }
+
+  @Get('testdecorator')
+  @UseGuards(AuthGuard)
+  async testDecorator(@UserId() userId: string): Promise<any> {
+    console.log('userId: ', userId);
     return userId;
   }
 
