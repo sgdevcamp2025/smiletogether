@@ -1,5 +1,5 @@
 import WorkspaceIconButton from '@/components/workspace/WorkspaceIconButton';
-import useWorkSpaceQuery from '@/hooks/workspace/useWorkSpaceQuery';
+import useWorkspaceQuery from '@/hooks/workspace/useWorkspaceQuery';
 import currentFrameState from '@/stores/currentFrameState.store';
 import { useWorkspaceCreationStore } from '@/stores/workspace.store';
 import { NAVIGATION_ICONS } from '@/constants/navItems';
@@ -8,7 +8,7 @@ const WorkspaceSideBar = () => {
   const { currentPage } = currentFrameState();
   const { workspaceName } = useWorkspaceCreationStore();
   const name = workspaceName ? workspaceName[0].toUpperCase() : 'W';
-  const { data } = useWorkSpaceQuery();
+  const { data } = useWorkspaceQuery();
 
   const filterdIcons = Object.values(NAVIGATION_ICONS).filter(
     item => item.label === '홈' || item.label === '더보기'
