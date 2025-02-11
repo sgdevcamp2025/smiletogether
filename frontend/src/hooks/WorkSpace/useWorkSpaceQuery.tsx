@@ -1,4 +1,4 @@
-import { getWorkSpaceList } from '@/apis/workspace/worksapce';
+import { getWorkSpaceList } from '@/apis/workspace';
 import { useQuery } from '@tanstack/react-query';
 
 const useWorkSpaceQuery = () => {

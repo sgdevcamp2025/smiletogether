@@ -11,12 +11,28 @@ interface Workspace {
   workspace_members: WorkspaceMember[];
 }
 
-interface EmailGroup {
+export interface GetUserWorkspacListeResponse {
   email: string;
   workspaces: Workspace[];
 }
 
-export interface GetWorkSpaceResponseDto {
-  userId: string;
-  emails: EmailGroup[];
+export interface PostNewWorkspaceRequestDto {
+  workspace_name: string;
+  owner_id: string;
+  user_name: string;
+  profile_image: string;
+  invite_user_list: string[];
+}
+
+export interface PostNewWorkspaceResponseDto {
+  workspaceId: string;
+  name: string;
+  creator: string;
+  defaultChannel: string;
+  profileImage: string;
+  inviteResults: {
+    success: string[] | null;
+    failed: string[] | null;
+  };
+  createdAt: string;
 }

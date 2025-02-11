@@ -20,28 +20,66 @@
     }
   ],
   "userWorkspaces": {
-    "userId": "2",
-    "emails": [
+    "email": "star9207@naver.com",
+    "workspaces": [
       {
-        "email": "star9207@naver.com",
-        "workspaces": [
+        "workspace_id": "workspace_12345",
+        "name": "Home",
+        "profile_image": "https://example.com/home.png",
+        "member_count": 1,
+        "workspace_members": [
           {
-            "workspace_id": "workspace_12345",
-            "name": "Home",
-            "profile_image": "https://example.com/home.png",
-            "member_count": 1,
-            "workspace_members": [
-              {
-                "user_id": "user_12345",
-                "profile_image": "https://example.com/user_12345.png"
-              }
-            ]
+            "user_id": "user_12345",
+            "profile_image": "https://example.com/user_12345.png"
+          }
+        ]
+      },
+      {
+        "workspace_id": "workspace_67890",
+        "name": "Smilegate DevCamp Community",
+        "profile_image": "https://example.com/smilegate.png",
+        "member_count": 9,
+        "workspace_members": [
+          {
+            "user_id": "user_67890",
+            "profile_image": "https://example.com/user_67890.png"
+          },
+          {
+            "user_id": "user_23456",
+            "profile_image": "https://example.com/user_23456.png"
+          },
+          {
+            "user_id": "user_34567",
+            "profile_image": "https://example.com/user_34567.png"
+          },
+          {
+            "user_id": "user_67890",
+            "profile_image": "https://example.com/user_67890.png"
+          },
+          {
+            "user_id": "user_23456",
+            "profile_image": "https://example.com/user_23456.png"
+          },
+          {
+            "user_id": "user_34567",
+            "profile_image": "https://example.com/user_34567.png"
+          },
+          {
+            "user_id": "user_67890",
+            "profile_image": "https://example.com/user_67890.png"
+          },
+          {
+            "user_id": "user_23456",
+            "profile_image": "https://example.com/user_23456.png"
+          },
+          {
+            "user_id": "user_34567",
+            "profile_image": "https://example.com/user_34567.png"
           }
         ]
       }
     ]
   },
-
   "channels": [
     {
       "channelId": "12345",
