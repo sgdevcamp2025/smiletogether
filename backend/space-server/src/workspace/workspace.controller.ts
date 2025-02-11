@@ -13,17 +13,13 @@ import { CreateWorkspaceDto } from './dto/create-workspace.dto';
 import { WorkspaceResponseDto } from './dto/workspcae-response.dto';
 import { WorkspaceSearchResponseDto } from './dto/search-workspace.dto';
 import { WorkspaceDetailResponseDto } from './dto/workspace-detail.dto';
-import { JwtService } from '@nestjs/jwt';
 import { UserId } from 'src/decorators/user-id.decorator';
 import { AuthGuard } from 'src/guards/auth.guard';
 
 @Controller('workspaces')
 @UseGuards(AuthGuard)
 export class WorkspaceController {
-  constructor(
-    private readonly jwtService: JwtService,
-    private readonly workspaceService: WorkspaceService,
-  ) {}
+  constructor(private readonly workspaceService: WorkspaceService) {}
 
   @Get()
   async getUserWorkspaces(
