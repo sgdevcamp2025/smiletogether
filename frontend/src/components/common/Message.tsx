@@ -14,7 +14,8 @@ import {
 import EditBox from './EditBox';
 import { useUserStore } from '@/stores/userStore';
 
-interface MessageProps {
+export interface MessageProps {
+  messageId?: number;
   user: User;
   content: string;
   createdAt: string;
@@ -35,7 +36,7 @@ const Message = ({ user, content, createdAt }: MessageProps) => {
 
   return (
     <div
-      className={`relative flex gap-2 w-full p-5 transition-colors ${
+      className={`relative flex gap-2 w-full p-2 transition-colors ${
         isEditing ? 'bg-amber-100' : 'hover:bg-zinc-100'
       }`}
       onMouseEnter={() => setIsHovered(true)}
