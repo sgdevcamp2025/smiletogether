@@ -42,6 +42,9 @@ dependencies {
 
 	// SockJS
 	implementation 'org.webjars:sockjs-client:1.5.1'
+
+	// jackson 의존성 추가
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.18.2'
 	
 	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 	implementation 'org.springframework.boot:spring-boot-starter-test'
@@ -57,4 +60,9 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+tasks.withType(Test) {
+	useJUnitPlatform()
+	forkEvery 1
 }
