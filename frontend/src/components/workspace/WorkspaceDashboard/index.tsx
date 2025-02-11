@@ -8,12 +8,10 @@ const WorkspaceDashboard = () => {
 
   useEffect(() => {
     setCurrentPage('workspace');
-    // eslint-disable-next-line no-console
     console.log('params', params);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  return <div>ㅇㅇ</div>;
+  // durl
+  return <div>WorkspaceDashboard</div>;
 };
 
 export default WorkspaceDashboard;
