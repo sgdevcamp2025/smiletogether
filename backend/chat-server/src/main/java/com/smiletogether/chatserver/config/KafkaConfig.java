@@ -14,7 +14,7 @@ import java.util.concurrent.ExecutionException;
 @Configuration
 public class KafkaConfig {
 
-    private static final String TOPIC_NAME = "test-topic";
+    private static final String TOPIC_NAME = "chat-topic";
 
     @Bean
     public NewTopic chatTopic(Environment env) {
