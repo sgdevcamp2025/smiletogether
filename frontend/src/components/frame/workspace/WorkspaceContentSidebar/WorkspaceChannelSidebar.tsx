@@ -1,5 +1,5 @@
 const WorkspaceChannelSidebar = () => {
-  return <div>2</div>;
+  return <div>WorkspaceChannelSidebar</div>;
 };
 
 export default WorkspaceChannelSidebar;

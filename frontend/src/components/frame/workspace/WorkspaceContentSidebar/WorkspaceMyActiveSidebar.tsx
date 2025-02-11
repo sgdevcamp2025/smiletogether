@@ -1,5 +1,5 @@
 const WorkspaceMyActiveSidebar = () => {
-  return <div>s</div>;
+  return <div>WorkspaceMyActiveSidebar</div>;
 };
 
 export default WorkspaceMyActiveSidebar;

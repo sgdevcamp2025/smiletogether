@@ -38,7 +38,7 @@ export const useWorkspaceCreationStore = create<WorkspaceCreationState>(
   })
 );
 
-type SidebarType = 'Home' | 'MyActive' | 'DM';
+export type SidebarType = 'Home' | 'MyActive' | 'DM';
 interface useWorkspaceSidebarStoreState {
   activeSidebar: SidebarType;
   setActiveSidebar: (currentPage: SidebarType) => void;
