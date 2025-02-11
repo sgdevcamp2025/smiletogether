@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router';
 import Avatar from '@/components/common/Avatar';
 import ArrorIcon from '@/components/common/ArrorIcon';
-import WorkspaceListItemDetail from '@/components/workspace/WorkSpaceListItemDetail';
+import WorkspaceListItemDetail from '@/components/workspace/WorkspaceListItemDetail';
 
 interface WorkspaceListItemProps {
   name: string;

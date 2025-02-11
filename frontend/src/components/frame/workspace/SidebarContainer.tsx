@@ -1,4 +1,4 @@
-import ChannelSidebar from '@/components/frame/workspace/ChannelSidebar';
+import WorkspaceContentSidebar from '@/components/frame/workspace/WorkspaceContentSidebar';
 import MainNavigationSidebar from '@/components/frame/workspace/MainNavigationSidebar';
 import currentFrameState from '@/stores/currentFrameState.store';
 
@@ -8,7 +8,7 @@ const SideBarContainer = () => {
   return (
     <>
       {currentPage === 'workspace' && <MainNavigationSidebar />}
-      <ChannelSidebar />
+      <WorkspaceContentSidebar />
     </>
   );
 };
