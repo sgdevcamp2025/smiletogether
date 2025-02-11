@@ -4,6 +4,7 @@ import LoginPage from '@/pages/login/LoginPage';
 import MainFrame from '@/components/Frame/MainFrame';
 import WorkSpaceListPage from '@/pages/workspace/WorkspaceListPage';
 import DMPage from '@/pages/dm/DMPage';
+import ChannelPage from '@/pages/channel/ChannelPage';
 
 export const router = createBrowserRouter([
   {
@@ -19,6 +20,7 @@ export const router = createBrowserRouter([
     element: <WorkSpaceListPage />,
   },
   { path: '/dm', element: <DMPage /> },
+  { path: '/client/:workspaceId/:channelId', element: <ChannelPage /> },
   {
     element: <MainFrame />,
     children: [
