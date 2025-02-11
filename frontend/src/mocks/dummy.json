@@ -35,6 +35,30 @@
         ]
       },
       {
+        "workspace_id": "workspace_12345",
+        "name": "Home",
+        "profile_image": "https://example.com/home.png",
+        "member_count": 1,
+        "workspace_members": [
+          {
+            "user_id": "user_12345",
+            "profile_image": "https://example.com/user_12345.png"
+          }
+        ]
+      },
+      {
+        "workspace_id": "workspace_12345",
+        "name": "rweewr",
+        "profile_image": "https://example.com/home.png",
+        "member_count": 1,
+        "workspace_members": [
+          {
+            "user_id": "user_12345",
+            "profile_image": "https://example.com/user_12345.png"
+          }
+        ]
+      },
+      {
         "workspace_id": "workspace_67890",
         "name": "Smilegate DevCamp Community",
         "profile_image": "https://example.com/smilegate.png",

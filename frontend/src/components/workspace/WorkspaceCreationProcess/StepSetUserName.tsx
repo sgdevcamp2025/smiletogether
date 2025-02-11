@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import useProfileImageRef from '@/hooks/WorkSpace/useProfileImageRef';
+import useProfileImageRef from '@/hooks/workspace/useProfileImageRef';
 import { Button } from '@/components/ui/button';
 import { IoPersonSharp } from 'react-icons/io5';
 import WorkspaceCreationInput from '@/components/workspace/WorkspaceCreationInput';

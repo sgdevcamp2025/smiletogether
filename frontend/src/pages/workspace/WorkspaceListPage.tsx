@@ -1,6 +1,6 @@
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import useWorkSpaceQuery from '@/hooks/WorkSpace/useWorkSpaceQuery';
+import useWorkSpaceQuery from '@/hooks/workspace/useWorkSpaceQuery';
 import WorkspaceListItem from '@/components/workspace/WorkspaceListItem';
 
 const WorkSpaceListPage = () => {
