@@ -1,8 +1,8 @@
 import WorkspaceIconButton from '@/components/workspace/WorkspaceIconButton';
 import useWorkspaceQuery from '@/hooks/workspace/useWorkspaceQuery';
-import currentFrameState from '@/stores/currentFrameState.store';
-import { useWorkspaceCreationStore } from '@/stores/workspace.store';
 import { NAVIGATION_ICONS } from '@/constants/navItems';
+import currentFrameState from '@/stores/currentFrameState';
+import { useWorkspaceCreationStore } from '@/stores/workspace';
 
 const WorkspaceSideBar = () => {
   const { currentPage } = currentFrameState();
@@ -20,9 +20,12 @@ const WorkspaceSideBar = () => {
         <>
           <div className="flex flex-col items-center justify-center">
             {data &&
-              data.workspaces.map(item => {
+              data.workspaces.map((item, index) => {
                 return (
-                  <WorkspaceIconButton className="bg-gray-400 rounded-xl">
+                  <WorkspaceIconButton
+                    key={index}
+                    className="bg-gray-400 rounded-xl"
+                  >
                     {item.name.slice(0, 2)}
                   </WorkspaceIconButton>
                 );
@@ -37,9 +40,9 @@ const WorkspaceSideBar = () => {
           <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center">
             <span className="text-sm font-semibold">{name}</span>
           </div>
-          {filterdIcons.map(item => {
+          {filterdIcons.map((item, index) => {
             return (
-              <WorkspaceIconButton className="bg-transparent">
+              <WorkspaceIconButton key={index} className="bg-transparent">
                 {item.icon}
                 <span>{item.label}</span>
               </WorkspaceIconButton>

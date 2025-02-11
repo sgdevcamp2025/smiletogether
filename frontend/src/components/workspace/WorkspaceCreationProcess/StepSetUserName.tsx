@@ -6,7 +6,7 @@ import WorkspaceCreationInput from '@/components/workspace/WorkspaceCreationInpu
 import WorkspaceNextButton from '@/components/workspace/WorkspaceNextButton';
 import WorkspaceProfileModal from '@/components/workspace/WorkspaceProfileModal';
 import { isValidKoreanEnglish } from '@/lib/utils';
-import { useWorkspaceCreationStore } from '@/stores/workspace.store';
+import { useWorkspaceCreationStore } from '@/stores/workspace';
 const StepSetUserName = () => {
   const { step, setStep, setUserName } = useWorkspaceCreationStore();
   const [userNameInput, setUserNameInput] = useState('');

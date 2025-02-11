@@ -5,7 +5,7 @@ import SideBarContainer from '@/components/frame/workspace/SidebarContainer';
 
 const WorkspaceFrame = () => {
   return (
-    <div className="flex h-screen flex-col">
+    <div className="flex h-screen flex-col w-full">
       <WorkspaceHeader />
       <div className="flex flex-1">
         <WorkspaceSideBar />

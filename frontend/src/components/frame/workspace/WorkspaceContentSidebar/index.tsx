@@ -1,7 +1,7 @@
 import WorkspaceChannelSidebar from '@/components/frame/workspace/WorkspaceContentSidebar/WorkspaceChannelSidebar';
 import WorkspaceDmSidebar from '@/components/frame/workspace/WorkspaceContentSidebar/WorkspaceDmSidebar';
 import WorkspaceMyActiveSidebar from '@/components/frame/workspace/WorkspaceContentSidebar/WorkspaceMyActiveSidebar';
-import { useWorkspaceSidebarStore } from '@/stores/workspace.store';
+import { useWorkspaceSidebarStore } from '@/stores/workspace';
 
 const WorkspaceContentSidebar = () => {
   const { activeSidebar } = useWorkspaceSidebarStore();

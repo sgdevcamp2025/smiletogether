@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router';
 import { IoIosLink } from 'react-icons/io';
 import { Button } from '@/components/ui/button';
 import { useCreateWorkspace } from '@/hooks/workspace/useCreateWorkspace';
-import { useWorkspaceCreationStore } from '@/stores/workspace.store';
 import { isValidEmail } from '@/lib/utils';
+import { useWorkspaceCreationStore } from '@/stores/workspace';
 
 const StepSetInviteUsers = () => {
   const {

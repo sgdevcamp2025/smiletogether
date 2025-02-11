@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { isValidKoreanEnglish } from '@/lib/utils';
-import { useWorkspaceCreationStore } from '@/stores/workspace.store';
 import WorkspaceCreationInput from '@/components/workspace/WorkspaceCreationInput';
 import WorkspaceNextButton from '@/components/workspace/WorkspaceNextButton';
+import { useWorkspaceCreationStore } from '@/stores/workspace';
 
 const StepSetWorkspaceName = () => {
   const { step, setStep, setWorkspaceName } = useWorkspaceCreationStore();
