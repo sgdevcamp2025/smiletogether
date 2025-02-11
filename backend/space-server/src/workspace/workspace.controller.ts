@@ -18,21 +18,14 @@ import { UserId } from 'src/decorators/user-id.decorator';
 import { AuthGuard } from 'src/guards/auth.guard';
 
 @Controller('workspaces')
+@UseGuards(AuthGuard)
 export class WorkspaceController {
   constructor(
     private readonly jwtService: JwtService,
     private readonly workspaceService: WorkspaceService,
   ) {}
 
-  @Get('testdecorator')
-  @UseGuards(AuthGuard)
-  async testDecorator(@UserId() userId: number): Promise<any> {
-    console.log('userId: ', userId);
-    return userId;
-  }
-
   @Get()
-  @UseGuards(AuthGuard)
   async getUserWorkspaces(
     @UserId() userId: number,
   ): Promise<WorkspaceSearchResponseDto> {
