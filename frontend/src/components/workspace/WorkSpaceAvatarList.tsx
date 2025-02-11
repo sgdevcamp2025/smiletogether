@@ -1,5 +1,5 @@
 import Avatar from '@/components/common/Avatar';
-import { MemberProps } from '@/components/workspace/WorkspaceListItem';
+import { MemberProps } from '@/components/workspace/WorkSpaceListItem';
 
 interface WorkspaceAvatarListProps {
   members: MemberProps[];
