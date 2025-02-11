@@ -6,11 +6,8 @@ import {
   ParseIntPipe,
   Post,
   Query,
-  Req,
-  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
-import { Request } from 'express';
 import { WorkspaceService } from './workspace.service';
 import { CreateWorkspaceDto } from './dto/create-workspace.dto';
 import { WorkspaceResponseDto } from './dto/workspcae-response.dto';
@@ -27,26 +24,19 @@ export class WorkspaceController {
     private readonly workspaceService: WorkspaceService,
   ) {}
 
-  @Get('testjwt')
-  async testJWT(@Req() req: Request): Promise<any> {
-    const authHeader = req.headers.authorization;
-    if (!authHeader) {
-      throw new UnauthorizedException('Authorization header missing');
-    }
-
-    const token = authHeader.replace('Bearer ', '');
-    const decoded = this.jwtService.decode(token) as { userId?: number };
-    const userId = decoded.userId;
-
-    console.log('token: ', decoded, userId);
+  @Get('testdecorator')
+  @UseGuards(AuthGuard)
+  async testDecorator(@UserId() userId: number): Promise<any> {
+    console.log('userId: ', userId);
     return userId;
   }
 
-  @Get('testdecorator')
+  @Get()
   @UseGuards(AuthGuard)
-  async testDecorator(@UserId() userId: string): Promise<any> {
-    console.log('userId: ', userId);
-    return userId;
+  async getUserWorkspaces(
+    @UserId() userId: number,
+  ): Promise<WorkspaceSearchResponseDto> {
+    return this.workspaceService.getUserWorkspaces(userId);
   }
 
   @Post()
