@@ -13,17 +13,19 @@ export interface GetChannelResponse {
   members: User[];
 }
 
+interface Reaction {
+  emoji: string;
+  count: number;
+  users: string[];
+}
+
 interface Message {
   messageId: string;
   user: User;
   content: string;
   createdAt: string;
   updatedAt: string | null;
-  reactions: {
-    emoji: string;
-    count: number;
-    users: string[];
-  }[];
+  reactions: Reaction[];
   hasThread: boolean;
   threadCount: number;
 }
