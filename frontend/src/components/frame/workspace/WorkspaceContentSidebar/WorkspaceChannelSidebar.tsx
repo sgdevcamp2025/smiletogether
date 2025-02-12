@@ -2,9 +2,11 @@ import useWorkspaceChannelListQuery from '@/hooks/channel/useWorkspaceChannelLis
 import { useEffect } from 'react';
 import { useParams } from 'react-router';
 import useUserWorkspacesQuery from '@/hooks/workspace/useUserWorkspacesQuery';
+import useUserWorkspaceQuery from '@/hooks/workspace/useUserWorkspaceQuery';
 
 const WorkspaceChannelSidebar = () => {
   const { workspaceID } = useParams();
+  const { data, isLoading, isError } = useUserWorkspaceQuery(workspaceID!);
 
   const {
     data: channelList,
@@ -19,7 +21,7 @@ const WorkspaceChannelSidebar = () => {
   } = useUserWorkspacesQuery();
 
   useEffect(() => {
-    console.log('params', workspaceID);
+    console.log('params', workspaceID, 'data', data);
   }, []);
 
   if (isChannelLoading || isWorkspaceLoading) return <p>로딩 중입니다!</p>;
