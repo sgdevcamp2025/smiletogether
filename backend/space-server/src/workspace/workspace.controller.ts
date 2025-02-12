@@ -15,7 +15,7 @@ import { WorkspaceDetailResponseDto } from './dto/workspace-detail.dto';
 import { UserId } from 'src/decorators/user-id.decorator';
 import { AuthGuard } from 'src/guards/auth.guard';
 
-@Controller('workspaces')
+@Controller('api/workspaces')
 @UseGuards(AuthGuard)
 export class WorkspaceController {
   constructor(private readonly workspaceService: WorkspaceService) {}
