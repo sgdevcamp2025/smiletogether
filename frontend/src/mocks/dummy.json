@@ -104,7 +104,7 @@
       }
     ]
   },
-  "channels": [
+  "channel": [
     {
       "channelId": "12345",
       "name": "2025-온라인캠프-질의응답",
