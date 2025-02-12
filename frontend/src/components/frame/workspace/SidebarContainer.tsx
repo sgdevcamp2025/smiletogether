@@ -7,8 +7,14 @@ const SideBarContainer = () => {
 
   return (
     <>
-      {currentPage === 'workspace' && <MainNavigationSidebar />}
-      <WorkspaceContentSidebar />
+      {currentPage === 'workspace' ? (
+        <>
+          <MainNavigationSidebar />
+          <WorkspaceContentSidebar />
+        </>
+      ) : (
+        <div className="w-80 bg-yellow-200 "></div>
+      )}
     </>
   );
 };

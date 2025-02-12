@@ -52,7 +52,9 @@ export const handlers = [
     }
   }),
   http.get(`/api/workspaces/:workspaceId/channels`, ({ request }) => {
-    console.log(request);
+    const url = new URL(request.url);
+
+    console.log(url);
     return HttpResponse.json(dummy.channels);
   }),
   http.get('/api/channel', ({ request }) => {
