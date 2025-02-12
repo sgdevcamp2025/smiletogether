@@ -15,8 +15,8 @@ const ChannelPage = () => {
     channelId || ''
   );
 
-  if (isMessageLoading && isChannelLoading) return <p>로딩중입니다.</p>;
-  if (isMessageError && isChannelError) return <p>에러입니다.</p>;
+  if (isMessageLoading || isChannelLoading) return <p>로딩중입니다.</p>;
+  if (isMessageError || isChannelError) return <p>에러입니다.</p>;
 
   return (
     <div>
