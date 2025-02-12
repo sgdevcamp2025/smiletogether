@@ -19,7 +19,7 @@ export class AuthGuard implements CanActivate {
     }
 
     const token = authHeader.replace('Bearer ', '');
-    const decoded = this.jwtService.decode(token) as { userId?: number };
+    const decoded = this.jwtService.decode(token) as { userId?: string };
 
     if (!decoded || !decoded.userId) {
       throw new UnauthorizedException('Invalid token');

@@ -10,7 +10,7 @@ export class WorkspaceService {
   constructor(private readonly prismaService: PrismaService) {}
   private readonly logger = new Logger(WorkspaceService.name);
 
-  async getUserWorkspaces(userId: number): Promise<any> {
+  async getUserWorkspaces(userId: string): Promise<any> {
     const workspaces = await this.prismaService.workspace.findMany({
       where: {
         WorkspaceUser: {
@@ -141,10 +141,10 @@ export class WorkspaceService {
 
       // response
       return {
-        workspaceId: `workspace_${workspace.workspace_id}`,
+        workspaceId: workspace.workspace_id,
         name: workspace_name,
         creator: owner_id,
-        defaultChannel: `channel_${defaultChannel.channel_id}`,
+        defaultChannel: defaultChannel.channel_id,
         profileImage: profile_image || 'default.jpg',
         inviteResults,
         createdAt: workspace.created_at,
@@ -183,7 +183,7 @@ export class WorkspaceService {
   }
 
   async getWorkspaceById(
-    workspaceId: number,
+    workspaceId: string,
   ): Promise<WorkspaceDetailResponseDto> {
     const workspace = await this.prismaService.workspace.findUnique({
       where: {

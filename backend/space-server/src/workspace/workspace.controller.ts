@@ -3,7 +3,6 @@ import {
   Controller,
   Get,
   Param,
-  ParseIntPipe,
   Post,
   Query,
   UseGuards,
@@ -23,7 +22,7 @@ export class WorkspaceController {
 
   @Get()
   async getUserWorkspaces(
-    @UserId() userId: number,
+    @UserId() userId: string,
   ): Promise<WorkspaceSearchResponseDto> {
     return this.workspaceService.getUserWorkspaces(userId);
   }
@@ -44,7 +43,7 @@ export class WorkspaceController {
 
   @Get(':workspace_id')
   async getWorkspaceById(
-    @Param('workspace_id', ParseIntPipe) workspaceId: number,
+    @Param('workspace_id') workspaceId: string,
   ): Promise<WorkspaceDetailResponseDto> {
     const workspace = await this.workspaceService.getWorkspaceById(workspaceId);
     return workspace;

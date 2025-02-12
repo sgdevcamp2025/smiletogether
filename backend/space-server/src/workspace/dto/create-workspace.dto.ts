@@ -4,8 +4,8 @@ export class CreateWorkspaceDto {
   @IsString()
   workspace_name: string;
 
-  @IsInt()
-  owner_id: number;
+  @IsString()
+  owner_id: string;
 
   @IsString()
   user_name: string;
@@ -15,5 +15,5 @@ export class CreateWorkspaceDto {
 
   @IsArray()
   @IsInt({ each: true })
-  invite_user_list: number[];
+  invite_user_list: string[];
 }
