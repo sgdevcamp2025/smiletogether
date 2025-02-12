@@ -14,7 +14,7 @@ import {
 import EditBox from './EditBox';
 import { useUserStore } from '@/stores/userStore';
 
-export interface MessageProps {
+interface MessageProps {
   messageId?: number;
   user: User;
   content: string;
