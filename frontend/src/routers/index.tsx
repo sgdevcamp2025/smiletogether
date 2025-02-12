@@ -1,9 +1,12 @@
 import { createBrowserRouter } from 'react-router-dom';
-import ConfirmEmailPage from '@/pages/login/ConfirmEmailPage';
-import LoginPage from '@/pages/login/LoginPage';
-import MainFrame from '@/components/Frame/MainFrame';
-import WorkSpaceListPage from '@/pages/workspace/WorkspaceListPage';
 import DMPage from '@/pages/dm/DMPage';
+import LoginPage from '@/pages/login/LoginPage';
+import WorkspaceFrame from '@/components/frame/workspace/WorkspaceFrame';
+import ConfirmEmailPage from '@/pages/login/ConfirmEmailPage';
+import WorkSpaceListPage from '@/pages/workspace/WorkspaceListPage';
+import WorkspaceDashboard from '@/components/workspace/WorkspaceDashboard';
+import WorkspaceCreationProcess from '@/components/workspace/WorkspaceCreationProcess';
+import ChannelPage from '@/pages/channel/ChannelPage';
 
 export const router = createBrowserRouter([
   {
@@ -19,15 +22,17 @@ export const router = createBrowserRouter([
     element: <WorkSpaceListPage />,
   },
   { path: '/dm', element: <DMPage /> },
+  { path: '/client/:workspaceId/:channelId', element: <ChannelPage /> },
   {
-    element: <MainFrame />,
+    element: <WorkspaceFrame />,
     children: [
       {
         path: '/workspace/create',
-        element: <div>dadasss</div>,
+        element: <WorkspaceCreationProcess />,
       },
       {
-        path: `/client/:workspaceID`,
+        path: `/workspace/:workspaceID`,
+        element: <WorkspaceDashboard />,
       },
     ],
   },

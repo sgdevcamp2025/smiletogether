@@ -1,24 +1,24 @@
 import { IoPersonSharp } from 'react-icons/io5';
-import { MemberProps } from '@/components/workspace/WorkspaceListItem';
-import WorkSpaceAvatarList from '@/components/workspace/WorkspaceAvatarList';
+import { MemberProps } from '@/components/workspace/WorkSpaceListItem';
+import WorkspaceAvatarList from '@/components/workspace/WorkSpaceAvatarList';
 
-interface WorkSpaceListItemDetailProps {
+interface WorkspaceListItemDetailProps {
   name: string;
   members: MemberProps[];
   memberCount: number;
 }
 
-const WorkSpaceListItemDetail = ({
+const WorkspaceListItemDetail = ({
   name,
   members,
   memberCount,
-}: WorkSpaceListItemDetailProps) => {
+}: WorkspaceListItemDetailProps) => {
   return (
     <div className="pl-4 flex flex-col">
       <h2 className="font-medium">{name}</h2>
       <div className="flex">
         {memberCount > 0 ? (
-          <WorkSpaceAvatarList members={members} />
+          <WorkspaceAvatarList members={members} />
         ) : (
           <IoPersonSharp className="w-5 h-5" />
         )}
@@ -28,4 +28,4 @@ const WorkSpaceListItemDetail = ({
   );
 };
 
-export default WorkSpaceListItemDetail;
+export default WorkspaceListItemDetail;
