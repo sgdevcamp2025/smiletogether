@@ -1,12 +1,20 @@
+import { JSX } from 'react/jsx-runtime';
+import { useEffect } from 'react';
 import StepSetWorkspaceName from '@/components/workspace/WorkspaceCreationProcess/StepSetWorkspaceName';
 import StepSetUserName from '@/components/workspace/WorkspaceCreationProcess/StepSetUserName';
 import StepSetInviteUsers from '@/components/workspace/WorkspaceCreationProcess/StepSetInviteUsers';
 import { stepData } from '@/lib/workspace';
-import { useWorkspaceCreationStore } from '@/stores/workspace.store';
-import { JSX } from 'react/jsx-runtime';
+import { useWorkspaceCreationStore } from '@/stores/workspace';
+import currentFrameState from '@/stores/currentFrameState';
 
 const WorkspaceCreationProcess = () => {
   const { step, workspaceName } = useWorkspaceCreationStore();
+  const { setCurrentPage } = currentFrameState();
+
+  useEffect(() => {
+    setCurrentPage('create');
+  }, [setCurrentPage]);
+
   const workspaceProcessComponents: Record<number, JSX.Element> = {
     1: <StepSetWorkspaceName />,
     2: <StepSetUserName />,
