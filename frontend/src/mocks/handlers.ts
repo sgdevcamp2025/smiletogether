@@ -43,7 +43,8 @@ export const handlers = [
         createdAt: new Date().toISOString(),
       };
       return HttpResponse.json(responseData, { status: 201 });
-    } catch (e) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (e: unknown) {
       return HttpResponse.json(
         { error: 'internal server error' },
         { status: 500 }

@@ -1,12 +1,17 @@
 import { useEffect } from 'react';
 import { useParams } from 'react-router';
+import currentFrameState from '@/stores/currentFrameState';
 
 const WorkspaceDashboard = () => {
+  const { setCurrentPage } = currentFrameState();
   const params = useParams();
+
   useEffect(() => {
-    console.log(params);
+    setCurrentPage('workspace');
+    console.log('params', params);
   }, []);
-  return <div></div>;
+  // durl
+  return <div>WorkspaceDashboard</div>;
 };
 
 export default WorkspaceDashboard;
