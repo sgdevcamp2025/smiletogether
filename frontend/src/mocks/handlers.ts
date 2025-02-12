@@ -55,7 +55,7 @@ export const handlers = [
     const url = new URL(request.url);
     const channelId = url.searchParams.get('channelId');
 
-    const channel = dummy.channels.find(c => c.channelId === channelId);
+    const channel = dummy.channel.find(c => c.channelId === channelId);
 
     if (channel) {
       return HttpResponse.json(channel);
