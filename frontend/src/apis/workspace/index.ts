@@ -4,7 +4,7 @@ import {
 } from '@/apis/workspace/dto';
 import https from '@/lib/https';
 
-export const getWorkSpaceList =
+export const getUserWorkspaces =
   async (): Promise<GetUserWorkspacListeResponse> => {
     const { data } = await https.get('/api/workspaces');
     return data;

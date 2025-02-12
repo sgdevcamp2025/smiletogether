@@ -6,12 +6,14 @@ import {
   PostNewWorkspaceResponseDto,
 } from '@/apis/workspace/dto';
 
+let db = JSON.parse(JSON.stringify(dummy));
+
 export const handlers = [
   http.get('/api/users', () => {
     return HttpResponse.json(dummy.userProfiles);
   }),
   http.get('/api/workspaces', () => {
-    return HttpResponse.json(dummy.userWorkspaces);
+    return HttpResponse.json(db.userWorkspaces);
   }),
   http.post('/api/workspaces', async ({ request }) => {
     try {
@@ -32,7 +34,7 @@ export const handlers = [
       }
       const responseData: PostNewWorkspaceResponseDto = {
         workspaceId: nanoid(8),
-        name: newPost.workspace_name,
+        name: String(newPost.workspace_name),
         creator: newPost.owner_id,
         defaultChannel: 'general',
         profileImage: newPost.profile_image,
@@ -42,6 +44,8 @@ export const handlers = [
         },
         createdAt: new Date().toISOString(),
       };
+      db.userWorkspaces.workspaces.push(newPost);
+      console.log(newPost, db);
       return HttpResponse.json(responseData, { status: 201 });
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e: unknown) {
@@ -53,7 +57,6 @@ export const handlers = [
   }),
   http.get(`/api/workspaces/:workspaceId/channels`, ({ request }) => {
     const url = new URL(request.url);
-
     console.log(url);
     return HttpResponse.json(dummy.channels);
   }),
