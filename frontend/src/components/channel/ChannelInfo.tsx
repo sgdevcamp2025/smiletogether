@@ -5,7 +5,6 @@ interface ChannelInfoProps {
   channelName: string;
   username: string;
   displayName: string;
-  createdBy: string;
   createdAt: string;
   isPrivate: boolean;
 }

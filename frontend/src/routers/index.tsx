@@ -6,6 +6,7 @@ import ConfirmEmailPage from '@/pages/login/ConfirmEmailPage';
 import WorkSpaceListPage from '@/pages/workspace/WorkspaceListPage';
 import WorkspaceDashboard from '@/components/workspace/WorkspaceDashboard';
 import WorkspaceCreationProcess from '@/components/workspace/WorkspaceCreationProcess';
+import ChannelPage from '@/pages/channel/ChannelPage';
 
 export const router = createBrowserRouter([
   {
@@ -21,6 +22,7 @@ export const router = createBrowserRouter([
     element: <WorkSpaceListPage />,
   },
   { path: '/dm', element: <DMPage /> },
+  { path: '/client/:workspaceId/:channelId', element: <ChannelPage /> },
   {
     element: <WorkspaceFrame />,
     children: [
