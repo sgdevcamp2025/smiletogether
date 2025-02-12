@@ -45,11 +45,11 @@ export const handlers = [
       const workspaceId = nanoid(8);
       const userList = [];
       for (let i = 0; i < newPost.invite_user_list.length; i++) {
-        const mockUser = {
+        const dummyUser = {
           user_id: 'user_12345',
           profile_image: 'https://example.com/user_12345.png',
         };
-        userList.push(mockUser);
+        userList.push(dummyUser);
       }
 
       const workspaceData = {
