@@ -1,6 +1,9 @@
+-- CreateExtension
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 -- CreateTable
 CREATE TABLE "Workspace" (
-    "workspace_id" SERIAL NOT NULL,
+    "workspace_id" UUID NOT NULL DEFAULT uuid_generate_v1mc(),
     "name" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
@@ -11,12 +14,12 @@ CREATE TABLE "Workspace" (
 
 -- CreateTable
 CREATE TABLE "WorkspaceUser" (
-    "profile_id" SERIAL NOT NULL,
-    "user_id" INTEGER NOT NULL,
-    "workspace_id" INTEGER NOT NULL,
-    "role" TEXT NOT NULL,
+    "profile_id" UUID NOT NULL DEFAULT uuid_generate_v1mc(),
+    "user_id" UUID NOT NULL,
+    "workspace_id" UUID NOT NULL,
+    "role" TEXT NOT NULL DEFAULT 'member',
     "joined_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "profile_image" TEXT NOT NULL,
+    "profile_image" TEXT NOT NULL DEFAULT 'default.jpg',
     "profile_name" TEXT NOT NULL,
 
     CONSTRAINT "WorkspaceUser_pkey" PRIMARY KEY ("profile_id")
@@ -24,8 +27,8 @@ CREATE TABLE "WorkspaceUser" (
 
 -- CreateTable
 CREATE TABLE "Channel" (
-    "channel_id" SERIAL NOT NULL,
-    "workspace_id" INTEGER NOT NULL,
+    "channel_id" UUID NOT NULL DEFAULT uuid_generate_v1mc(),
+    "workspace_id" UUID NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT,
     "is_private" BOOLEAN NOT NULL DEFAULT false,
@@ -37,9 +40,9 @@ CREATE TABLE "Channel" (
 
 -- CreateTable
 CREATE TABLE "ChannelUser" (
-    "mapping_id" SERIAL NOT NULL,
-    "user_id" INTEGER NOT NULL,
-    "channel_id" INTEGER NOT NULL,
+    "mapping_id" UUID NOT NULL DEFAULT uuid_generate_v1mc(),
+    "user_id" UUID NOT NULL,
+    "channel_id" UUID NOT NULL,
     "joined_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "channel_role" TEXT NOT NULL DEFAULT 'member',
 
