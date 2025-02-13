@@ -1,9 +1,15 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
 import { CreateWorkspaceDto } from './dto/create-workspace.dto';
 import { WorkspaceResponseDto } from './dto/workspcae-response.dto';
 import { WorkspaceSearchResponseDto } from './dto/search-workspace.dto';
 import { WorkspaceDetailResponseDto } from './dto/workspace-detail.dto';
+import { WorkspaceDeleteResponseDto } from './dto/delete-workspace.dto';
 
 @Injectable()
 export class WorkspaceService {
@@ -220,6 +226,46 @@ export class WorkspaceService {
       })),
       created_at: workspace.created_at,
       updated_at: workspace.updated_at,
+    };
+  }
+
+  async deleteWorkspaceById(
+    workspaceId: string,
+    userId: string,
+  ): Promise<WorkspaceDeleteResponseDto> {
+    const workspace = await this.prismaService.workspace.findUnique({
+      where: {
+        workspace_id: workspaceId,
+      },
+      include: {
+        WorkspaceUser: {
+          where: {
+            role: 'admin',
+            user_id: userId,
+          },
+        },
+      },
+    });
+
+    if (!workspace) {
+      throw new NotFoundException(`Workspace with ID ${workspaceId} not found`);
+    }
+
+    if (workspace.WorkspaceUser.length === 0) {
+      throw new UnauthorizedException(
+        'You do not have permission to delete this workspace.',
+      );
+    }
+
+    const deletedWorkspace = await this.prismaService.workspace.delete({
+      where: {
+        workspace_id: workspaceId,
+      },
+    });
+
+    return {
+      workspace_id: deletedWorkspace.workspace_id,
+      status: 'workspace deleted',
     };
   }
 }

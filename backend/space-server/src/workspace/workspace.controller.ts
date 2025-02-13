@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -14,6 +15,7 @@ import { WorkspaceSearchResponseDto } from './dto/search-workspace.dto';
 import { WorkspaceDetailResponseDto } from './dto/workspace-detail.dto';
 import { UserId } from 'src/decorators/user-id.decorator';
 import { AuthGuard } from 'src/guards/auth.guard';
+import { WorkspaceDeleteResponseDto } from './dto/delete-workspace.dto';
 
 @Controller('api/workspaces')
 @UseGuards(AuthGuard)
@@ -47,5 +49,13 @@ export class WorkspaceController {
   ): Promise<WorkspaceDetailResponseDto> {
     const workspace = await this.workspaceService.getWorkspaceById(workspaceId);
     return workspace;
+  }
+
+  @Delete(':workspace_id')
+  async deleteWorkspaceById(
+    @Param('workspace_id') workspaceId: string,
+    @UserId() userId: string,
+  ): Promise<WorkspaceDeleteResponseDto> {
+    return await this.workspaceService.deleteWorkspaceById(workspaceId, userId);
   }
 }
