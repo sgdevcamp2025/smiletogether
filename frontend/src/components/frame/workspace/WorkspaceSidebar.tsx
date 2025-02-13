@@ -1,5 +1,5 @@
 import WorkspaceIconButton from '@/components/workspace/WorkspaceIconButton';
-import useUserWorkspacesQuery from '@/hooks/WorkSpace/useUserWorkspacesQuery';
+import useUserWorkspacesQuery from '@/hooks/workspace/useUserWorkspacesQuery';
 import { NAVIGATION_ICONS } from '@/constants/navItems';
 import currentFrameState from '@/stores/currentFrameState';
 import { useWorkspaceCreationStore } from '@/stores/workspace';
