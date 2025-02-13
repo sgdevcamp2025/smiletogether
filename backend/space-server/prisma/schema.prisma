@@ -1,0 +1,67 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Workspace {
+  workspace_id   Int      @default(autoincrement()) @id
+  name           String 
+  created_at     DateTime @default(now()) 
+  updated_at     DateTime @updatedAt 
+  workspace_image String  @default("default.jpg")
+
+  WorkspaceUser WorkspaceUser[]
+  Channel Channel[]
+}
+
+model WorkspaceUser {
+  profile_id     Int      @id @default(autoincrement())
+  user_id        Int      
+  workspace_id   Int      
+  role           String   @default("member")
+  joined_at      DateTime @default(now())
+  profile_image  String   @default("default.jpg")
+  profile_name   String
+
+  workspace Workspace @relation(fields: [workspace_id], references: [workspace_id], onDelete: Cascade)
+
+  @@unique([user_id, workspace_id])
+}
+
+// 채널 테이블
+model Channel {
+  channel_id   Int      @id @default(autoincrement())
+  workspace_id Int
+  name         String
+  description  String?
+  is_private   Boolean  @default(false)
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  workspace Workspace @relation(fields: [workspace_id], references: [workspace_id], onDelete: Cascade)
+
+  ChannelUser ChannelUser[]
+}
+
+// 채널-사용자 관계 테이블
+model ChannelUser {
+  mapping_id    Int      @id @default(autoincrement())
+  user_id       Int      
+  channel_id    Int      
+  joined_at     DateTime @default(now())
+  channel_role  String  @default("member")
+
+  channel Channel @relation(fields: [channel_id], references: [channel_id], onDelete: Cascade)
+
+  @@unique([user_id, channel_id])
+}
