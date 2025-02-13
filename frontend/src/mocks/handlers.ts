@@ -84,7 +84,7 @@ export const handlers = [
   http.get(`/api/workspaces/:workspaceId/channels`, ({ request }) => {
     const url = new URL(request.url);
     console.log(url);
-    return HttpResponse.json(dummy.channels);
+    return HttpResponse.json(dummy.channel);
   }),
   http.get('/api/channel', ({ request }) => {
     const url = new URL(request.url);
