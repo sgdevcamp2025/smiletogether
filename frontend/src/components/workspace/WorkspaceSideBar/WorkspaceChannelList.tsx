@@ -35,7 +35,7 @@ const WorkspaceChannelList = ({
             return (
               <Button
                 key={index}
-                className=" w-full bg-transparent shadow-none hover:bg-gray-50 flex justify-start text-xs  py-0"
+                className="w-full bg-transparent shadow-none hover:bg-gray-50 flex justify-start text-xs  py-0"
               >
                 {channel.isPrivate ? <FaHashtag /> : <FiLock />}
                 {channel.name}
