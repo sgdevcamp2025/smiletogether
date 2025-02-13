@@ -1,11 +1,9 @@
-<<<<<<< HEAD
+import { User } from '@/types/user';
 export interface getWorkspaceChannelsResponseDto {
   channelId: string;
   name: string;
   isPrivate: boolean;
-=======
-import { User } from '@/types/user';
-
+}
 export interface GetChannelResponse {
   createdBy: {
     userId: string;
@@ -43,5 +41,4 @@ interface DateGroupedMessages {
 export interface GetMessagesResponse {
   channelId: string;
   messages: DateGroupedMessages;
->>>>>>> 0431fde9d239ecc42ae6f4df289cffe795d1107f
 }

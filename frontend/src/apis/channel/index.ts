@@ -1,5 +1,5 @@
-import { getWorkspaceChannelsResponseDto } from '@/apis/channel/dto';
 import https from '@/lib/https';
+import { getWorkspaceChannelsResponseDto } from '@/apis/channel/dto';
 import { GetChannelResponse, GetMessagesResponse } from './dto';
 
 export const getChannel = async (
