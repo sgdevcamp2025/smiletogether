@@ -23,7 +23,8 @@ services:
       - "3000:3000"
     depends_on:
       - postgres
-    command: ["npm", "run", "start:dev"]
+    command: >
+      sh -c "npx prisma migrate deploy && npx prisma generate && pnpm run start:dev"
 
 volumes:
   postgres_data:
