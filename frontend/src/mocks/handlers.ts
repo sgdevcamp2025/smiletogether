@@ -21,7 +21,6 @@ export const handlers = [
       (item: { workspace_id: string | readonly string[] | undefined }) =>
         item.workspace_id === workspaceId
     );
-    console.log('find', workspace);
     return HttpResponse.json(workspace);
   }),
   http.post('/api/workspaces', async ({ request }) => {
