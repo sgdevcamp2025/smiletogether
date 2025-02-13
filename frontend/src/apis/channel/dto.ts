@@ -1,5 +1,9 @@
 import { User } from '@/types/user';
-
+export interface getWorkspaceChannelsResponseDto {
+  channelId: string;
+  name: string;
+  isPrivate: boolean;
+}
 export interface GetChannelResponse {
   createdBy: {
     userId: string;
