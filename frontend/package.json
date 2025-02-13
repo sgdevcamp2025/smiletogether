@@ -10,10 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-<<<<<<< HEAD
     "@radix-ui/react-accordion": "^1.2.3",
-=======
->>>>>>> 7e1679b97d1d7492c04de3d65987ce270e9b71d7
     "@radix-ui/react-avatar": "^1.1.2",
     "@radix-ui/react-context": "^1.1.1",
     "@radix-ui/react-dropdown-menu": "^2.1.5",
