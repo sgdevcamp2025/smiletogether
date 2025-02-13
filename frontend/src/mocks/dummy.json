@@ -292,6 +292,31 @@
             "userId": "2",
             "username": "Subin Kim",
             "profileImage": "https://example.com/profile/subin.jpg"
+          },
+          {
+            "userId": "4",
+            "username": "박건우",
+            "profileImage": "https://example.com/profile/geonwoo.jpg"
+          },
+          {
+            "userId": "5",
+            "username": "이지은",
+            "profileImage": "https://example.com/profile/jieun.jpg"
+          },
+          {
+            "userId": "2",
+            "username": "Subin Kim",
+            "profileImage": "https://example.com/profile/subin.jpg"
+          },
+          {
+            "userId": "4",
+            "username": "박건우",
+            "profileImage": "https://example.com/profile/geonwoo.jpg"
+          },
+          {
+            "userId": "5",
+            "username": "이지은",
+            "profileImage": "https://example.com/profile/jieun.jpg"
           }
         ],
         "lastMessage": {
@@ -308,6 +333,11 @@
             "userId": "3",
             "username": "안연아",
             "profileImage": "https://example.com/profile/anya.jpg"
+          },
+          {
+            "userId": "6",
+            "username": "김민재",
+            "profileImage": "https://example.com/profile/minjae.jpg"
           }
         ],
         "lastMessage": {
@@ -316,6 +346,22 @@
           "createdAt": "2025-01-12T15:20:00Z"
         },
         "unreadCount": 0
+      },
+      {
+        "dmId": "dm_003",
+        "participants": [
+          {
+            "userId": "7",
+            "username": "정수빈",
+            "profileImage": "https://example.com/profile/subin2.jpg"
+          }
+        ],
+        "lastMessage": {
+          "senderId": "8",
+          "content": "내일 일정 공유 부탁드립니다!",
+          "createdAt": "2025-01-11T18:45:00Z"
+        },
+        "unreadCount": 1
       }
     ]
   }

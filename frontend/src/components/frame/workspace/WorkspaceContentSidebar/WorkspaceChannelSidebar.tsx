@@ -39,7 +39,10 @@ const WorkspaceChannelSidebar = () => {
         {workspacesInfo?.name}
       </h2>
       <WorkspaceChannelList sectionTitle={'채널'} listItems={channelList} />
-      {/* <WorkspaceDMList sectionTitle="다이렉트 메세지" /> */}
+      <WorkspaceDMList
+        sectionTitle="다이렉트 메세지"
+        listItems={dmList ? dmList?.dms : []}
+      />
     </div>
   );
 };
