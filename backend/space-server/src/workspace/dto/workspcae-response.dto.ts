@@ -1,12 +1,12 @@
 export class WorkspaceInviteResult {
-  success: number[];
-  failed: number[];
+  success: string[];
+  failed: string[];
 }
 
 export class WorkspaceResponseDto {
   workspaceId: string;
   name: string;
-  creator: number;
+  creator: string;
   defaultChannel: string;
   profileImage: string;
   inviteResults: WorkspaceInviteResult;

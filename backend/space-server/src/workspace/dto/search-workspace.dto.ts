@@ -1,7 +1,7 @@
 export class WorkspaceSearchItemDto {
-  workspace_id: number;
+  workspace_id: string;
   name: string;
-  owner_id: number;
+  owner_id: string;
   nickname: string;
 }
 
