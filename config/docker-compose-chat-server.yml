@@ -31,7 +31,7 @@ services:
     container_name: chat-server
     restart: unless-stopped
     ports:
-      - "8081:8081"
+      - "8080:8080"
     environment:
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka-single-broker:9092
       - SPRING_DATASOURCE_URL=jdbc:h2:mem:testdb
