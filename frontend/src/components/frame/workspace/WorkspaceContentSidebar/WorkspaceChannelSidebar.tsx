@@ -1,5 +1,5 @@
 import { useParams } from 'react-router';
-import useUserWorkspaceQuery from '@/hooks/workspace/useUserWorkspaceQuery';
+import useUserWorkspaceQuery from '@/hooks/WorkSpace/useUserWorkspaceQuery';
 import useWorkspaceChannelListQuery from '@/hooks/channel/useWorkspaceChannelListQuery';
 import WorkspaceChannelList from '@/components/workspace/WorkspaceSideBar/WorkspaceSidebarSection';
 

@@ -1,10 +1,10 @@
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import useWorkSpaceQuery from '@/hooks/workspace/useUserWorkspacesQuery';
+import useUserWorkspacesQuery from '@/hooks/WorkSpace/useUserWorkspacesQuery';
 import WorkspaceListItem from '@/components/workspace/WorkspaceListItem';
 
 const WorkSpaceListPage = () => {
-  const { data, isError, isLoading } = useWorkSpaceQuery();
+  const { data, isError, isLoading } = useUserWorkspacesQuery();
 
   if (isLoading) return <div>로딩중...</div>;
   if (isError) return <div>에러 발생</div>;
