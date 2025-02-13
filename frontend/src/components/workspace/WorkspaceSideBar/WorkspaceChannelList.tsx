@@ -32,15 +32,7 @@ const WorkspaceChannelList = ({
         </AccordionTrigger>
         <AccordionContent className="pb-0">
           {listItems?.map((channel, index) => {
-            return (
-              <Button
-                key={index}
-                className="w-full bg-transparent shadow-none hover:bg-gray-50 flex justify-start text-xs  py-0"
-              >
-                {channel.isPrivate ? <FaHashtag /> : <FiLock />}
-                {channel.name}
-              </Button>
-            );
+            return <WorkspaceChannelItem channel={channel} key={index} />;
           })}
           <Button className=" w-full bg-transparent shadow-none hover:bg-gray-50 flex justify-start text-xs  py-0">
             <MdOutlineAddBox />
@@ -53,3 +45,16 @@ const WorkspaceChannelList = ({
 };
 
 export default WorkspaceChannelList;
+
+interface WorkspaceChannelItemProps {
+  channel: ChannelItem;
+}
+
+const WorkspaceChannelItem = ({ channel }: WorkspaceChannelItemProps) => {
+  return (
+    <Button className="w-full bg-transparent shadow-none hover:bg-gray-50 flex justify-start text-xs  py-0">
+      {channel.isPrivate ? <FaHashtag /> : <FiLock />}
+      {channel.name}
+    </Button>
+  );
+};
