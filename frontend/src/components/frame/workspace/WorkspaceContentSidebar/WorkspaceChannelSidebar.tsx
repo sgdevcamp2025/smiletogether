@@ -35,7 +35,7 @@ const WorkspaceChannelSidebar = () => {
 
   return (
     <div className="text-wrap">
-      <h2 className="mt-4 px-4 scroll-m-20 text-2xl font-semibold tracking-tight text-white">
+      <h2 className="mt-3 px-4 scroll-m-20 text-2xl font-semibold tracking-tight text-white">
         {workspacesInfo?.name}
       </h2>
       <WorkspaceChannelList sectionTitle={'채널'} listItems={channelList} />
