@@ -114,4 +114,8 @@ export const handlers = [
       { status: 404 }
     );
   }),
+  http.get('/api/dms', () => {
+    console.log('dummy.workspacedmList', dummy.workspacedmList);
+    return HttpResponse.json(dummy.workspacedmList);
+  }),
 ];

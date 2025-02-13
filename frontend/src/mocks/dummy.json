@@ -281,5 +281,42 @@
         }
       ]
     }
+  },
+  "workspacedmList": {
+    "userId": "1",
+    "dms": [
+      {
+        "dmId": "dm_001",
+        "participants": [
+          {
+            "userId": "2",
+            "username": "Subin Kim",
+            "profileImage": "https://example.com/profile/subin.jpg"
+          }
+        ],
+        "lastMessage": {
+          "senderId": "1",
+          "content": "다음에 봬요! 😆",
+          "createdAt": "2025-01-13T10:30:00Z"
+        },
+        "unreadCount": 2
+      },
+      {
+        "dmId": "dm_002",
+        "participants": [
+          {
+            "userId": "3",
+            "username": "안연아",
+            "profileImage": "https://example.com/profile/anya.jpg"
+          }
+        ],
+        "lastMessage": {
+          "senderId": "3",
+          "content": "이건 고객센터용 공간입니다.",
+          "createdAt": "2025-01-12T15:20:00Z"
+        },
+        "unreadCount": 0
+      }
+    ]
   }
 }
