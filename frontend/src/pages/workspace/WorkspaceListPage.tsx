@@ -1,7 +1,7 @@
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import useWorkSpaceQuery from '@/hooks/workspace/useUserWorkspacesQuery';
-import WorkspaceListItem from '@/components/workspace/WorkSpaceListItem';
+import WorkspaceListItem from '@/components/workspace/WorkspaceListItem';
 
 const WorkSpaceListPage = () => {
   const { data, isError, isLoading } = useWorkSpaceQuery();
