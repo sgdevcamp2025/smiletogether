@@ -25,10 +25,7 @@ const WorkspaceChannelSidebar = () => {
       <h3 className="mt-4 px-4 scroll-m-20 text-xl font-semibold tracking-tight text-white">
         {workspacesInfo?.name}
       </h3>
-      <WorkspaceChannelList
-        sectionTitle={workspacesInfo?.name ? workspacesInfo?.name : 'workspace'}
-        listItems={channelList}
-      />
+      <WorkspaceChannelList sectionTitle={'채널'} listItems={channelList} />
     </div>
   );
 };
