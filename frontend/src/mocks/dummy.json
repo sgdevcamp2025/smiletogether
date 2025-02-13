@@ -106,6 +106,18 @@
   },
   "channel": [
     {
+      "channelId": "channel_001",
+      "name": "General",
+      "isPrivate": false
+    },
+    {
+      "channelId": "channel_002",
+      "name": "Project Updates",
+      "isPrivate": true
+    }
+  ],
+  "channel": [
+    {
       "channelId": "12345",
       "name": "2025-온라인캠프-질의응답",
       "isPrivate": true,

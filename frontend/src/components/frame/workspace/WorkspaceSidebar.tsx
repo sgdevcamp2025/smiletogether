@@ -1,5 +1,5 @@
 import WorkspaceIconButton from '@/components/workspace/WorkspaceIconButton';
-import useWorkspaceQuery from '@/hooks/workspace/useWorkspaceQuery';
+import useWorkspaceQuery from '@/hooks/workspace/useUserWorkspacesQuery';
 import { NAVIGATION_ICONS } from '@/constants/navItems';
 import currentFrameState from '@/stores/currentFrameState';
 import { useWorkspaceCreationStore } from '@/stores/workspace';
@@ -19,17 +19,16 @@ const WorkspaceSideBar = () => {
       {currentPage === 'workspace' ? (
         <>
           <div className="flex flex-col items-center justify-center">
-            {data &&
-              data.workspaces.map((item, index) => {
-                return (
-                  <WorkspaceIconButton
-                    key={index}
-                    className="bg-gray-400 rounded-xl"
-                  >
-                    {item.name.slice(0, 2)}
-                  </WorkspaceIconButton>
-                );
-              })}
+            {data?.workspaces?.map((item, index) => {
+              return (
+                <WorkspaceIconButton
+                  key={index}
+                  className="bg-gray-400 rounded-xl"
+                >
+                  {item.name ? item.name.slice(0, 2) : 'W'}
+                </WorkspaceIconButton>
+              );
+            })}
             <WorkspaceIconButton className="bg-transparent">
               +
             </WorkspaceIconButton>

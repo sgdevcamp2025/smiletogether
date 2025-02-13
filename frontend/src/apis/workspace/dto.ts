@@ -1,6 +1,7 @@
 interface WorkspaceMember {
   user_id: string;
   profile_image: string;
+  role?: 'member' | 'admin';
 }
 
 interface Workspace {
@@ -11,7 +12,17 @@ interface Workspace {
   workspace_members: WorkspaceMember[];
 }
 
-export interface GetUserWorkspacListeResponse {
+export interface GetUserWorkspaceResponse {
+  workspace_id: string;
+  name: string;
+  owner_id: string;
+  profile_image: string;
+  users: WorkspaceMember[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface GetUserWorkspaceListeResponse {
   email: string;
   workspaces: Workspace[];
 }
