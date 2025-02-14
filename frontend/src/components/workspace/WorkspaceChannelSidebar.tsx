@@ -4,10 +4,10 @@ import useWorkspaceChannelListQuery from '@/hooks/channel/useWorkspaceChannelLis
 import WorkspaceChannelList from '@/components/workspace/WorkspaceSideBar/WorkspaceChannelList';
 import useGetDMListQuery from '@/hooks/dm/useGetDMListQuery';
 import WorkspaceDMList from '@/components/workspace/WorkspaceSideBar/WorkspaceDMList';
-import { useEffect } from 'react';
 
 const WorkspaceChannelSidebar = () => {
   const { workspaceID } = useParams();
+
   const {
     data: workspacesInfo,
     isLoading: isWorkspaceLoading,
@@ -24,9 +24,6 @@ const WorkspaceChannelSidebar = () => {
     isLoading: isChannelLoading,
     isError: isChannelError,
   } = useWorkspaceChannelListQuery(workspaceID!);
-  useEffect(() => {
-    console.log(dmList);
-  }, []);
 
   if (isChannelLoading || isWorkspaceLoading || isDMLoading)
     return <p>로딩 중입니다!</p>;
@@ -34,7 +31,7 @@ const WorkspaceChannelSidebar = () => {
     return <p>에러가 발생했습니다!</p>;
 
   return (
-    <div className="text-wrap">
+    <div className=" min-w-16 bg-yellow-200 text-white flex py-2 flex-col items-center gap-2 text-wrap h-screen">
       <h2 className="mt-3 px-4 scroll-m-20 text-2xl font-semibold tracking-tight text-white">
         {workspacesInfo?.name}
       </h2>

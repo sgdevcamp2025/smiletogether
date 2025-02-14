@@ -7,6 +7,12 @@ import WorkSpaceListPage from '@/pages/workspace/WorkspaceListPage';
 import WorkspaceCreationProcess from '@/components/workspace/WorkspaceCreationProcess';
 import ChannelPage from '@/pages/channel/ChannelPage';
 import ActivityPage from '@/pages/activity/ActivityPage';
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from '@/components/ui/resizable';
+import WorkspaceChannelSidebar from '@/components/workspace/WorkspaceChannelSidebar';
 
 export const router = createBrowserRouter([
   {
@@ -32,7 +38,17 @@ export const router = createBrowserRouter([
     children: [
       {
         path: '',
-        element: <ChannelPage />,
+        element: (
+          <ResizablePanelGroup direction="horizontal">
+            <ResizablePanel className="w-32">
+              <WorkspaceChannelSidebar />
+            </ResizablePanel>
+            <ResizableHandle withHandle />
+            <ResizablePanel>
+              <ChannelPage />
+            </ResizablePanel>
+          </ResizablePanelGroup>
+        ),
       },
       {
         path: 'dm',

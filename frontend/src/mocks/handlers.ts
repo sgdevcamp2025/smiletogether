@@ -91,7 +91,6 @@ export const handlers = [
     const channelId = url.searchParams.get('channelId');
 
     const channel = dummy.channel.find(c => c.channelId === channelId);
-
     if (channel) {
       return HttpResponse.json(channel);
     }
@@ -104,7 +103,7 @@ export const handlers = [
   http.get('/api/chatMessage', ({ request }) => {
     const url = new URL(request.url);
     const channelId = url.searchParams.get('channelId');
-
+    console.log('chatMessage channelId', channelId);
     if (channelId === dummy.messages.channelId) {
       return HttpResponse.json(dummy.messages);
     }
