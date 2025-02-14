@@ -33,7 +33,7 @@ export const router = createBrowserRouter([
         path: `/workspace/:workspaceID`,
         element: <WorkspaceDashboard />,
       },
-      { path: '/client/:workspaceId/:channelId', element: <ChannelPage /> },
+      { path: '/workspace/:workspaceId/:channelId', element: <ChannelPage /> },
     ],
   },
 ]);
