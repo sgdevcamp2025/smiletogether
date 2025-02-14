@@ -5,7 +5,7 @@ import SideBar from '@/components/dm/sideBar';
 
 const DMPage = () => {
   return (
-    <div className="flex w-full">
+    <div className="flex w-full h-screen overflow-hidden">
       <SplitPaneLayout
         leftPannelDefaultSize={30}
         rightPannelDefaultSize={70}

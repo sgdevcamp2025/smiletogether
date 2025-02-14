@@ -25,7 +25,12 @@ const WorkspaceChannelList = ({
   listItems,
 }: WorkspaceSidebarSectionProps) => {
   return (
-    <Accordion type="single" collapsible className="w-full">
+    <Accordion
+      type="single"
+      collapsible
+      className="w-full"
+      defaultValue="item-1"
+    >
       <AccordionItem value="item-1">
         <AccordionTrigger className="px-4 pb-0 text-white text-xs ">
           {sectionTitle}

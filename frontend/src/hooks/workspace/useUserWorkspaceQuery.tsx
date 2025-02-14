@@ -5,7 +5,7 @@ const useUserWorkspaceQuery = (workspaceId: string) => {
   const { data, isError, isLoading } = useQuery({
     queryKey: ['workspace'],
     queryFn: () => getUserWorkspace(workspaceId),
-    enabled: Boolean(workspaceId),
+    enabled: !!workspaceId,
   });
 
   return { data, isError, isLoading };

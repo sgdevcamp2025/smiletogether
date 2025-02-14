@@ -5,7 +5,7 @@ import MainNavigationSidebar from '@/components/frame/workspace/MainNavigationSi
 
 const WorkspaceFrame = () => {
   return (
-    <div className="flex h-screen flex-col w-full">
+    <div className="flex h-screen w-full flex-col overflow-hidden">
       <WorkspaceHeader />
       <div className="flex flex-1">
         <WorkspaceSideBar />

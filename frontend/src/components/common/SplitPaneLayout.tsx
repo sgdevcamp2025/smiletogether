@@ -19,7 +19,7 @@ const SplitPaneLayout = ({
   children2,
 }: SplitPaneLayoutProps) => {
   return (
-    <ResizablePanelGroup direction="horizontal">
+    <ResizablePanelGroup direction="horizontal" className="h-screen">
       <ResizablePanel defaultSize={leftPannelDefaultSize}>
         {children1}
       </ResizablePanel>
