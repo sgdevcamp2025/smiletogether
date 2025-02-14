@@ -1,7 +1,8 @@
 import { Outlet } from 'react-router-dom';
 import WorkspaceHeader from '@/components/frame/workspace/WorkspaceHeader';
 import WorkspaceSideBar from '@/components/frame/workspace/WorkspaceSidebar';
-import SideBarContainer from '@/components/frame/workspace/SidebarContainer';
+import MainNavigationSidebar from '@/components/frame/workspace/MainNavigationSidebar';
+import WorkspaceContentSidebar from '@/components/frame/workspace/WorkspaceContentSidebar';
 
 const WorkspaceFrame = () => {
   return (
@@ -9,7 +10,8 @@ const WorkspaceFrame = () => {
       <WorkspaceHeader />
       <div className="flex flex-1">
         <WorkspaceSideBar />
-        <SideBarContainer />
+        <MainNavigationSidebar />
+        <WorkspaceContentSidebar />
         <Outlet />
       </div>
     </div>

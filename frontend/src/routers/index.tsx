@@ -4,9 +4,9 @@ import LoginPage from '@/pages/login/LoginPage';
 import WorkspaceFrame from '@/components/frame/workspace/WorkspaceFrame';
 import ConfirmEmailPage from '@/pages/login/ConfirmEmailPage';
 import WorkSpaceListPage from '@/pages/workspace/WorkspaceListPage';
-import WorkspaceDashboard from '@/components/workspace/WorkspaceDashboard';
 import WorkspaceCreationProcess from '@/components/workspace/WorkspaceCreationProcess';
 import ChannelPage from '@/pages/channel/ChannelPage';
+import ActivityPage from '@/pages/activity/ActivityPage';
 
 export const router = createBrowserRouter([
   {
@@ -21,19 +21,28 @@ export const router = createBrowserRouter([
     path: '/workspaces',
     element: <WorkSpaceListPage />,
   },
-  { path: '/dm', element: <DMPage /> },
-  { path: '/client/:workspaceId/:channelId', element: <ChannelPage /> },
+
   {
+    path: '/workspace/create',
+    element: <WorkspaceCreationProcess />,
+  },
+  {
+    path: '/workspace/:workspaceID',
     element: <WorkspaceFrame />,
     children: [
       {
-        path: '/workspace/create',
-        element: <WorkspaceCreationProcess />,
+        path: '',
+        element: <ChannelPage />,
       },
       {
-        path: `/workspace/:workspaceID`,
-        element: <WorkspaceDashboard />,
+        path: 'dm',
+        element: <DMPage />,
       },
+      {
+        path: 'activity',
+        element: <ActivityPage />,
+      },
+      { path: 'channel/:channelId', element: <ChannelPage /> },
     ],
   },
 ]);
