@@ -13,6 +13,7 @@ import {
   ResizablePanelGroup,
 } from '@/components/ui/resizable';
 import WorkspaceChannelSidebar from '@/components/workspace/WorkspaceChannelSidebar';
+import SplitPaneLayout from '@/components/common/SplitPaneLayout';
 
 export const router = createBrowserRouter([
   {
@@ -39,15 +40,10 @@ export const router = createBrowserRouter([
       {
         path: '',
         element: (
-          <ResizablePanelGroup direction="horizontal">
-            <ResizablePanel className="w-32">
-              <WorkspaceChannelSidebar />
-            </ResizablePanel>
-            <ResizableHandle withHandle />
-            <ResizablePanel>
-              <ChannelPage />
-            </ResizablePanel>
-          </ResizablePanelGroup>
+          <SplitPaneLayout
+            children1={<WorkspaceChannelSidebar />}
+            children2={<ChannelPage />}
+          />
         ),
       },
       {
