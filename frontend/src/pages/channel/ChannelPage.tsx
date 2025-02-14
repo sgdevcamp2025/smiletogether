@@ -7,6 +7,7 @@ import { useGetMessages } from '@/hooks/channel/useGetMessage';
 import { useParams } from 'react-router';
 import MessageBox from '@/components/common/MessageBox';
 import { useWebSocket } from '@/hooks/channel/useWebSocket';
+import { useEffect, useRef } from 'react';
 
 const ChannelPage = () => {
   const { workspaceId, channelId } = useParams();
@@ -18,12 +19,19 @@ const ChannelPage = () => {
     workspaceId,
     channelId,
   });
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [messages, messageData]);
 
   if (isMessageLoading || isChannelLoading) return <p>로딩중입니다.</p>;
   if (isMessageError || isChannelError) return <p>에러입니다.</p>;
 
   return (
-    <div>
+    <div className="w-full">
       {channelData && (
         <>
           <ChatHeader
@@ -32,6 +40,11 @@ const ChannelPage = () => {
             totalMembers={channelData.totalMembers}
             members={channelData.members}
           />
+        </>
+      )}
+
+      <div ref={scrollRef} className="h-[400px] overflow-auto scrollbar-hide">
+        {channelData && (
           <ChannelInfo
             userId={channelData.createdBy.userId}
             channelName={channelData.name}
@@ -40,37 +53,37 @@ const ChannelPage = () => {
             createdAt={channelData.createdAt}
             isPrivate={channelData.isPrivate}
           />
-        </>
-      )}
+        )}
 
-      {/* 이전 메시지 */}
-      {messageData?.messages ? (
-        Object.entries(messageData.messages).map(([date, messages]) => (
-          <div key={date}>
-            <DateBadge date={date} />
-            {messages.map(msg => (
-              <Message
-                key={msg.messageId}
-                user={msg.user}
-                content={msg.content}
-                createdAt={msg.createdAt}
-              />
-            ))}
-          </div>
-        ))
-      ) : (
-        <p>메시지 없음</p>
-      )}
+        {/* 이전 메시지 */}
+        {messageData?.messages ? (
+          Object.entries(messageData.messages).map(([date, messages]) => (
+            <div key={date}>
+              <DateBadge date={date} />
+              {messages.map(msg => (
+                <Message
+                  key={msg.messageId}
+                  user={msg.user}
+                  content={msg.content}
+                  createdAt={msg.createdAt}
+                />
+              ))}
+            </div>
+          ))
+        ) : (
+          <p>메시지 없음</p>
+        )}
 
-      {/* 웹 소켓에서 전송받은 메시지 */}
-      {messages.map((msg, index) => (
-        <Message
-          key={index} // 이 부분은 나중에 백 구조가 바뀌면 messageId를 넣을 예정입니다!
-          user={msg.user}
-          content={msg.content}
-          createdAt={msg.createdAt}
-        />
-      ))}
+        {/* 웹 소켓에서 전송받은 메시지 */}
+        {messages.map((msg, index) => (
+          <Message
+            key={index} // 이 부분은 나중에 백 구조가 바뀌면 messageId를 넣을 예정입니다!
+            user={msg.user}
+            content={msg.content}
+            createdAt={msg.createdAt}
+          />
+        ))}
+      </div>
 
       {channelData && client && (
         <MessageBox

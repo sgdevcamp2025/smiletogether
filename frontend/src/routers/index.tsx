@@ -22,7 +22,6 @@ export const router = createBrowserRouter([
     element: <WorkSpaceListPage />,
   },
   { path: '/dm', element: <DMPage /> },
-  { path: '/client/:workspaceId/:channelId', element: <ChannelPage /> },
   {
     element: <WorkspaceFrame />,
     children: [
@@ -34,6 +33,7 @@ export const router = createBrowserRouter([
         path: `/workspace/:workspaceID`,
         element: <WorkspaceDashboard />,
       },
+      { path: '/client/:workspaceId/:channelId', element: <ChannelPage /> },
     ],
   },
 ]);

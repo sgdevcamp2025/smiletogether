@@ -29,7 +29,7 @@ const Message = ({ user, content, createdAt }: Chat) => {
 
   return (
     <div
-      className={`relative flex gap-2 w-full p-2 transition-colors ${
+      className={`relative flex gap-2 w-full py-2 px-5 transition-colors ${
         isEditing ? 'bg-amber-100' : 'hover:bg-zinc-100'
       }`}
       onMouseEnter={() => setIsHovered(true)}
