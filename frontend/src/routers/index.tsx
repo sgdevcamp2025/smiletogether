@@ -7,11 +7,6 @@ import WorkSpaceListPage from '@/pages/workspace/WorkspaceListPage';
 import WorkspaceCreationProcess from '@/components/workspace/WorkspaceCreationProcess';
 import ChannelPage from '@/pages/channel/ChannelPage';
 import ActivityPage from '@/pages/activity/ActivityPage';
-import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from '@/components/ui/resizable';
 import WorkspaceChannelSidebar from '@/components/workspace/WorkspaceChannelSidebar';
 import SplitPaneLayout from '@/components/common/SplitPaneLayout';
 

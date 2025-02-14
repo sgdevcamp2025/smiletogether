@@ -21,7 +21,6 @@ export const handlers = [
       (item: { workspace_id: string | readonly string[] | undefined }) =>
         item.workspace_id === workspaceId
     );
-    console.log('find', workspace);
     return HttpResponse.json(workspace);
   }),
   http.post('/api/workspaces', async ({ request }) => {
@@ -103,7 +102,6 @@ export const handlers = [
   http.get('/api/chatMessage', ({ request }) => {
     const url = new URL(request.url);
     const channelId = url.searchParams.get('channelId');
-    console.log('chatMessage channelId', channelId);
     if (channelId === dummy.messages.channelId) {
       return HttpResponse.json(dummy.messages);
     }
