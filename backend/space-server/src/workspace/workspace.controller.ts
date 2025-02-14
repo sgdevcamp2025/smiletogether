@@ -58,4 +58,12 @@ export class WorkspaceController {
   ): Promise<WorkspaceDeleteResponseDto> {
     return await this.workspaceService.deleteWorkspaceById(workspaceId, userId);
   }
+
+  @Delete(':workspace_id/leave')
+  async leaveWorkspace(
+    @Param('workspace_id') workspaceId: string,
+    @UserId() userId: string,
+  ): Promise<any> {
+    return await this.workspaceService.leaveWorkspace(workspaceId, userId);
+  }
 }

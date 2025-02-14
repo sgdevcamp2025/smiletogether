@@ -268,4 +268,57 @@ export class WorkspaceService {
       status: 'workspace deleted',
     };
   }
+
+  async leaveWorkspace(workspaceId: string, userId: string): Promise<any> {
+    const workspace = await this.prismaService.workspace.findUnique({
+      where: {
+        workspace_id: workspaceId,
+      },
+      include: {
+        WorkspaceUser: true,
+      },
+    });
+
+    if (!workspace) {
+      throw new NotFoundException(`Workspace with ID ${workspaceId} not found`);
+    }
+
+    const leavingUser = workspace.WorkspaceUser.find(
+      (user) => user.user_id === userId,
+    );
+
+    if (!leavingUser) {
+      throw new NotFoundException(`User is not a member of this workspace`);
+    }
+
+    // 만약 마지막 유저라면 workspace 자체를 삭제
+    if (workspace.WorkspaceUser.length === 1) {
+      await this.prismaService.workspace.delete({
+        where: {
+          workspace_id: workspaceId,
+        },
+      });
+
+      return {
+        message: 'Workspace has been deleted as you were the last member',
+      };
+    }
+
+    // admin이 탈퇴하는 경우, 탈퇴 전 ownership transfer 필요
+    if (leavingUser.role === 'admin')
+      return {
+        error: 'Workspace owner cannot leave. Transfer ownership first.',
+      };
+
+    //user 삭제
+    await this.prismaService.workspaceUser.delete({
+      where: {
+        profile_id: leavingUser.profile_id,
+      },
+    });
+
+    return {
+      message: 'Successfuly deleted',
+    };
+  }
 }
