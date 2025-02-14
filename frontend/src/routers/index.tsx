@@ -36,6 +36,8 @@ export const router = createBrowserRouter([
         path: '',
         element: (
           <SplitPaneLayout
+            leftPannelDefaultSize={30}
+            rightPannelDefaultSize={70}
             children1={<WorkspaceChannelSidebar />}
             children2={<ChannelPage />}
           />

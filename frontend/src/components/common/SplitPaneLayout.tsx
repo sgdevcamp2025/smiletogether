@@ -6,16 +6,27 @@ import {
 } from '@/components/ui/resizable';
 
 interface SplitPaneLayoutProps {
+  leftPannelDefaultSize: number;
+  rightPannelDefaultSize: number;
   children1: React.ReactNode;
   children2: React.ReactNode;
 }
 
-const SplitPaneLayout = ({ children1, children2 }: SplitPaneLayoutProps) => {
+const SplitPaneLayout = ({
+  leftPannelDefaultSize,
+  rightPannelDefaultSize,
+  children1,
+  children2,
+}: SplitPaneLayoutProps) => {
   return (
     <ResizablePanelGroup direction="horizontal">
-      <ResizablePanel defaultSize={20}>{children1}</ResizablePanel>
+      <ResizablePanel defaultSize={leftPannelDefaultSize}>
+        {children1}
+      </ResizablePanel>
       <ResizableHandle withHandle />
-      <ResizablePanel defaultSize={80}>{children2}</ResizablePanel>
+      <ResizablePanel defaultSize={rightPannelDefaultSize}>
+        {children2}
+      </ResizablePanel>
     </ResizablePanelGroup>
   );
 };
