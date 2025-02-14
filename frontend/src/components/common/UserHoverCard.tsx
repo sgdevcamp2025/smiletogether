@@ -7,6 +7,8 @@ import {
 } from '@/components/ui/hover-card';
 import { User } from '@/types/user';
 
+// 이 부분 API 모킹 활용하여여 호버했을 때 데이터를 불러오는 것으로 로직 수정하기!
+
 const UserHoverCard = ({
   username,
   displayName,
