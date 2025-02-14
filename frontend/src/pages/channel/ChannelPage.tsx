@@ -5,15 +5,19 @@ import Message from '@/components/common/Message';
 import { useGetChannel } from '@/hooks/channel/useGetChaneel';
 import { useGetMessages } from '@/hooks/channel/useGetMessage';
 import { useParams } from 'react-router';
+import MessageBox from '@/components/common/MessageBox';
+import { useWebSocket } from '@/hooks/channel/useWebSocket';
 
 const ChannelPage = () => {
   const { workspaceId, channelId } = useParams();
-  const { channelData, isChannelLoading, isChannelError } = useGetChannel(
-    channelId || ''
-  );
-  const { messageData, isMessageLoading, isMessageError } = useGetMessages(
-    channelId || ''
-  );
+  const { channelData, isChannelLoading, isChannelError } =
+    useGetChannel(channelId);
+  const { messageData, isMessageLoading, isMessageError } =
+    useGetMessages(channelId);
+  const { client, messages } = useWebSocket({
+    workspaceId,
+    channelId,
+  });
 
   if (isMessageLoading || isChannelLoading) return <p>로딩중입니다.</p>;
   if (isMessageError || isChannelError) return <p>에러입니다.</p>;
@@ -39,6 +43,7 @@ const ChannelPage = () => {
         </>
       )}
 
+      {/* 이전 메시지 */}
       {messageData?.messages ? (
         Object.entries(messageData.messages).map(([date, messages]) => (
           <div key={date}>
@@ -55,6 +60,25 @@ const ChannelPage = () => {
         ))
       ) : (
         <p>메시지 없음</p>
+      )}
+
+      {/* 웹 소켓에서 전송받은 메시지 */}
+      {messages.map((msg, index) => (
+        <Message
+          key={index} // 이 부분은 나중에 백 구조가 바뀌면 messageId를 넣을 예정입니다!
+          user={msg.user}
+          content={msg.content}
+          createdAt={msg.createdAt}
+        />
+      ))}
+
+      {channelData && client && (
+        <MessageBox
+          channelName={channelData.name}
+          workspaceId={workspaceId!}
+          channelId={channelId!}
+          client={client}
+        />
       )}
     </div>
   );

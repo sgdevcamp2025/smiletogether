@@ -1,7 +1,6 @@
 import { formatTime } from '@/lib/date';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import UserHoverCard from './UserHoverCard';
-import { User } from '@/types/user';
 import { useState } from 'react';
 import {
   Menubar,
@@ -13,15 +12,9 @@ import {
 } from '@/components/ui/menubar';
 import EditBox from './EditBox';
 import { useUserStore } from '@/stores/userStore';
+import { Chat } from '@/types/chat';
 
-interface MessageProps {
-  messageId?: number;
-  user: User;
-  content: string;
-  createdAt: string;
-}
-
-const Message = ({ user, content, createdAt }: MessageProps) => {
+const Message = ({ user, content, createdAt }: Chat) => {
   const { user: currentUser } = useUserStore();
   const [isHovered, setIsHovered] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -54,10 +47,8 @@ const Message = ({ user, content, createdAt }: MessageProps) => {
           <div className="flex gap-2 items-center">
             <UserHoverCard
               userId={user.userId}
-              username={user.username}
               displayName={user.displayName}
               profileImage="https://github.com/shadcn.png"
-              isActive={true}
               isMessage={true}
             />
             <p className="text-zinc-400 text-sm">{formatTime(createdAt)}</p>
