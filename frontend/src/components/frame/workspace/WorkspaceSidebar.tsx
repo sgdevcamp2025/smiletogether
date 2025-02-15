@@ -19,6 +19,10 @@ const WorkspaceSideBar = () => {
     navigate(`/workspace/${workspaceId}`);
   };
 
+  const navigateToCreateWorkspace = () => {
+    navigate(`/workspace/create`);
+  };
+
   return (
     <div className=" min-w-16 bg-yellow-400 text-white flex py-2 flex-col items-center gap-2">
       <div className="flex flex-col items-center justify-center">
@@ -33,7 +37,12 @@ const WorkspaceSideBar = () => {
               </WorkspaceIconButton>
             );
           })}
-        <WorkspaceIconButton className="bg-transparent">+</WorkspaceIconButton>
+        <WorkspaceIconButton
+          className="bg-transparent"
+          onClick={navigateToCreateWorkspace}
+        >
+          +
+        </WorkspaceIconButton>
       </div>
     </div>
   );
