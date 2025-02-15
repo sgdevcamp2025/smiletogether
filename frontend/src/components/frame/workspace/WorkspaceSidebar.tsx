@@ -1,10 +1,11 @@
 import WorkspaceIconButton from '@/components/workspace/WorkspaceIconButton';
 import useUserWorkspacesQuery from '@/hooks/workspace/useUserWorkspacesQuery';
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 
 const WorkspaceSideBar = () => {
   const { data, isLoading, isError } = useUserWorkspacesQuery();
+  const { workspaceID } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,7 +26,7 @@ const WorkspaceSideBar = () => {
           data.workspaces.map((item, index) => {
             return (
               <WorkspaceIconButton
-                className="bg-gray-400 rounded-xl"
+                className={`bg-gray-400 rounded-xl" ${item.workspace_id === workspaceID ? 'bg-gray-300' : null}`}
                 onClick={() => navigateToWorkspace(item.workspace_id)}
               >
                 {item.name ? item.name.slice(0, 2) : 'W'}
