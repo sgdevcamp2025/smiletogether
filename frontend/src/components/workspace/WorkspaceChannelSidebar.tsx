@@ -4,6 +4,7 @@ import useWorkspaceChannelListQuery from '@/hooks/channel/useWorkspaceChannelLis
 import WorkspaceChannelList from '@/components/workspace/WorkspaceSideBar/WorkspaceChannelList';
 import useGetDMListQuery from '@/hooks/dm/useGetDMListQuery';
 import WorkspaceDMList from '@/components/workspace/WorkspaceSideBar/WorkspaceDMList';
+import { useEffect } from 'react';
 
 const WorkspaceChannelSidebar = () => {
   const { workspaceID } = useParams();

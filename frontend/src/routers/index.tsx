@@ -51,7 +51,17 @@ export const router = createBrowserRouter([
         path: 'activity',
         element: <ActivityPage />,
       },
-      { path: 'channel/:channelId', element: <ChannelPage /> },
+      {
+        path: 'channel/:channelId',
+        element: (
+          <SplitPaneLayout
+            leftPannelDefaultSize={30}
+            rightPannelDefaultSize={70}
+            children1={<WorkspaceChannelSidebar />}
+            children2={<ChannelPage />}
+          />
+        ),
+      },
     ],
   },
 ]);
