@@ -13,6 +13,7 @@ export const handlers = [
     return HttpResponse.json(dummy.userProfiles);
   }),
   http.get('/api/workspaces', () => {
+    console.log('나 부름?', db.userWorkspaces);
     return HttpResponse.json(db.userWorkspaces);
   }),
   http.get(`/api/workspaces/:workspaceId`, ({ params }) => {
