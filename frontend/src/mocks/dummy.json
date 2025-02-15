@@ -23,82 +23,62 @@
     "email": "star9207@naver.com",
     "workspaces": [
       {
-        "workspace_id": "workspace_12345",
+        "workspace_id": "workspace_001",
         "name": "Home",
         "profile_image": "https://example.com/home.png",
         "member_count": 1,
         "workspace_members": [
           {
-            "user_id": "user_12345",
-            "profile_image": "https://example.com/user_12345.png"
+            "user_id": "user_001",
+            "profile_image": "https://example.com/user_001.png"
           }
         ]
       },
       {
-        "workspace_id": "workspace_12345",
-        "name": "Home",
-        "profile_image": "https://example.com/home.png",
-        "member_count": 1,
+        "workspace_id": "workspace_002",
+        "name": "Project Alpha",
+        "profile_image": "https://example.com/project_alpha.png",
+        "member_count": 3,
         "workspace_members": [
           {
-            "user_id": "user_12345",
-            "profile_image": "https://example.com/user_12345.png"
-          }
-        ]
-      },
-      {
-        "workspace_id": "workspace_12345",
-        "name": "rweewr",
-        "profile_image": "https://example.com/home.png",
-        "member_count": 1,
-        "workspace_members": [
+            "user_id": "user_002",
+            "profile_image": "https://example.com/user_002.png"
+          },
           {
-            "user_id": "user_12345",
-            "profile_image": "https://example.com/user_12345.png"
+            "user_id": "user_003",
+            "profile_image": "https://example.com/user_003.png"
+          },
+          {
+            "user_id": "user_004",
+            "profile_image": "https://example.com/user_004.png"
           }
         ]
       },
       {
-        "workspace_id": "workspace_67890",
-        "name": "Smilegate DevCamp Community",
+        "workspace_id": "workspace_003",
+        "name": "Smilegate DevCamp",
         "profile_image": "https://example.com/smilegate.png",
-        "member_count": 9,
+        "member_count": 5,
         "workspace_members": [
           {
-            "user_id": "user_67890",
-            "profile_image": "https://example.com/user_67890.png"
+            "user_id": "user_005",
+            "profile_image": "https://example.com/user_005.png"
           },
           {
-            "user_id": "user_23456",
-            "profile_image": "https://example.com/user_23456.png"
+            "user_id": "user_006",
+            "profile_image": "https://example.com/user_006.png"
           },
           {
-            "user_id": "user_34567",
-            "profile_image": "https://example.com/user_34567.png"
+            "user_id": "user_007",
+            "profile_image": "https://example.com/user_007.png"
           },
           {
-            "user_id": "user_67890",
-            "profile_image": "https://example.com/user_67890.png"
+            "user_id": "user_008",
+            "profile_image": "https://example.com/user_008.png"
           },
           {
-            "user_id": "user_23456",
-            "profile_image": "https://example.com/user_23456.png"
-          },
-          {
-            "user_id": "user_34567",
-            "profile_image": "https://example.com/user_34567.png"
-          },
-          {
-            "user_id": "user_67890",
-            "profile_image": "https://example.com/user_67890.png"
-          },
-          {
-            "user_id": "user_23456",
-            "profile_image": "https://example.com/user_23456.png"
-          },
-          {
-            "user_id": "user_34567",
-            "profile_image": "https://example.com/user_34567.png"
+            "user_id": "user_009",
+            "profile_image": "https://example.com/user_009.png"
           }
         ]
       }
