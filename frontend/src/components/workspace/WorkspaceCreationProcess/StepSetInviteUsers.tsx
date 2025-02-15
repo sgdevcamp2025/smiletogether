@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button';
 import { useCreateWorkspace } from '@/hooks/workspace/useCreateWorkspace';
 import { useWorkspaceCreationStore } from '@/stores/workspace';
 import EmailTagInput from '@/components/common/EmailTagInput';
-import ModalPortal from '@/components/common/ModalPortal';
 
 const StepSetInviteUsers = () => {
   const {
@@ -41,7 +40,6 @@ const StepSetInviteUsers = () => {
 
   return (
     <div className="w-1000px">
-      <ModalPortal children={<div>seqweqe</div>} />
       <EmailTagInput
         emails={invitedUsers}
         setEmails={setInvitedUsers}
