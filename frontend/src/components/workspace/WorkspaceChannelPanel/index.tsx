@@ -1,11 +1,13 @@
 import { useParams } from 'react-router';
+import { MdOutlineAddBox } from 'react-icons/md';
+import WorkspaceAccordionSection from '@/components/workspace/WorkspaceAccordionList';
+import WorkspaceChannelListItem from '@/components/workspace/WorkspaceChannelPanel/WorkspaceChannelListItem';
+import WorkspaceDirectMessageListItem from '@/components/workspace/WorkspaceChannelPanel/WorkspaceDirectMessageListItem';
 import useUserWorkspaceQuery from '@/hooks/workspace/useUserWorkspaceQuery';
 import useWorkspaceChannelListQuery from '@/hooks/channel/useWorkspaceChannelListQuery';
-import WorkspaceChannelList from '@/components/workspace/WorkspaceSideBar/WorkspaceChannelList';
 import useGetDMListQuery from '@/hooks/dm/useGetDMListQuery';
-import WorkspaceDMList from '@/components/workspace/WorkspaceSideBar/WorkspaceDMList';
 
-const WorkspaceChannelSidebar = () => {
+const WorkspaceChannelPanel = () => {
   const { workspaceID } = useParams();
 
   const {
@@ -35,13 +37,26 @@ const WorkspaceChannelSidebar = () => {
       <h2 className="mt-3 px-4 scroll-m-20 text-2xl font-semibold tracking-tight text-white">
         {workspacesInfo?.name}
       </h2>
-      <WorkspaceChannelList sectionTitle={'채널'} listItems={channelList} />
-      <WorkspaceDMList
+      <WorkspaceAccordionSection
+        sectionTitle="채널"
+        createButtonIcon={<MdOutlineAddBox />}
+        createButtonText="채널 추가"
+      >
+        {channelList?.map((channel, index) => (
+          <WorkspaceChannelListItem channel={channel} key={index} />
+        ))}
+      </WorkspaceAccordionSection>
+      <WorkspaceAccordionSection
         sectionTitle="다이렉트 메세지"
-        listItems={dmList ? dmList?.dms : []}
-      />
+        createButtonIcon={<MdOutlineAddBox className="text-2xl" />}
+        createButtonText="직장 동류 추가"
+      >
+        {dmList?.dms?.map((dm, index) => (
+          <WorkspaceDirectMessageListItem dm={dm} key={index} />
+        ))}
+      </WorkspaceAccordionSection>
     </div>
   );
 };
 
-export default WorkspaceChannelSidebar;
+export default WorkspaceChannelPanel;

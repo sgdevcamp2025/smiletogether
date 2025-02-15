@@ -1,11 +1,4 @@
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
-import { MdOutlineAddBox } from 'react-icons/md';
 
 interface DMParticipant {
   userId: string;
@@ -26,44 +19,13 @@ interface DirectMessage {
   unreadCount: number;
 }
 
-interface WorkspaceDMListProps {
-  sectionTitle: string;
-  listItems: DirectMessage[];
-}
-
-const WorkspaceDMList = ({ sectionTitle, listItems }: WorkspaceDMListProps) => {
-  return (
-    <Accordion
-      type="single"
-      collapsible
-      className="w-full"
-      defaultValue="item-1"
-    >
-      <AccordionItem value="item-1">
-        <AccordionTrigger className="px-4 pb-0 text-white text-xs ">
-          {sectionTitle}
-        </AccordionTrigger>
-        <AccordionContent className="pb-0">
-          {listItems?.map((dm, index) => {
-            return <WorkspaceDMItem dm={dm} key={index} />;
-          })}
-          <Button className=" w-full bg-transparent shadow-none hover:bg-gray-50 flex justify-start text-xs  py-0 pl-5">
-            <MdOutlineAddBox className="text-2xl" />
-            <span>직장 동료 추가</span>
-          </Button>
-        </AccordionContent>
-      </AccordionItem>
-    </Accordion>
-  );
-};
-
-export default WorkspaceDMList;
-
-interface WorkspaceDMItemProps {
+interface WorkspaceDirectMessageListItemProps {
   dm: DirectMessage;
 }
 
-const WorkspaceDMItem = ({ dm }: WorkspaceDMItemProps) => {
+const WorkspaceDirectMessageListItem = ({
+  dm,
+}: WorkspaceDirectMessageListItemProps) => {
   return (
     <Button className="w-full shadow-none flex items-center justify-start text-xs rounded-lg bg-transparent hover:bg-transparent">
       <div className="relative w-6 h-6 flex-shrink-0 ">
@@ -94,3 +56,5 @@ const WorkspaceDMItem = ({ dm }: WorkspaceDMItemProps) => {
     </Button>
   );
 };
+
+export default WorkspaceDirectMessageListItem;

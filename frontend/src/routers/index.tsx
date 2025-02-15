@@ -7,7 +7,7 @@ import WorkSpaceListPage from '@/pages/workspace/WorkspaceListPage';
 import WorkspaceCreationProcess from '@/components/workspace/WorkspaceCreationProcess';
 import ChannelPage from '@/pages/channel/ChannelPage';
 import ActivityPage from '@/pages/activity/ActivityPage';
-import WorkspaceChannelSidebar from '@/components/workspace/WorkspaceChannelSidebar';
+import WorkspaceChannelPanel from '@/components/workspace/WorkspaceChannelPanel';
 import SplitPaneLayout from '@/components/common/SplitPaneLayout';
 
 export const router = createBrowserRouter([
@@ -38,7 +38,7 @@ export const router = createBrowserRouter([
           <SplitPaneLayout
             leftPannelDefaultSize={30}
             rightPannelDefaultSize={70}
-            children1={<WorkspaceChannelSidebar />}
+            children1={<WorkspaceChannelPanel />}
             children2={<ChannelPage />}
           />
         ),
@@ -57,7 +57,7 @@ export const router = createBrowserRouter([
           <SplitPaneLayout
             leftPannelDefaultSize={30}
             rightPannelDefaultSize={70}
-            children1={<WorkspaceChannelSidebar />}
+            children1={<WorkspaceChannelPanel />}
             children2={<ChannelPage />}
           />
         ),
