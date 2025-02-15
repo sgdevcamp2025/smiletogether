@@ -83,7 +83,6 @@ export const handlers = [
   }),
   http.get(`/api/workspaces/:workspaceId/channels`, ({ request }) => {
     const url = new URL(request.url);
-    console.log(url);
     return HttpResponse.json(dummy.channels);
   }),
   http.get('/api/channel', ({ request }) => {
@@ -112,7 +111,6 @@ export const handlers = [
     );
   }),
   http.get('/api/dms', () => {
-    console.log('dummy.workspacedmList', dummy.workspacedmList);
     return HttpResponse.json(dummy.workspacedmList);
   }),
 ];
