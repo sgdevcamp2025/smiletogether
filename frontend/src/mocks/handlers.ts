@@ -113,6 +113,9 @@ export const handlers = [
       return HttpResponse.json(response, { status: 200 });
     }
   ),
+  http.post(`/api/workspaces/:workspaceId/channels/invite`, request => {
+    return HttpResponse.json({ status: 200 });
+  }),
   http.get(`/api/workspaces/:workspaceId/channels`, ({ request }) => {
     const url = new URL(request.url);
     return HttpResponse.json(dummy.channels);

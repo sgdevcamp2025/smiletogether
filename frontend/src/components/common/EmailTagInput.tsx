@@ -1,11 +1,10 @@
-import { cn, isValidEmail } from '@/lib/utils';
+import { isValidEmail } from '@/lib/utils';
 import React, { useState } from 'react';
 
 interface EmailTagInputProps {
   emails: string[];
   setEmails: (emails: string[]) => void;
   setIsValidEmail: (isValid: boolean) => void;
-  inputType?: 'input' | 'textarea';
   className?: string;
 }
 
@@ -13,7 +12,6 @@ const EmailTagInput = ({
   emails,
   setEmails,
   setIsValidEmail,
-  inputType = 'input',
   className,
 }: EmailTagInputProps) => {
   const [emailInput, setEmailInput] = useState('');
@@ -57,9 +55,12 @@ const EmailTagInput = ({
     <div
       className={`flex flex-wrap items-center gap-2 p-4 border rounded-md ${className}`}
     >
-      {emails.map(tag => {
+      {emails.map((tag, index) => {
         return (
-          <div className="flex items-center px-2  bg-blue-100 rounded-md text-sm ">
+          <div
+            className="flex items-center px-2  bg-blue-100 rounded-md text-sm "
+            key={index}
+          >
             <span className="flex items-center px-2 py-1 rounded-full text-sm">
               {tag}
             </span>

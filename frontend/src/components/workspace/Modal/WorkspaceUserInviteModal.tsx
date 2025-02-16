@@ -6,6 +6,7 @@ import useInviteWorkspaceMutation from '@/hooks/workspace/useInviteWorkspaceMuta
 import { useParams } from 'react-router';
 import useWorkspaceChannelListQuery from '@/hooks/channel/useWorkspaceChannelListQuery';
 import ChannelTagInput from '@/components/common/ChannelTagInput';
+import useInviteChannelMutation from '@/hooks/channel/useInviteChannelMutation';
 
 interface WorkspaceUserInviteModalProps {
   title: string;
@@ -21,12 +22,13 @@ const WorkspaceUserInviteModal = ({
   const [inviteChannel, setInviteChannel] = useState<string[]>([]);
   const [isValid, setIsValid] = useState(false);
   const [customUserIviteMode, setCustomUserIviteMode] = useState(false);
-  const { mutate: inviteUser } = useInviteWorkspaceMutation();
+  const { mutate: inviteUserWorkspace } = useInviteWorkspaceMutation();
   const {
     data: channelList,
     isLoading: channelIsLoading,
     isError: channelIsError,
   } = useWorkspaceChannelListQuery(workspaceID!);
+  const { mutate: inviteUserChannels } = useInviteChannelMutation();
 
   const onCustomUserIviteMode = () => {
     setCustomUserIviteMode(true);
@@ -43,16 +45,35 @@ const WorkspaceUserInviteModal = ({
       return;
     }
 
-    inviteUser(
-      { workspaceId: workspaceID, emails },
-      {
-        onSuccess: data => {
-          console.log(data);
-          alert('완료되었습니다.!');
-          closeModal();
-        },
+    if (!customUserIviteMode) {
+      inviteUserWorkspace(
+        { workspaceId: workspaceID, emails },
+        {
+          onSuccess: data => {
+            alert('완료되었습니다.!');
+            closeModal();
+          },
+        }
+      );
+    } else {
+      if (inviteChannel.length === 0) {
+        alert('초대할 채널을 입력해주세요');
+        return;
       }
-    );
+      inviteUserChannels(
+        {
+          workspaceId: workspaceID,
+          emails: emails,
+          channels: inviteChannel,
+        },
+        {
+          onSuccess: () => {
+            alert('완료되었습니다.');
+            closeModal();
+          },
+        }
+      );
+    }
   };
 
   if (!workspaceID) return <p>워크스페이스 ID가 없습니다.</p>;
