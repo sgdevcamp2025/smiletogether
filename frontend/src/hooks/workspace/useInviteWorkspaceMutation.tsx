@@ -1,7 +1,7 @@
 import { inviteWorkspace } from '@/apis/workspace';
 import { useMutation } from '@tanstack/react-query';
 
-const useInviteWorkspaceQuery = () => {
+const useInviteWorkspaceMutation = () => {
   return useMutation({
     mutationKey: ['inviteWorkspace'],
     mutationFn: ({
@@ -14,4 +14,4 @@ const useInviteWorkspaceQuery = () => {
   });
 };
 
-export default useInviteWorkspaceQuery;
+export default useInviteWorkspaceMutation;

@@ -1,10 +1,11 @@
 import EmailTagInput from '@/components/common/EmailTagInput';
 import ModalPortal from '@/components/common/ModalPortal';
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import useInviteWorkspaceQuery from '@/hooks/workspace/useInviteWorkspaceQuery';
+import useInviteWorkspaceMutation from '@/hooks/workspace/useInviteWorkspaceMutation';
 import { useParams } from 'react-router';
+import useWorkspaceChannelListQuery from '@/hooks/channel/useWorkspaceChannelListQuery';
 
 interface WorkspaceUserInviteModalProps {
   title: string;
@@ -19,25 +20,57 @@ const WorkspaceUserInviteModal = ({
   const [emails, setEmails] = useState<string[]>([]);
   const [isValid, setIsValid] = useState(false);
   const [customUserIviteMode, setCustomUserIviteMode] = useState(false);
+  const [channelInput, setChannelInput] = useState('');
+  const { mutate: inviteUser } = useInviteWorkspaceMutation();
+  const {
+    data: channelList,
+    isLoading: channelIsLoading,
+    isError: channelIsError,
+  } = useWorkspaceChannelListQuery(workspaceID!);
 
   const onCustomUserIviteMode = () => {
     setCustomUserIviteMode(true);
   };
 
-  const { mutate: inviteUser } = useInviteWorkspaceQuery();
   const handleSubmit = () => {
-    if (!workspaceID || emails.length === 0) return;
+    if (!workspaceID) {
+      alert('워크스페이스 ID가 없습니다.');
+      return;
+    }
+
+    if (emails.length === 0) {
+      alert('초대할 이메일을 입력하세요.');
+      return;
+    }
+
     inviteUser(
       { workspaceId: workspaceID, emails },
       {
         onSuccess: data => {
           console.log(data);
           alert('완료되었습니다.!');
-          closeModal(true);
+          closeModal();
         },
       }
     );
   };
+
+  useEffect(() => {
+    console.log('검색어 입력됨:', channelInput);
+  }, [channelInput]);
+
+  const handleChannelInput = (e: ChangeEvent<HTMLInputElement>) => {
+    setChannelInput(e.target.value);
+  };
+
+  const filteredChannel = (channelList ?? []).filter(
+    channel =>
+      channelInput.trim() === '' ||
+      channel.name.toLowerCase().includes(channelInput.toLowerCase())
+  );
+  if (!workspaceID) return <p>워크스페이스 ID가 없습니다.</p>;
+  if (channelIsLoading) return <p>로딩중입니다.</p>;
+  if (channelIsError) return <p>에러입니다.</p>;
 
   return (
     <ModalPortal>
@@ -61,10 +94,11 @@ const WorkspaceUserInviteModal = ({
               setIsValidEmail={setIsValid}
             />
           </div>
+          <span>{isValid && '올바른 이메일 형식이 아닙니다'}</span>
         </div>
         {!customUserIviteMode ? (
           <Button
-            className="mt-3 text-blue-600 hover:underline text-sm w-full py-6 bg-gray-100"
+            className="mt-3 text-blue-600 hover:underline text-sm w-full py-6 bg-gray-100 hover:bg-yellow-200"
             onClick={onCustomUserIviteMode}
           >
             ✨ 초대 사용자 지정
@@ -76,11 +110,21 @@ const WorkspaceUserInviteModal = ({
               새 멤버는 워크스페이스의 아래 채널과 기본 채널에 자동으로 참여하게
               됩니다.
             </p>
-            <Input placeholder="채널 검색" />
+            <Input
+              placeholder="채널 검색"
+              onChange={handleChannelInput}
+              value={channelInput}
+            />
+            <div>
+              {channelInput.length > 0 &&
+                filteredChannel?.map(item => {
+                  return <div>{item.name}</div>;
+                })}
+            </div>
           </div>
         )}
         <div className="mt-6 flex justify-between border-t pt-4">
-          <Button className="text-blue-500 hover:underline text-sm bg-transparent shadow-none ">
+          <Button className="text-blue-500 hover:bg-yellow-200 text-sm bg-transparent shadow-none ">
             🔗 초대 링크 복사
           </Button>
           <Button
