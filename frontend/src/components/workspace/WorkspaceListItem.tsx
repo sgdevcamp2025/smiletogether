@@ -25,7 +25,7 @@ const WorkspaceListItem = ({
 }: WorkspaceListItemProps) => {
   const navigate = useNavigate();
 
-  const handleNavigate = (workspaceId: string) => {
+  const navigateToWorkspace = (workspaceId: string) => {
     navigate(`/workspace/${workspaceId}`);
   };
 
@@ -40,7 +40,7 @@ const WorkspaceListItem = ({
       <div
         className="ml-auto text-gray-400"
         onClick={() => {
-          handleNavigate(workspaceId);
+          navigateToWorkspace(workspaceId);
         }}
       >
         <ArrorIcon />

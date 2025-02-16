@@ -11,6 +11,7 @@ const MainNavigationSidebar = () => {
   const { data: workspaceChannelList } = useWorkspaceChannelListQuery(
     workspaceID!
   );
+
   return (
     <div className=" min-w-16 bg-yellow-200 text-white flex py-3 flex-col items-center border-r-2">
       {icons.map((item, index) => {
