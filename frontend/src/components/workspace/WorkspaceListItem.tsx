@@ -30,7 +30,7 @@ const WorkspaceListItem = ({
   };
 
   return (
-    <div className="flex items-center px-6 py-4 w-full max-w-lg border  shadow hover:bg-gray-50">
+    <div className="flex items-center px-6 py-4 w-full border  shadow hover:bg-gray-50">
       <Avatar src={profileImage} alt="workspace_profile_image" fallback="CN" />
       <WorkspaceListItemDetail
         name={name}

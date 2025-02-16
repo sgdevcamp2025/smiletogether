@@ -16,9 +16,9 @@ const WorkSpaceListPage = () => {
   };
 
   return (
-    <div className="h-screen flex items-center justify-center flex-col">
+    <div className="h-screen flex items-center justify-center flex-col w-full">
       <Button
-        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        className="px-40 py-4 bg-yellow-400 text-white rounded hover:bg-yellow-200"
         onClick={navigateToCreateWorkspace}
       >
         워크스페이스 생성
@@ -26,8 +26,8 @@ const WorkSpaceListPage = () => {
       <blockquote className="my-10 text-gray-400 italic">
         아래에서 워크스페이스를 선택하여 팀과 계속 협업하세요.
       </blockquote>
-      <Card className="w-full max-w-lg mt-5">
-        <div className="flex items-center px-6 py-4 w-full max-w-lg border  shadow hover:bg-gray-50">
+      <Card className="w-2/5 max-w-2lg mt-5">
+        <div className="flex items-center px-6 py-4 w-full border  shadow hover:bg-gray-50">
           <h1 className="text-lg font-semibold">{data && data.email}</h1>
           <div className="text-gray-600">님의 워크스페이스 관리 </div>
         </div>
