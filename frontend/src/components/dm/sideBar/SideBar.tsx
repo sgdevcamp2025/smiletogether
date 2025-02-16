@@ -33,7 +33,7 @@ const DM_DATA = [
 
 const SideBar = () => {
   return (
-    <div className="flex flex-col w-[500px] h-screen bg-amber-200 gap-2">
+    <div className="flex flex-col  h-screen bg-amber-200 gap-2">
       <SideBarHeader />
       <div className="flex flex-col">
         {DM_DATA.map((dm, index) => (

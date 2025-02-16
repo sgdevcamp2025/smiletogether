@@ -24,3 +24,14 @@ export const postWorkspace = async (
   const { data } = await https.post('/api/workspaces', workspaceInfo);
   return data;
 };
+
+export const inviteWorkspace = async (
+  workspaceId: string,
+  emails: string[]
+) => {
+  const { data } = await https.post(
+    `/api/workspaces/${workspaceId}/invite`,
+    emails
+  );
+  return data;
+};

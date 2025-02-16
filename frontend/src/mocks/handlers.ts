@@ -8,6 +8,11 @@ import {
 
 let db = JSON.parse(JSON.stringify(dummy));
 
+interface InvitedUser {
+  user_id: string;
+  status: string;
+}
+
 export const handlers = [
   http.get('/api/users', () => {
     return HttpResponse.json(dummy.userProfiles);
@@ -21,7 +26,6 @@ export const handlers = [
       (item: { workspace_id: string | readonly string[] | undefined }) =>
         item.workspace_id === workspaceId
     );
-    console.log('find', workspace);
     return HttpResponse.json(workspace);
   }),
   http.post('/api/workspaces', async ({ request }) => {
@@ -81,17 +85,44 @@ export const handlers = [
       );
     }
   }),
+  http.post(
+    `/api/workspaces/:workspaceId/invite`,
+    async ({ request, params }) => {
+      const requestBody = await request.json();
+      if (!requestBody || !Array.isArray(requestBody)) {
+        return HttpResponse.json(
+          {
+            message: '입력된 이메일이 없습니다!',
+          },
+          { status: 400 }
+        );
+      }
+      const { workspaceId } = params;
+      const inviteUserListResult: InvitedUser[] = [];
+      requestBody.map(email => {
+        inviteUserListResult.push({
+          user_id: email,
+          status: 'invitation_sent',
+        });
+      });
+      const response = {
+        workspace_id: workspaceId,
+        invited_users: inviteUserListResult,
+      };
+      return HttpResponse.json(response, { status: 200 });
+    }
+  ),
+  http.post(`/api/workspaces/:workspaceId/channels/invite`, request => {
+    return HttpResponse.json({ status: 200 });
+  }),
   http.get(`/api/workspaces/:workspaceId/channels`, ({ request }) => {
     const url = new URL(request.url);
-    console.log(url);
     return HttpResponse.json(dummy.channels);
   }),
   http.get('/api/channel', ({ request }) => {
     const url = new URL(request.url);
     const channelId = url.searchParams.get('channelId');
-
-    const channel = dummy.channel.find(c => c.channelId === channelId);
-
+    const channel = dummy.channel.find(c => c.channelId === '12345');
     if (channel) {
       return HttpResponse.json(channel);
     }
@@ -104,8 +135,7 @@ export const handlers = [
   http.get('/api/chatMessage', ({ request }) => {
     const url = new URL(request.url);
     const channelId = url.searchParams.get('channelId');
-
-    if (channelId === dummy.messages.channelId) {
+    if ('12345' === dummy.messages.channelId) {
       return HttpResponse.json(dummy.messages);
     }
 
@@ -113,5 +143,8 @@ export const handlers = [
       { message: '채널을 찾을 수 없습니다.' },
       { status: 404 }
     );
+  }),
+  http.get('/api/dms', () => {
+    return HttpResponse.json(dummy.workspacedmList);
   }),
 ];

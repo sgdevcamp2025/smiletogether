@@ -23,82 +23,62 @@
     "email": "star9207@naver.com",
     "workspaces": [
       {
-        "workspace_id": "workspace_12345",
+        "workspace_id": "workspace_001",
         "name": "Home",
         "profile_image": "https://example.com/home.png",
         "member_count": 1,
         "workspace_members": [
           {
-            "user_id": "user_12345",
-            "profile_image": "https://example.com/user_12345.png"
+            "user_id": "user_001",
+            "profile_image": "https://example.com/user_001.png"
           }
         ]
       },
       {
-        "workspace_id": "workspace_12345",
-        "name": "Home",
-        "profile_image": "https://example.com/home.png",
-        "member_count": 1,
+        "workspace_id": "workspace_002",
+        "name": "Project Alpha",
+        "profile_image": "https://example.com/project_alpha.png",
+        "member_count": 3,
         "workspace_members": [
           {
-            "user_id": "user_12345",
-            "profile_image": "https://example.com/user_12345.png"
-          }
-        ]
-      },
-      {
-        "workspace_id": "workspace_12345",
-        "name": "rweewr",
-        "profile_image": "https://example.com/home.png",
-        "member_count": 1,
-        "workspace_members": [
+            "user_id": "user_002",
+            "profile_image": "https://example.com/user_002.png"
+          },
           {
-            "user_id": "user_12345",
-            "profile_image": "https://example.com/user_12345.png"
+            "user_id": "user_003",
+            "profile_image": "https://example.com/user_003.png"
+          },
+          {
+            "user_id": "user_004",
+            "profile_image": "https://example.com/user_004.png"
           }
         ]
       },
       {
-        "workspace_id": "workspace_67890",
-        "name": "Smilegate DevCamp Community",
+        "workspace_id": "workspace_003",
+        "name": "Smilegate DevCamp",
         "profile_image": "https://example.com/smilegate.png",
-        "member_count": 9,
+        "member_count": 5,
         "workspace_members": [
           {
-            "user_id": "user_67890",
-            "profile_image": "https://example.com/user_67890.png"
+            "user_id": "user_005",
+            "profile_image": "https://example.com/user_005.png"
           },
           {
-            "user_id": "user_23456",
-            "profile_image": "https://example.com/user_23456.png"
+            "user_id": "user_006",
+            "profile_image": "https://example.com/user_006.png"
           },
           {
-            "user_id": "user_34567",
-            "profile_image": "https://example.com/user_34567.png"
+            "user_id": "user_007",
+            "profile_image": "https://example.com/user_007.png"
           },
           {
-            "user_id": "user_67890",
-            "profile_image": "https://example.com/user_67890.png"
+            "user_id": "user_008",
+            "profile_image": "https://example.com/user_008.png"
           },
           {
-            "user_id": "user_23456",
-            "profile_image": "https://example.com/user_23456.png"
-          },
-          {
-            "user_id": "user_34567",
-            "profile_image": "https://example.com/user_34567.png"
-          },
-          {
-            "user_id": "user_67890",
-            "profile_image": "https://example.com/user_67890.png"
-          },
-          {
-            "user_id": "user_23456",
-            "profile_image": "https://example.com/user_23456.png"
-          },
-          {
-            "user_id": "user_34567",
-            "profile_image": "https://example.com/user_34567.png"
+            "user_id": "user_009",
+            "profile_image": "https://example.com/user_009.png"
           }
         ]
       }
@@ -281,5 +261,88 @@
         }
       ]
     }
+  },
+  "workspacedmList": {
+    "userId": "1",
+    "dms": [
+      {
+        "dmId": "dm_001",
+        "participants": [
+          {
+            "userId": "2",
+            "username": "Subin Kim",
+            "profileImage": "https://example.com/profile/subin.jpg"
+          },
+          {
+            "userId": "4",
+            "username": "박건우",
+            "profileImage": "https://example.com/profile/geonwoo.jpg"
+          },
+          {
+            "userId": "5",
+            "username": "이지은",
+            "profileImage": "https://example.com/profile/jieun.jpg"
+          },
+          {
+            "userId": "2",
+            "username": "Subin Kim",
+            "profileImage": "https://example.com/profile/subin.jpg"
+          },
+          {
+            "userId": "4",
+            "username": "박건우",
+            "profileImage": "https://example.com/profile/geonwoo.jpg"
+          },
+          {
+            "userId": "5",
+            "username": "이지은",
+            "profileImage": "https://example.com/profile/jieun.jpg"
+          }
+        ],
+        "lastMessage": {
+          "senderId": "1",
+          "content": "다음에 봬요! 😆",
+          "createdAt": "2025-01-13T10:30:00Z"
+        },
+        "unreadCount": 2
+      },
+      {
+        "dmId": "dm_002",
+        "participants": [
+          {
+            "userId": "3",
+            "username": "안연아",
+            "profileImage": "https://example.com/profile/anya.jpg"
+          },
+          {
+            "userId": "6",
+            "username": "김민재",
+            "profileImage": "https://example.com/profile/minjae.jpg"
+          }
+        ],
+        "lastMessage": {
+          "senderId": "3",
+          "content": "이건 고객센터용 공간입니다.",
+          "createdAt": "2025-01-12T15:20:00Z"
+        },
+        "unreadCount": 0
+      },
+      {
+        "dmId": "dm_003",
+        "participants": [
+          {
+            "userId": "7",
+            "username": "정수빈",
+            "profileImage": "https://example.com/profile/subin2.jpg"
+          }
+        ],
+        "lastMessage": {
+          "senderId": "8",
+          "content": "내일 일정 공유 부탁드립니다!",
+          "createdAt": "2025-01-11T18:45:00Z"
+        },
+        "unreadCount": 1
+      }
+    ]
   }
 }
