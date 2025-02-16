@@ -26,7 +26,7 @@ const WorkspaceListItem = ({
   const navigate = useNavigate();
 
   const handleNavigate = (workspaceId: string) => {
-    navigate(`/client/${workspaceId}`);
+    navigate(`/workspace/${workspaceId}`);
   };
 
   return (
