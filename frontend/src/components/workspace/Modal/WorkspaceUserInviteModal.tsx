@@ -1,8 +1,10 @@
 import EmailTagInput from '@/components/common/EmailTagInput';
 import ModalPortal from '@/components/common/ModalPortal';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import useInviteWorkspaceQuery from '@/hooks/workspace/useInviteWorkspaceQuery';
+import { useParams } from 'react-router';
 
 interface WorkspaceUserInviteModalProps {
   title: string;
@@ -13,12 +15,28 @@ const WorkspaceUserInviteModal = ({
   title,
   closeModal,
 }: WorkspaceUserInviteModalProps) => {
+  const { workspaceID, channelId } = useParams();
   const [emails, setEmails] = useState<string[]>([]);
   const [isValid, setIsValid] = useState(false);
   const [customUserIviteMode, setCustomUserIviteMode] = useState(false);
 
   const onCustomUserIviteMode = () => {
     setCustomUserIviteMode(true);
+  };
+
+  const { mutate: inviteUser } = useInviteWorkspaceQuery();
+  const handleSubmit = () => {
+    if (!workspaceID || emails.length === 0) return;
+    inviteUser(
+      { workspaceId: workspaceID, emails },
+      {
+        onSuccess: data => {
+          console.log(data);
+          alert('완료되었습니다.!');
+          closeModal(true);
+        },
+      }
+    );
   };
 
   return (
@@ -28,7 +46,7 @@ const WorkspaceUserInviteModal = ({
           <h1 className="text-lg font-semibold">{title}(으)로 사용자 초대</h1>
           <Button
             onClick={closeModal}
-            className="text-gray-500 hover:text-gray-700 bg-transparent shadow-none"
+            className="text-gray-500 hover:text-gray-700 bg-transparent shadow-none hover:bg-yellow-200"
           >
             x
           </Button>
@@ -65,7 +83,10 @@ const WorkspaceUserInviteModal = ({
           <Button className="text-blue-500 hover:underline text-sm bg-transparent shadow-none ">
             🔗 초대 링크 복사
           </Button>
-          <Button className="text-gray-500 hover:text-gray-700 text-sm font-black bg-gray-100 shadow-none px-6">
+          <Button
+            className="text-gray-500 hover:text-gray-700 text-sm font-black bg-gray-100 shadow-none px-6 hover:bg-yellow-200"
+            onClick={handleSubmit}
+          >
             보내기
           </Button>
         </div>

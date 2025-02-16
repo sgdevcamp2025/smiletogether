@@ -8,6 +8,11 @@ import {
 
 let db = JSON.parse(JSON.stringify(dummy));
 
+interface InvitedUser {
+  user_id: string;
+  status: string;
+}
+
 export const handlers = [
   http.get('/api/users', () => {
     return HttpResponse.json(dummy.userProfiles);
@@ -81,6 +86,33 @@ export const handlers = [
       );
     }
   }),
+  http.post(
+    `/api/workspaces/:workspaceId/invite`,
+    async ({ request, params }) => {
+      const requestBody = await request.json();
+      if (!requestBody || !Array.isArray(requestBody)) {
+        return HttpResponse.json(
+          {
+            message: '입력된 이메일이 없습니다!',
+          },
+          { status: 400 }
+        );
+      }
+      const { workspaceId } = params;
+      const inviteUserListResult: InvitedUser[] = [];
+      requestBody.map(email => {
+        inviteUserListResult.push({
+          user_id: email,
+          status: 'invitation_sent',
+        });
+      });
+      const response = {
+        workspace_id: workspaceId,
+        invited_users: inviteUserListResult,
+      };
+      return HttpResponse.json(response, { status: 200 });
+    }
+  ),
   http.get(`/api/workspaces/:workspaceId/channels`, ({ request }) => {
     const url = new URL(request.url);
     return HttpResponse.json(dummy.channels);
