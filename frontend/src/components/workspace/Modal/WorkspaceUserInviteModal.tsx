@@ -2,6 +2,7 @@ import EmailTagInput from '@/components/common/EmailTagInput';
 import ModalPortal from '@/components/common/ModalPortal';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 interface WorkspaceUserInviteModalProps {
   title: string;
@@ -14,6 +15,11 @@ const WorkspaceUserInviteModal = ({
 }: WorkspaceUserInviteModalProps) => {
   const [emails, setEmails] = useState<string[]>([]);
   const [isValid, setIsValid] = useState(false);
+  const [customUserIviteMode, setCustomUserIviteMode] = useState(false);
+
+  const onCustomUserIviteMode = () => {
+    setCustomUserIviteMode(true);
+  };
 
   return (
     <ModalPortal>
@@ -38,10 +44,23 @@ const WorkspaceUserInviteModal = ({
             />
           </div>
         </div>
-
-        <Button className="mt-3 text-blue-600 hover:underline text-sm w-full py-6 bg-gray-100">
-          ✨ 초대 사용자 지정
-        </Button>
+        {!customUserIviteMode ? (
+          <Button
+            className="mt-3 text-blue-600 hover:underline text-sm w-full py-6 bg-gray-100"
+            onClick={onCustomUserIviteMode}
+          >
+            ✨ 초대 사용자 지정
+          </Button>
+        ) : (
+          <div className="mt-4">
+            <h3 className="font-bold">채널</h3>
+            <p className="text-gray-400 my-1">
+              새 멤버는 워크스페이스의 아래 채널과 기본 채널에 자동으로 참여하게
+              됩니다.
+            </p>
+            <Input placeholder="채널 검색" />
+          </div>
+        )}
         <div className="mt-6 flex justify-between border-t pt-4">
           <Button className="text-blue-500 hover:underline text-sm bg-transparent shadow-none ">
             🔗 초대 링크 복사
