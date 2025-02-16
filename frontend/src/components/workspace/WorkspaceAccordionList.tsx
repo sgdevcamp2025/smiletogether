@@ -12,6 +12,7 @@ interface WorkspaceAccordionSectionProps {
   children: React.ReactNode;
   createButtonIcon?: React.ReactNode;
   createButtonText?: string;
+  createButtonOnClick?: () => void;
 }
 
 const WorkspaceAccordionSection = ({
@@ -19,6 +20,7 @@ const WorkspaceAccordionSection = ({
   children,
   createButtonIcon,
   createButtonText,
+  createButtonOnClick,
 }: WorkspaceAccordionSectionProps) => {
   return (
     <Accordion
@@ -33,7 +35,10 @@ const WorkspaceAccordionSection = ({
         </AccordionTrigger>
         <AccordionContent className="pb-0">
           {children}
-          <Button className=" w-full bg-transparent shadow-none hover:bg-gray-50 flex justify-start text-xs  py-0">
+          <Button
+            className=" w-full bg-transparent shadow-none hover:bg-gray-50 flex justify-start text-xs  py-0"
+            onClick={createButtonOnClick}
+          >
             {createButtonIcon}
             <span>{createButtonText}</span>
           </Button>

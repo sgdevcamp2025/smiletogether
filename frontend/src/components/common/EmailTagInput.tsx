@@ -55,7 +55,7 @@ const EmailTagInput = ({
 
   return (
     <div
-      className={`flex flex-wrap items-center gap-2 p-4 border rounded-md max-w-xl ${className}`}
+      className={`flex flex-wrap items-center gap-2 p-4 border rounded-md ${className}`}
     >
       {emails.map(tag => {
         return (

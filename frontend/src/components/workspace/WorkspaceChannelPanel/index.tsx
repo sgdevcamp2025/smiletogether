@@ -6,9 +6,12 @@ import WorkspaceDirectMessageListItem from '@/components/workspace/WorkspaceChan
 import useUserWorkspaceQuery from '@/hooks/workspace/useUserWorkspaceQuery';
 import useWorkspaceChannelListQuery from '@/hooks/channel/useWorkspaceChannelListQuery';
 import useGetDMListQuery from '@/hooks/dm/useGetDMListQuery';
+import { useState } from 'react';
+import WorkspaceUserInviteModal from '@/components/workspace/Modal/WorkspaceUserInviteModal';
 
 const WorkspaceChannelPanel = () => {
   const { workspaceID } = useParams();
+  const [onModal, setOnModal] = useState(false);
 
   const {
     data: workspacesInfo,
@@ -32,6 +35,14 @@ const WorkspaceChannelPanel = () => {
   if (isChannelError || isWorkspaceError || isDMError)
     return <p>에러가 발생했습니다!</p>;
 
+  const openAddColleagueModal = () => {
+    setOnModal(true);
+  };
+
+  const offAddColleagueModal = () => {
+    setOnModal(false);
+  };
+
   return (
     <div className=" min-w-16 bg-yellow-200 text-white flex py-2 flex-col gap-2 text-wrap h-screen">
       <h2 className="mt-3 px-4 scroll-m-20 text-2xl font-semibold tracking-tight text-white">
@@ -50,11 +61,18 @@ const WorkspaceChannelPanel = () => {
         sectionTitle="다이렉트 메세지"
         createButtonIcon={<MdOutlineAddBox className="text-2xl" />}
         createButtonText="직장 동류 추가"
+        createButtonOnClick={openAddColleagueModal}
       >
         {dmList?.dms?.map((dm, index) => (
           <WorkspaceDirectMessageListItem dm={dm} key={index} />
         ))}
       </WorkspaceAccordionSection>
+      {onModal && (
+        <WorkspaceUserInviteModal
+          title={workspacesInfo?.name ?? ''}
+          closeModal={offAddColleagueModal}
+        />
+      )}
     </div>
   );
 };
