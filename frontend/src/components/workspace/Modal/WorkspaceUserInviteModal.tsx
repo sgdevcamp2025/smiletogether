@@ -17,7 +17,7 @@ const WorkspaceUserInviteModal = ({
   title,
   closeModal,
 }: WorkspaceUserInviteModalProps) => {
-  const { workspaceID, channelId } = useParams();
+  const { workspaceID } = useParams();
   const [emails, setEmails] = useState<string[]>([]);
   const [inviteChannel, setInviteChannel] = useState<string[]>([]);
   const [isValid, setIsValid] = useState(false);
@@ -49,7 +49,7 @@ const WorkspaceUserInviteModal = ({
       inviteUserWorkspace(
         { workspaceId: workspaceID, emails },
         {
-          onSuccess: data => {
+          onSuccess: () => {
             alert('완료되었습니다.!');
             closeModal();
           },
