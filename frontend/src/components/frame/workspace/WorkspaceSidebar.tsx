@@ -19,7 +19,7 @@ const WorkspaceSideBar = () => {
   };
 
   return (
-    <div className=" min-w-16 bg-yellow-400 text-white flex py-2 flex-col items-center gap-2">
+    <div className=" min-w-20 bg-yellow-400 text-white flex py-2 flex-col items-center gap-2">
       <div className="flex flex-col items-center justify-center">
         {data &&
           data.workspaces.map(item => {
