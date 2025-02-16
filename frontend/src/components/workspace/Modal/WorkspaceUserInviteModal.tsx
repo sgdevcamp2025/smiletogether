@@ -1,11 +1,11 @@
 import EmailTagInput from '@/components/common/EmailTagInput';
 import ModalPortal from '@/components/common/ModalPortal';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import useInviteWorkspaceMutation from '@/hooks/workspace/useInviteWorkspaceMutation';
 import { useParams } from 'react-router';
 import useWorkspaceChannelListQuery from '@/hooks/channel/useWorkspaceChannelListQuery';
+import ChannelTagInput from '@/components/common/ChannelTagInput';
 
 interface WorkspaceUserInviteModalProps {
   title: string;
@@ -18,9 +18,9 @@ const WorkspaceUserInviteModal = ({
 }: WorkspaceUserInviteModalProps) => {
   const { workspaceID, channelId } = useParams();
   const [emails, setEmails] = useState<string[]>([]);
+  const [inviteChannel, setInviteChannel] = useState<string[]>([]);
   const [isValid, setIsValid] = useState(false);
   const [customUserIviteMode, setCustomUserIviteMode] = useState(false);
-  const [channelInput, setChannelInput] = useState('');
   const { mutate: inviteUser } = useInviteWorkspaceMutation();
   const {
     data: channelList,
@@ -55,19 +55,6 @@ const WorkspaceUserInviteModal = ({
     );
   };
 
-  useEffect(() => {
-    console.log('검색어 입력됨:', channelInput);
-  }, [channelInput]);
-
-  const handleChannelInput = (e: ChangeEvent<HTMLInputElement>) => {
-    setChannelInput(e.target.value);
-  };
-
-  const filteredChannel = (channelList ?? []).filter(
-    channel =>
-      channelInput.trim() === '' ||
-      channel.name.toLowerCase().includes(channelInput.toLowerCase())
-  );
   if (!workspaceID) return <p>워크스페이스 ID가 없습니다.</p>;
   if (channelIsLoading) return <p>로딩중입니다.</p>;
   if (channelIsError) return <p>에러입니다.</p>;
@@ -110,17 +97,11 @@ const WorkspaceUserInviteModal = ({
               새 멤버는 워크스페이스의 아래 채널과 기본 채널에 자동으로 참여하게
               됩니다.
             </p>
-            <Input
-              placeholder="채널 검색"
-              onChange={handleChannelInput}
-              value={channelInput}
+            <ChannelTagInput
+              selectedChannels={inviteChannel}
+              availableChannels={channelList ?? []}
+              setSelectedChannels={setInviteChannel}
             />
-            <div>
-              {channelInput.length > 0 &&
-                filteredChannel?.map(item => {
-                  return <div>{item.name}</div>;
-                })}
-            </div>
           </div>
         )}
         <div className="mt-6 flex justify-between border-t pt-4">
