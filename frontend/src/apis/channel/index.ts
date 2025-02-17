@@ -22,3 +22,18 @@ export const getWorkspaceChannels = async (
   const { data } = await https.get(`/api/workspaces/${workspaceId}/channels`);
   return data;
 };
+
+export const postInviteWorkspaceChannels = async (
+  workspaceId: string,
+  emails: string[],
+  channels: string[]
+) => {
+  const { data } = await https.post(
+    `/api/workspaces/${workspaceId}/channels/invite`,
+    {
+      emails,
+      channels,
+    }
+  );
+  return data;
+};

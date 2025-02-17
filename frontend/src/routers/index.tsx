@@ -4,9 +4,11 @@ import LoginPage from '@/pages/login/LoginPage';
 import WorkspaceFrame from '@/components/frame/workspace/WorkspaceFrame';
 import ConfirmEmailPage from '@/pages/login/ConfirmEmailPage';
 import WorkSpaceListPage from '@/pages/workspace/WorkspaceListPage';
-import WorkspaceDashboard from '@/components/workspace/WorkspaceDashboard';
 import WorkspaceCreationProcess from '@/components/workspace/WorkspaceCreationProcess';
 import ChannelPage from '@/pages/channel/ChannelPage';
+import ActivityPage from '@/pages/activity/ActivityPage';
+import WorkspaceChannelPanel from '@/components/workspace/WorkspaceChannelPanel';
+import SplitPaneLayout from '@/components/common/SplitPaneLayout';
 
 export const router = createBrowserRouter([
   {
@@ -21,17 +23,43 @@ export const router = createBrowserRouter([
     path: '/workspaces',
     element: <WorkSpaceListPage />,
   },
-  { path: '/dm', element: <DMPage /> },
   {
+    path: '/workspace/create',
+    element: <WorkspaceCreationProcess />,
+  },
+  {
+    path: '/workspace/:workspaceID',
     element: <WorkspaceFrame />,
     children: [
       {
-        path: '/workspace/create',
-        element: <WorkspaceCreationProcess />,
+        path: '',
+        element: (
+          <SplitPaneLayout
+            leftPannelDefaultSize={30}
+            rightPannelDefaultSize={70}
+            children1={<WorkspaceChannelPanel />}
+            children2={<ChannelPage />}
+          />
+        ),
       },
       {
-        path: `/workspace/:workspaceID`,
-        element: <WorkspaceDashboard />,
+        path: 'dm',
+        element: <DMPage />,
+      },
+      {
+        path: 'activity',
+        element: <ActivityPage />,
+      },
+      {
+        path: 'channel/:channelId',
+        element: (
+          <SplitPaneLayout
+            leftPannelDefaultSize={30}
+            rightPannelDefaultSize={70}
+            children1={<WorkspaceChannelPanel />}
+            children2={<ChannelPage />}
+          />
+        ),
       },
       { path: '/workspace/:workspaceId/:channelId', element: <ChannelPage /> },
     ],

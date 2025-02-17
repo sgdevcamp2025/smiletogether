@@ -25,12 +25,12 @@ const WorkspaceListItem = ({
 }: WorkspaceListItemProps) => {
   const navigate = useNavigate();
 
-  const handleNavigate = (workspaceId: string) => {
-    navigate(`/client/${workspaceId}`);
+  const navigateToWorkspace = (workspaceId: string) => {
+    navigate(`/workspace/${workspaceId}`);
   };
 
   return (
-    <div className="flex items-center px-6 py-4 w-full max-w-lg border  shadow hover:bg-gray-50">
+    <div className="flex items-center px-6 py-4 w-full border  shadow hover:bg-gray-50">
       <Avatar src={profileImage} alt="workspace_profile_image" fallback="CN" />
       <WorkspaceListItemDetail
         name={name}
@@ -40,7 +40,7 @@ const WorkspaceListItem = ({
       <div
         className="ml-auto text-gray-400"
         onClick={() => {
-          handleNavigate(workspaceId);
+          navigateToWorkspace(workspaceId);
         }}
       >
         <ArrorIcon />
