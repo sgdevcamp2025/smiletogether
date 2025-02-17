@@ -212,4 +212,57 @@ export class ChannelService {
       channelId: newChannelUser.channel_id,
     };
   }
+
+  async leaveChannel(channelId: string, userId: string): Promise<any> {
+    const channel = await this.prismaService.channel.findUnique({
+      where: {
+        channel_id: channelId,
+      },
+      include: {
+        ChannelUser: true,
+      },
+    });
+
+    if (!channel) {
+      throw new NotFoundException(`Workspace with ID ${channelId} not found`);
+    }
+
+    const leavingUser = channel.ChannelUser.find(
+      (user) => user.user_id === userId,
+    );
+
+    if (!leavingUser) {
+      throw new NotFoundException(`User is not a member of this channel`);
+    }
+
+    // 만약 마지막 유저라면 channel 자체를 삭제
+    if (channel.ChannelUser.length === 1) {
+      await this.prismaService.channel.delete({
+        where: {
+          channel_id: channelId,
+        },
+      });
+
+      return {
+        message: 'Channel has been deleted as you were the last member',
+      };
+    }
+
+    // admin이 탈퇴하는 경우, 탈퇴 전 ownership transfer 필요
+    if (leavingUser.channel_role === 'admin')
+      return {
+        error: 'Channel owner cannot leave. Transfer ownership first.',
+      };
+
+    //user 삭제
+    await this.prismaService.channelUser.delete({
+      where: {
+        mapping_id: leavingUser.mapping_id,
+      },
+    });
+
+    return {
+      message: 'Successfuly deleted',
+    };
+  }
 }

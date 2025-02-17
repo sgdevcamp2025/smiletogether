@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { ChannelService } from './channel.service';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { UserId } from 'src/decorators/user-id.decorator';
@@ -46,5 +54,13 @@ export class ChannelController {
     @Param('channelId') channelId: string,
   ): Promise<any> {
     return this.channelService.joinChannel(userId, channelId);
+  }
+
+  @Delete(':channel_id/leave')
+  async leaveChannel(
+    @UserId() userId: string,
+    @Param('channel_id') channelId: string,
+  ): Promise<any> {
+    return await this.channelService.leaveChannel(channelId, userId);
   }
 }
