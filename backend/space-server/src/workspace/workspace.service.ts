@@ -10,6 +10,7 @@ import { WorkspaceResponseDto } from './dto/workspcae-response.dto';
 import { WorkspaceSearchResponseDto } from './dto/search-workspace.dto';
 import { WorkspaceDetailResponseDto } from './dto/workspace-detail.dto';
 import { WorkspaceDeleteResponseDto } from './dto/delete-workspace.dto';
+import { InviteWorkspaceDto } from './dto/invite-workspace.dto';
 
 @Injectable()
 export class WorkspaceService {
@@ -188,7 +189,12 @@ export class WorkspaceService {
     };
   }
 
-  async inviteWorkspace(workspaceId: string, invite_user_list: string[]) {
+  async inviteWorkspace(
+    workspaceId: string,
+    inviteWorkspaceDto: InviteWorkspaceDto,
+  ) {
+    const { invite_user_list } = inviteWorkspaceDto;
+
     const inviteResults = {
       success: [],
       failed: [],

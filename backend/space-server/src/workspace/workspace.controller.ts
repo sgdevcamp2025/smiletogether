@@ -16,6 +16,7 @@ import { WorkspaceDetailResponseDto } from './dto/workspace-detail.dto';
 import { UserId } from 'src/decorators/user-id.decorator';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { WorkspaceDeleteResponseDto } from './dto/delete-workspace.dto';
+import { InviteWorkspaceDto } from './dto/invite-workspace.dto';
 
 @Controller('api/workspaces')
 @UseGuards(AuthGuard)
@@ -57,6 +58,17 @@ export class WorkspaceController {
     @UserId() userId: string,
   ): Promise<WorkspaceDeleteResponseDto> {
     return await this.workspaceService.deleteWorkspaceById(workspaceId, userId);
+  }
+
+  @Post(':workspace_id/invite')
+  async inviteWorkspace(
+    @Param('workspace_id') workspaceId: string,
+    @Body() inviteWorkspaceDto: InviteWorkspaceDto,
+  ): Promise<any> {
+    return await this.workspaceService.inviteWorkspace(
+      workspaceId,
+      inviteWorkspaceDto,
+    );
   }
 
   @Delete(':workspace_id/leave')
