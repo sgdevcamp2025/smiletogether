@@ -5,6 +5,7 @@ import { UserId } from 'src/decorators/user-id.decorator';
 import { ChannelResponseDto } from './dto/channel-response.dto';
 import { CreateChannelDto } from './dto/create-channel.dto';
 import { WorkspaceChannelDto } from './dto/workspace-channel.dto';
+import { ChannelDetailsDto } from './dto/channel-detail.dto';
 
 @Controller('api/channels')
 @UseGuards(AuthGuard)
@@ -13,7 +14,7 @@ export class ChannelController {
 
   @Get()
   getChannel(): string {
-    return 'get api/channel';
+    return 'Hello Channel API!';
   }
 
   @Post()
@@ -30,5 +31,12 @@ export class ChannelController {
     @Param('workspaceId') workspaceId: string,
   ): Promise<WorkspaceChannelDto> {
     return this.channelService.getChannelsByUser(userId, workspaceId);
+  }
+
+  @Get(':channelId')
+  async getChannelById(
+    @Param('channelId') channelId: string,
+  ): Promise<ChannelDetailsDto> {
+    return this.channelService.getChannelById(channelId);
   }
 }
