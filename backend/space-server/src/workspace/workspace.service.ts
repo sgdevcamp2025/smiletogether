@@ -188,6 +188,86 @@ export class WorkspaceService {
     };
   }
 
+  async inviteWorkspace(workspaceId: string, invite_user_list: string[]) {
+    const inviteResults = {
+      success: [],
+      failed: [],
+    };
+    return await this.prismaService.$transaction(async (prisma) => {
+      const workspace = await prisma.workspace.findUnique({
+        where: {
+          workspace_id: workspaceId,
+        },
+      });
+
+      if (!workspace) {
+        throw new NotFoundException(
+          `Workspace with ID ${workspaceId} not found`,
+        );
+      }
+
+      const defaultChannels = await prisma.channel.findMany({
+        where: {
+          workspace_id: workspaceId,
+          is_private: false,
+        },
+      });
+
+      const existingMembers = await prisma.workspaceUser.findMany({
+        where: {
+          workspace_id: workspaceId,
+        },
+        select: {
+          user_id: true,
+        },
+      });
+
+      const existingMemberIds = existingMembers.map((member) => member.user_id);
+
+      for (const userId of invite_user_list) {
+        try {
+          if (existingMemberIds.includes(userId)) {
+            inviteResults.failed.push(userId);
+            continue;
+          }
+
+          // 워크스페이스 멤버로 추가
+          await prisma.workspaceUser.create({
+            data: {
+              workspace_id: workspaceId,
+              user_id: userId,
+              role: 'member',
+              profile_name: `${userId}번 유저`, // 추후 사용자 DB에서 이름 가져오기
+              profile_image: 'default.jpg',
+            },
+          });
+
+          // 기본 채널에 추가
+          for (const defaultChannel of defaultChannels) {
+            await prisma.channelUser.create({
+              data: {
+                channel_id: defaultChannel.channel_id,
+                user_id: userId,
+                channel_role: 'member',
+              },
+            });
+          }
+
+          inviteResults.success.push(userId);
+        } catch (error) {
+          this.logger.error(`Failed to invite user ${userId}:`, error);
+          inviteResults.failed.push(userId);
+        }
+      }
+
+      // response
+      return {
+        workspaceId: workspaceId,
+        inviteResults,
+      };
+    });
+  }
+
   async getWorkspaceById(
     workspaceId: string,
   ): Promise<WorkspaceDetailResponseDto> {
