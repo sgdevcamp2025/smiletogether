@@ -1,6 +1,6 @@
 export class ChannelResponseDto {
   channelId: string;
-  channelName: string;
+  name: string;
   description: string;
   isPrivate: boolean;
   createdAt: Date;

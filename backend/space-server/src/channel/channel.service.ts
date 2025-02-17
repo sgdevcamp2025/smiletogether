@@ -20,8 +20,7 @@ export class ChannelService {
     userId: string,
     createChannelDto: CreateChannelDto,
   ): Promise<ChannelResponseDto> {
-    const { workspaceId, channelName, description, isPrivate } =
-      createChannelDto;
+    const { workspaceId, name, description, isPrivate } = createChannelDto;
 
     const workspaceUser = await this.prismaService.workspaceUser.findUnique({
       where: {
@@ -39,7 +38,7 @@ export class ChannelService {
     const newChannel = await this.prismaService.channel.create({
       data: {
         workspace_id: workspaceId,
-        name: channelName,
+        name: name,
         description: description,
         is_private: isPrivate,
       },
@@ -55,7 +54,7 @@ export class ChannelService {
 
     const channelResponse: ChannelResponseDto = {
       channelId: newChannel.channel_id,
-      channelName: newChannel.name,
+      name: newChannel.name,
       description: newChannel.description || '',
       isPrivate: newChannel.is_private,
       createdAt: newChannel.created_at,

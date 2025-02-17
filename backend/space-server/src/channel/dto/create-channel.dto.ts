@@ -7,7 +7,7 @@ export class CreateChannelDto {
 
   @IsString()
   @IsNotEmpty()
-  channelName: string;
+  name: string;
 
   @IsString()
   @IsNotEmpty()
