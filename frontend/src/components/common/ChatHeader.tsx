@@ -33,6 +33,7 @@ const ChatHeader = ({
 }: ChatHeaderProps) => {
   const [openDeleteChannel, setOpenDeleteChannel] = useState(false);
   const [openInfoChannel, setOpenInfoChannel] = useState(false);
+  const [infoTab, setInfoTab] = useState<'정보' | '멤버'>('정보');
   const displayMembers = members ? members?.slice(0, 3) : [];
 
   const handleDeleteChannel = () => {
@@ -56,7 +57,10 @@ const ChatHeader = ({
             <img className="w-5 h-5" src="/icons/Private.svg" alt="private" />
           )}
           <span
-            onClick={() => setOpenInfoChannel(true)}
+            onClick={() => {
+              setInfoTab('정보');
+              setOpenInfoChannel(true);
+            }}
             className="text-lg font-bold"
           >
             {name}
@@ -67,7 +71,10 @@ const ChatHeader = ({
           {members && (
             <div
               className="flex items-center gap-2 border px-2 rounded-sm"
-              onClick={() => setOpenInfoChannel(true)}
+              onClick={() => {
+                setInfoTab('멤버');
+                setOpenInfoChannel(true);
+              }}
             >
               <div className="flex gap-1">
                 {displayMembers.map(item => (
@@ -105,7 +112,12 @@ const ChatHeader = ({
               <img src="/icons/Option.svg" alt="option" />
             </DropdownMenuTrigger>
             <DropdownMenuContent forceMount>
-              <DropdownMenuItem onClick={() => setOpenInfoChannel(true)}>
+              <DropdownMenuItem
+                onClick={() => {
+                  setInfoTab('정보');
+                  setOpenInfoChannel(true);
+                }}
+              >
                 채널 세부정보 열기
               </DropdownMenuItem>
               <DropdownMenuSeparator />
@@ -137,6 +149,7 @@ const ChatHeader = ({
           manager={manager}
           setOpenDeleteChannel={setOpenDeleteChannel}
           members={members}
+          tab={infoTab}
         />
       )}
 
