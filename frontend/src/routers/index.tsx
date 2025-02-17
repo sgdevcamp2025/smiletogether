@@ -51,7 +51,7 @@ export const router = createBrowserRouter([
         element: <ActivityPage />,
       },
       {
-        path: 'channel/:channelId',
+        path: 'channel/:channelID',
         element: (
           <SplitPaneLayout
             leftPannelDefaultSize={30}
@@ -61,7 +61,6 @@ export const router = createBrowserRouter([
           />
         ),
       },
-      { path: '/workspace/:workspaceId/:channelId', element: <ChannelPage /> },
     ],
   },
 ]);

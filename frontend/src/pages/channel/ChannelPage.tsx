@@ -10,14 +10,14 @@ import { useWebSocket } from '@/hooks/channel/useWebSocket';
 import { useEffect, useRef } from 'react';
 
 const ChannelPage = () => {
-  const { workspaceId, channelId } = useParams();
+  const { workspaceID, channelID } = useParams();
   const { channelData, isChannelLoading, isChannelError } =
-    useGetChannel(channelId);
+    useGetChannel(channelID);
   const { messageData, isMessageLoading, isMessageError } =
-    useGetMessages(channelId);
+    useGetMessages(channelID);
   const { client, messages } = useWebSocket({
-    workspaceId,
-    channelId,
+    workspaceID,
+    channelID,
   });
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -88,8 +88,8 @@ const ChannelPage = () => {
       {channelData && client && (
         <MessageBox
           channelName={channelData.name}
-          workspaceId={workspaceId!}
-          channelId={channelId!}
+          workspaceId={workspaceID!}
+          channelId={channelID!}
           client={client}
         />
       )}
