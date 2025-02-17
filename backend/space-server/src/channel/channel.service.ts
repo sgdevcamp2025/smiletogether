@@ -159,4 +159,58 @@ export class ChannelService {
       lastActiveAt: channel.updated_at.toISOString(),
     };
   }
+
+  async joinChannel(userId: string, channelId: string): Promise<any> {
+    const channel = await this.prismaService.channel.findUnique({
+      where: { channel_id: channelId },
+    });
+
+    if (!channel) {
+      throw new NotFoundException(`채널 ID ${channelId}를 찾을 수 없습니다.`);
+    }
+
+    const workspaceUser = await this.prismaService.workspaceUser.findUnique({
+      where: {
+        user_id_workspace_id: {
+          user_id: userId,
+          workspace_id: channel.workspace_id,
+        },
+      },
+    });
+
+    if (!workspaceUser) {
+      throw new ForbiddenException(
+        `워크스페이스 ID ${channel.workspace_id}에 소속되어있지 않습니다`,
+      );
+    }
+
+    const channelUser = await this.prismaService.channelUser.findUnique({
+      where: {
+        user_id_channel_id: {
+          user_id: userId,
+          channel_id: channelId,
+        },
+      },
+    });
+
+    if (channelUser) {
+      return {
+        message: 'User is already a member of the channel.',
+        channelId: channelId,
+      };
+    }
+
+    const newChannelUser = await this.prismaService.channelUser.create({
+      data: {
+        user_id: userId,
+        channel_id: channelId,
+        channel_role: 'member',
+      },
+    });
+
+    return {
+      message: 'Joined channel successfully.',
+      channelId: newChannelUser.channel_id,
+    };
+  }
 }

@@ -39,4 +39,12 @@ export class ChannelController {
   ): Promise<ChannelDetailsDto> {
     return this.channelService.getChannelById(channelId);
   }
+
+  @Post(':channelId/join')
+  async joinChannel(
+    @UserId() userId: string,
+    @Param('channelId') channelId: string,
+  ): Promise<any> {
+    return this.channelService.joinChannel(userId, channelId);
+  }
 }
