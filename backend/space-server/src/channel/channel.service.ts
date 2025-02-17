@@ -1,7 +1,15 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
 import { ChannelResponseDto } from './dto/channel-response.dto';
 import { CreateChannelDto } from './dto/create-channel.dto';
+import {
+  ChannelItemDto,
+  WorkspaceChannelDto,
+} from './dto/workspace-channel.dto';
 
 @Injectable()
 export class ChannelService {
@@ -24,9 +32,7 @@ export class ChannelService {
     });
 
     if (!workspaceUser) {
-      throw new ForbiddenException(
-        '해당 워크스페이스에 소속되지 않은 사용자입니다',
-      );
+      throw new ForbiddenException('해당 워크스페이스에 접근 권한이 없습니다.');
     }
 
     const newChannel = await this.prismaService.channel.create({
@@ -55,5 +61,52 @@ export class ChannelService {
     };
 
     return channelResponse;
+  }
+
+  async getChannelsByUser(
+    userId: string,
+    workspaceId: string,
+  ): Promise<WorkspaceChannelDto> {
+    const workspace = await this.prismaService.workspace.findUnique({
+      where: { workspace_id: workspaceId },
+    });
+
+    if (!workspace) {
+      throw new NotFoundException('워크스페이스를 찾을 수 없습니다');
+    }
+
+    const workspaceUser = await this.prismaService.workspaceUser.findUnique({
+      where: {
+        user_id_workspace_id: {
+          user_id: userId,
+          workspace_id: workspaceId,
+        },
+      },
+    });
+
+    if (!workspaceUser) {
+      throw new ForbiddenException('해당 워크스페이스에 접근 권한이 없습니다.');
+    }
+
+    const channels = await this.prismaService.channel.findMany({
+      where: {
+        workspace_id: workspaceId,
+      },
+      select: {
+        channel_id: true,
+        name: true,
+        is_private: true,
+      },
+    });
+
+    const channelItems: ChannelItemDto[] = channels.map((channel) => ({
+      channelId: channel.channel_id,
+      name: channel.name,
+      isPrivate: channel.is_private,
+    }));
+
+    return {
+      channels: channelItems,
+    };
   }
 }
