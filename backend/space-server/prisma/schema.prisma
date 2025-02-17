@@ -57,6 +57,7 @@ model ChannelUser {
   channel_id    String   @db.Uuid   
   joined_at     DateTime @default(now())
   channel_role  String   @default("member")
+  
   channel Channel @relation(fields: [channel_id], references: [channel_id], onDelete: Cascade)
 
   @@unique([user_id, channel_id])
