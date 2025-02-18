@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-type ModalType =
+export type ModalType =
   | 'WORKSPACE_MENU'
   | 'USER_INVITE'
   | 'WORKSPACE_LEAVE'
@@ -12,7 +12,7 @@ interface ModalStoreProps {
   closeModal: () => void;
 }
 
-export const useModalStore = create<ModalStoreProps>()((set, get) => ({
+export const useModalStore = create<ModalStoreProps>()(set => ({
   modal: null,
   setModal: key => {
     set({ modal: key });
