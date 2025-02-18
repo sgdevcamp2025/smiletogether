@@ -8,6 +8,8 @@ import useWorkspaceChannelListQuery from '@/hooks/channel/useWorkspaceChannelLis
 import useGetDMListQuery from '@/hooks/dm/useGetDMListQuery';
 import { useState } from 'react';
 import WorkspaceUserInviteModal from '@/components/workspace/Modal/WorkspaceUserInviteModal';
+import ArrorIcon from '@/components/common/ArrorIcon';
+import WorkspaceMenu from '@/components/workspace/WorkspaceMenu';
 
 const WorkspaceChannelPanel = () => {
   const { workspaceID } = useParams();
@@ -45,9 +47,13 @@ const WorkspaceChannelPanel = () => {
 
   return (
     <div className=" min-w-16 bg-yellow-200 text-white flex py-2 flex-col gap-2 text-wrap h-screen">
-      <h2 className="mt-3 px-4 scroll-m-20 text-2xl font-semibold tracking-tight text-white">
-        {workspacesInfo?.name}
+      <h2 className="mt-3 px-4 scroll-m-20 text-2xl font-semibold tracking-tight text-white flex justify-between items-center">
+        <span>{workspacesInfo?.name} </span>
+        <div>
+          <ArrorIcon className="rotate-90" />
+        </div>
       </h2>
+      <WorkspaceMenu workspaceName={workspacesInfo?.name ?? ''} />
       <WorkspaceAccordionSection
         sectionTitle="채널"
         createButtonIcon={<MdOutlineAddBox />}
