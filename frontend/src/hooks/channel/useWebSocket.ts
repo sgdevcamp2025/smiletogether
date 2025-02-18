@@ -3,16 +3,16 @@ import { Client } from '@stomp/stompjs';
 import { useEffect, useState } from 'react';
 
 interface UseWebSocketProps {
-  workspaceID: string | undefined;
-  channelID: string | undefined;
+  workspaceId: string | undefined;
+  channelId: string | undefined;
 }
 
-export const useWebSocket = ({ workspaceID, channelID }: UseWebSocketProps) => {
+export const useWebSocket = ({ workspaceId, channelId }: UseWebSocketProps) => {
   const [messages, setMessages] = useState<Chat[]>([]);
   const [client, setClient] = useState<Client | null>(null);
 
   useEffect(() => {
-    if (!workspaceID || !channelID) return;
+    if (!workspaceId || !channelId) return;
 
     const stompClient = new Client({
       brokerURL: 'ws://localhost:8081/ws',
@@ -20,7 +20,7 @@ export const useWebSocket = ({ workspaceID, channelID }: UseWebSocketProps) => {
     });
 
     stompClient.onConnect = () => {
-      const subscriptionPath = `/sub/workspaces/${workspaceID}/channels/${channelID}`;
+      const subscriptionPath = `/sub/workspaces/${workspaceId}/channels/${channelId}`;
       stompClient.subscribe(subscriptionPath, message => {
         const receivedMessage: Chat = JSON.parse(message.body);
         setMessages(prev => [...prev, receivedMessage]);
@@ -34,7 +34,7 @@ export const useWebSocket = ({ workspaceID, channelID }: UseWebSocketProps) => {
       stompClient.deactivate();
       setClient(null);
     };
-  }, [workspaceID, channelID]);
+  }, [workspaceId, channelId]);
 
   return { client, messages };
 };
