@@ -35,12 +35,12 @@ const WorkSpaceListPage = () => {
           data.workspaces.map(item => {
             return (
               <WorkspaceListItem
-                key={item.workspace_id}
+                key={item.workspaceId}
                 name={item.name}
-                profileImage={item.profile_image}
-                memberCount={item.member_count}
-                members={item.workspace_members}
-                workspaceId={item.workspace_id}
+                profileImage={item.profileImage}
+                memberCount={item.memberCount}
+                members={item.workspaceMembers}
+                workspaceId={item.workspaceId}
               />
             );
           })}

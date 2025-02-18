@@ -35,3 +35,13 @@ export const inviteWorkspace = async (
   );
   return data;
 };
+
+export const leaveWorkspace = async (workspaceId: string) => {
+  const { data } = await https.post(`/api/workspaces/${workspaceId}/leave`);
+  return data;
+};
+
+export const removeWorkspace = async (workspaceId: string) => {
+  const { data } = await https.delete(`/api/workspaces/${workspaceId}`);
+  return data;
+};

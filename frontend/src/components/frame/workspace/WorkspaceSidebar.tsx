@@ -25,9 +25,9 @@ const WorkspaceSideBar = () => {
           data.workspaces.map(item => {
             return (
               <WorkspaceIconButton
-                key={item.workspace_id}
-                className={`bg-gray-400 rounded-xl" ${item.workspace_id === workspaceId ? 'bg-gray-300' : null}`}
-                onClick={() => navigateToWorkspace(item.workspace_id)}
+                key={item.workspaceId}
+                className={`bg-gray-400 rounded-xl" ${item.workspaceId === workspaceId ? 'bg-gray-300' : null}`}
+                onClick={() => navigateToWorkspace(item.workspaceId)}
               >
                 {item.name ? item.name.slice(0, 2) : 'W'}
               </WorkspaceIconButton>

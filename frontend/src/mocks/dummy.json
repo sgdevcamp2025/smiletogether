@@ -5,85 +5,86 @@
       "username": "Subin Kim",
       "displayName": "",
       "profileImage": "https://example.com/profile/subin.jpg",
-      "position": "인재영입팀 김수빈 과장 (DevRel)",
+      "position": "\uC778\uC7AC\uC601\uC785\uD300 \uAE40\uC218\uBE48 \uACFC\uC7A5 (DevRel)",
       "isActive": true,
-      "statusMessage": "고민이 있다면 언제든 메시지 주세요!"
+      "statusMessage": "\uACE0\uBBFC\uC774 \uC788\uB2E4\uBA74 \uC5B4\uB290\uB370\uB4E0 \uBA54\uC2DC\uC9C0 \uC8FC\uC138\uC694!"
     },
     {
       "userId": "3",
       "username": "John Doe",
       "displayName": "Johnny",
       "profileImage": "https://example.com/profile/john.jpg",
-      "position": "마케팅팀 리더",
+      "position": "\uB9C8\uCF13\uD0A4\uD305\uD300 \uB9AC\uB354",
       "isActive": false,
-      "statusMessage": "미팅 중입니다. 메시지를 남겨주세요!"
+      "statusMessage": "\uBBF8\uD305 \uC911\uC785\uB2C8\uB2E4. \uBA54\uC2DC\uC9C0\uB97C \uB0A8\uACBC\uC5B4\uC8FC\uC138\uC694!"
     }
   ],
   "userWorkspaces": {
     "email": "star9207@naver.com",
     "workspaces": [
       {
-        "workspace_id": "workspace_001",
+        "workspaceId": "workspace_001",
         "name": "Home",
-        "profile_image": "https://example.com/home.png",
-        "member_count": 1,
-        "workspace_members": [
+        "profileImage": "https://example.com/home.png",
+        "memberCount": 1,
+        "workspaceMembers": [
           {
-            "user_id": "user_001",
-            "profile_image": "https://example.com/user_001.png"
+            "userId": "user_001",
+            "profileImage": "https://example.com/user_001.png"
           }
         ]
       },
       {
-        "workspace_id": "workspace_002",
+        "workspaceId": "workspace_002",
         "name": "Project Alpha",
-        "profile_image": "https://example.com/project_alpha.png",
-        "member_count": 3,
-        "workspace_members": [
+        "profileImage": "https://example.com/project_alpha.png",
+        "memberCount": 3,
+        "workspaceMembers": [
           {
-            "user_id": "user_002",
-            "profile_image": "https://example.com/user_002.png"
+            "userId": "user_002",
+            "profileImage": "https://example.com/user_002.png"
           },
           {
-            "user_id": "user_003",
-            "profile_image": "https://example.com/user_003.png"
+            "userId": "user_003",
+            "profileImage": "https://example.com/user_003.png"
           },
           {
-            "user_id": "user_004",
-            "profile_image": "https://example.com/user_004.png"
+            "userId": "user_004",
+            "profileImage": "https://example.com/user_004.png"
           }
         ]
       },
       {
-        "workspace_id": "workspace_003",
+        "workspaceId": "workspace_003",
         "name": "Smilegate DevCamp",
-        "profile_image": "https://example.com/smilegate.png",
-        "member_count": 5,
-        "workspace_members": [
+        "profileImage": "https://example.com/smilegate.png",
+        "memberCount": 5,
+        "workspaceMembers": [
           {
-            "user_id": "user_005",
-            "profile_image": "https://example.com/user_005.png"
+            "userId": "user_005",
+            "profileImage": "https://example.com/user_005.png"
           },
           {
-            "user_id": "user_006",
-            "profile_image": "https://example.com/user_006.png"
+            "userId": "user_006",
+            "profileImage": "https://example.com/user_006.png"
           },
           {
-            "user_id": "user_007",
-            "profile_image": "https://example.com/user_007.png"
+            "userId": "user_007",
+            "profileImage": "https://example.com/user_007.png"
           },
           {
-            "user_id": "user_008",
-            "profile_image": "https://example.com/user_008.png"
+            "userId": "user_008",
+            "profileImage": "https://example.com/user_008.png"
           },
           {
-            "user_id": "user_009",
-            "profile_image": "https://example.com/user_009.png"
+            "userId": "user_009",
+            "profileImage": "https://example.com/user_009.png"
           }
         ]
       }
     ]
   },
+
   "channels": [
     {
       "channelId": "channel_001",
