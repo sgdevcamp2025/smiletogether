@@ -6,18 +6,16 @@ import WorkspaceDirectMessageListItem from '@/components/workspace/WorkspaceChan
 import useUserWorkspaceQuery from '@/hooks/workspace/useUserWorkspaceQuery';
 import useWorkspaceChannelListQuery from '@/hooks/channel/useWorkspaceChannelListQuery';
 import useGetDMListQuery from '@/hooks/dm/useGetDMListQuery';
-import { useState } from 'react';
 import WorkspaceUserInviteModal from '@/components/workspace/Modal/WorkspaceUserInviteModal';
 import ArrorIcon from '@/components/common/ArrorIcon';
 import WorkspaceMenu from '@/components/workspace/WorkspaceMenu';
-import useModal from '@/hooks/useModal';
 import useLeaveWorkspaceMutation from '@/hooks/workspace/useLeaveWorkspaceMutation';
-import { removeWorkspace } from '@/apis/workspace';
 import useRemoveWorkspaceMutation from '@/hooks/workspace/useRemoveWorkspaceMutation';
+import WorkspaceActionModal from '@/components/workspace/Modal/WorkspaceActionModal';
+import { modalStore } from '@/stores/modalStore';
 
 const WorkspaceChannelPanel = () => {
   const { workspaceId } = useParams();
-  const [onModal, setOnModal] = useState(false);
 
   const {
     data: workspacesInfo,
@@ -35,59 +33,45 @@ const WorkspaceChannelPanel = () => {
     isLoading: isChannelLoading,
     isError: isChannelError,
   } = useWorkspaceChannelListQuery(workspaceId!);
-  const { mutate: leaveWorkspace } = useLeaveWorkspaceMutation();
-  const { mutate: removeWorkspace } = useRemoveWorkspaceMutation();
 
-  const { openModal, closeModal, isOpen } = useModal();
+  const workspaceName = workspacesInfo?.name ?? '알 수 없는 워크스페이스';
+  const isOpen = modalStore(state => state.isOpen);
+  const setModal = modalStore(state => state.setModal);
 
+  if (!workspaceId) return <p>워크스페이스 정보를 불러오는 중...</p>;
   if (isChannelLoading || isWorkspaceLoading || isDMLoading)
     return <p>로딩 중입니다!</p>;
   if (isChannelError || isWorkspaceError || isDMError)
     return <p>에러가 발생했습니다!</p>;
-
-  const openAddColleagueModal = () => {
-    setOnModal(true);
-  };
-
-  const offAddColleagueModal = () => {
-    setOnModal(false);
-  };
 
   return (
     <div className=" min-w-16 bg-yellow-200 text-white flex py-2 flex-col gap-2 text-wrap h-screen">
       <h2
         className="mt-3 px-4 scroll-m-20 text-2xl font-semibold tracking-tight text-white flex justify-between items-center"
         onClick={() => {
-          openModal('WorkspaceMenu');
+          setModal('WORKSPACE_MENU');
         }}
       >
-        <span>{workspacesInfo?.name} </span>
+        <span>{workspaceName} </span>
         <div>
           <ArrorIcon className="rotate-90" />
         </div>
       </h2>
-      {isOpen('WorkspaceMenu') && (
+      {isOpen('WORKSPACE_MENU') && (
         <WorkspaceMenu
-          workspaceName={workspacesInfo?.name ?? ''}
+          workspaceName={workspaceName}
           onInvite={() => {
-            openModal('WorkspaceUserInviteModal');
+            setModal('USER_INVITE');
           }}
-          onLogout={() => console.log('로그아웃')}
+          onLogout={() => alert('로그아웃이 완료되었습니다.')}
           onDelete={() => {
-            removeWorkspace(workspaceId!);
+            setModal('WORKSPACE_DELETE');
           }}
           onLeave={() => {
-            leaveWorkspace(workspaceId!);
+            setModal('WORKSPACE_LEAVE');
           }}
         />
       )}
-      {isOpen('WorkspaceUserInviteModal') && (
-        <WorkspaceUserInviteModal
-          title={workspacesInfo?.name || ''}
-          closeModal={() => closeModal()}
-        />
-      )}
-      {isOpen('WorkspaceDeleteModal') && <div>WorkspaceDeleteModal</div>}
       <WorkspaceAccordionSection
         sectionTitle="채널"
         createButtonIcon={<MdOutlineAddBox />}
@@ -101,20 +85,58 @@ const WorkspaceChannelPanel = () => {
         sectionTitle="다이렉트 메세지"
         createButtonIcon={<MdOutlineAddBox className="text-2xl" />}
         createButtonText="직장 동류 추가"
-        createButtonOnClick={openAddColleagueModal}
+        createButtonOnClick={() => setModal('USER_INVITE')}
       >
         {dmList?.dms?.map((dm, index) => (
           <WorkspaceDirectMessageListItem dm={dm} key={index} />
         ))}
       </WorkspaceAccordionSection>
-      {onModal && (
-        <WorkspaceUserInviteModal
-          title={workspacesInfo?.name ?? ''}
-          closeModal={offAddColleagueModal}
-        />
-      )}
+      <ModalManager workspaceName={workspaceName} workspaceId={workspaceId!} />
     </div>
   );
 };
 
 export default WorkspaceChannelPanel;
+
+interface ModalManagerProps {
+  workspaceName: string;
+  workspaceId: string;
+}
+
+const ModalManager = ({ workspaceName, workspaceId }: ModalManagerProps) => {
+  const { mutate: leaveWorkspace } = useLeaveWorkspaceMutation();
+  const { mutate: removeWorkspace } = useRemoveWorkspaceMutation();
+  const { isOpen, closeModal } = modalStore();
+  return (
+    <>
+      {isOpen('USER_INVITE') && (
+        <WorkspaceUserInviteModal
+          title={workspaceName}
+          closeModal={() => closeModal()}
+        />
+      )}
+      {isOpen('WORKSPACE_DELETE') && (
+        <WorkspaceActionModal
+          title={`${workspaceName} 삭제하기`}
+          onClick={() => {
+            closeModal();
+            removeWorkspace(workspaceId);
+          }}
+          onClickButtonName="워크스페이스 삭제하기"
+          closeModal={() => closeModal()}
+        />
+      )}
+      {isOpen('WORKSPACE_LEAVE') && (
+        <WorkspaceActionModal
+          title={`${workspaceName} 나가기`}
+          onClick={() => {
+            closeModal();
+            leaveWorkspace(workspaceId);
+          }}
+          onClickButtonName="워스크스페이스 나가기"
+          closeModal={() => closeModal()}
+        />
+      )}
+    </>
+  );
+};

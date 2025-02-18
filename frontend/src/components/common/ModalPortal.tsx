@@ -7,9 +7,9 @@ interface ModalPortalProps {
 
 const ModalPortal = ({ children }: ModalPortalProps) => {
   return createPortal(
-    <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center z-10">
-      <div className="absolute top-0 left-0 w-full h-full bg-black opacity-25"></div>
-      <div className="bg-white p-6 rounded-lg shadow-lg relative">
+    <div className="fixed inset-0 flex justify-center items-center z-50">
+      <div className="absolute inset-0 bg-black/50"></div>
+      <div className="p-6 relative w-full flex items-center justify-center">
         {children}
       </div>
     </div>,
