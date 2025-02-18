@@ -39,6 +39,7 @@ const ChannelPage = () => {
             isPrivate={channelData.isPrivate}
             totalMembers={channelData.totalMembers}
             members={channelData.members}
+            manager={channelData.createdBy.username}
           />
         </>
       )}

@@ -12,25 +12,25 @@ import ArrorIcon from '@/components/common/ArrorIcon';
 import WorkspaceMenu from '@/components/workspace/WorkspaceMenu';
 
 const WorkspaceChannelPanel = () => {
-  const { workspaceID } = useParams();
+  const { workspaceId } = useParams();
   const [onModal, setOnModal] = useState(false);
 
   const {
     data: workspacesInfo,
     isLoading: isWorkspaceLoading,
     isError: isWorkspaceError,
-  } = useUserWorkspaceQuery(workspaceID!);
+  } = useUserWorkspaceQuery(workspaceId!);
   const {
     data: dmList,
     isLoading: isDMLoading,
     isError: isDMError,
-  } = useGetDMListQuery(workspaceID!);
+  } = useGetDMListQuery(workspaceId!);
 
   const {
     data: channelList = [],
     isLoading: isChannelLoading,
     isError: isChannelError,
-  } = useWorkspaceChannelListQuery(workspaceID!);
+  } = useWorkspaceChannelListQuery(workspaceId!);
 
   if (isChannelLoading || isWorkspaceLoading || isDMLoading)
     return <p>로딩 중입니다!</p>;

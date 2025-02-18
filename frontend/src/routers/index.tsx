@@ -28,7 +28,7 @@ export const router = createBrowserRouter([
     element: <WorkspaceCreationProcess />,
   },
   {
-    path: '/workspace/:workspaceID',
+    path: '/workspace/:workspaceId',
     element: <WorkspaceFrame />,
     children: [
       {

@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router';
 
 const WorkspaceSideBar = () => {
   const { data, isLoading, isError } = useUserWorkspacesQuery();
-  const { workspaceID } = useParams();
+  const { workspaceId } = useParams();
   const navigate = useNavigate();
 
   if (isLoading) return <p>로딩중</p>;
@@ -26,7 +26,7 @@ const WorkspaceSideBar = () => {
             return (
               <WorkspaceIconButton
                 key={item.workspace_id}
-                className={`bg-gray-400 rounded-xl" ${item.workspace_id === workspaceID ? 'bg-gray-300' : null}`}
+                className={`bg-gray-400 rounded-xl" ${item.workspace_id === workspaceId ? 'bg-gray-300' : null}`}
                 onClick={() => navigateToWorkspace(item.workspace_id)}
               >
                 {item.name ? item.name.slice(0, 2) : 'W'}
