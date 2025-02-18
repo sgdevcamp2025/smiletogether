@@ -20,6 +20,12 @@ export const handlers = [
   http.get('/api/workspaces', () => {
     return HttpResponse.json(db.userWorkspaces);
   }),
+  http.post(`/api/workspaces/:workspaceId/leave`, ({ params }) => {
+    return HttpResponse.json({ message: 'success' }, { status: 200 });
+  }),
+  http.delete(`/api/workspaces/:workspaceId`, ({ params }) => {
+    return HttpResponse.json({ message: 'success' }, { status: 200 });
+  }),
   http.get(`/api/workspaces/:workspaceId`, ({ params }) => {
     const { workspaceId } = params;
     const workspace = db.userWorkspaces.workspaces.find(

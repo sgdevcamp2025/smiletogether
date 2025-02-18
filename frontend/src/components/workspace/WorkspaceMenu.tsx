@@ -4,10 +4,21 @@ import React from 'react';
 
 interface WorkspaceMenuProps {
   workspaceName: string;
+  onInvite: () => void;
+  onLogout: () => void;
+  onLeave: () => void;
+  onDelete: () => void;
   className?: string;
 }
 
-const WorkspaceMenu = ({ workspaceName, className }: WorkspaceMenuProps) => {
+const WorkspaceMenu = ({
+  workspaceName,
+  onInvite,
+  onLogout,
+  onLeave,
+  onDelete,
+  className,
+}: WorkspaceMenuProps) => {
   return (
     <div
       className={cn('bg-white shadow-lg rounded-md w-64 text-black', className)}
@@ -21,9 +32,13 @@ const WorkspaceMenu = ({ workspaceName, className }: WorkspaceMenuProps) => {
         <span>{workspaceName}</span>
       </div>
       <div className="mt-2 flex flex-col">
-        <WorkspaceMenuItem children={`${workspaceName} 으로 사용자 초대`} />
-        <WorkspaceMenuItem children={'로그아웃'} />
-        <WorkspaceMenuItem children={'워크스페이스 삭제'} />
+        <WorkspaceMenuItem
+          children={`${workspaceName} 으로 사용자 초대`}
+          onClick={onInvite}
+        />
+        <WorkspaceMenuItem children={'로그아웃'} onClick={onLogout} />
+        <WorkspaceMenuItem children={'워크스페이스 나가기'} onClick={onLeave} />
+        <WorkspaceMenuItem children={'워크스페이스 삭제'} onClick={onDelete} />
       </div>
     </div>
   );
@@ -31,9 +46,17 @@ const WorkspaceMenu = ({ workspaceName, className }: WorkspaceMenuProps) => {
 
 export default WorkspaceMenu;
 
-const WorkspaceMenuItem = ({ children }: { children: React.ReactNode }) => {
+interface WorkspaceMenuItemProps {
+  onClick: () => void;
+  children: React.ReactNode;
+}
+
+const WorkspaceMenuItem = ({ onClick, children }: WorkspaceMenuItemProps) => {
   return (
-    <Button className="p-2 hover:bg-gray-100 cursor-pointer text-gray-700 border-t-2 bg-transparent shadow-none border-0">
+    <Button
+      className="p-2 hover:bg-gray-100 cursor-pointer text-gray-700 border-t-2 bg-transparent shadow-none border-0 justify-start"
+      onClick={onClick}
+    >
       {children}
     </Button>
   );

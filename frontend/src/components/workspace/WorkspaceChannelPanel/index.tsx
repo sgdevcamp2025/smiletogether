@@ -10,6 +10,10 @@ import { useState } from 'react';
 import WorkspaceUserInviteModal from '@/components/workspace/Modal/WorkspaceUserInviteModal';
 import ArrorIcon from '@/components/common/ArrorIcon';
 import WorkspaceMenu from '@/components/workspace/WorkspaceMenu';
+import useModal from '@/hooks/useModal';
+import useLeaveWorkspaceMutation from '@/hooks/workspace/useLeaveWorkspaceMutation';
+import { removeWorkspace } from '@/apis/workspace';
+import useRemoveWorkspaceMutation from '@/hooks/workspace/useRemoveWorkspaceMutation';
 
 const WorkspaceChannelPanel = () => {
   const { workspaceId } = useParams();
@@ -31,6 +35,10 @@ const WorkspaceChannelPanel = () => {
     isLoading: isChannelLoading,
     isError: isChannelError,
   } = useWorkspaceChannelListQuery(workspaceId!);
+  const { mutate: leaveWorkspace } = useLeaveWorkspaceMutation();
+  const { mutate: removeWorkspace } = useRemoveWorkspaceMutation();
+
+  const { openModal, closeModal, isOpen } = useModal();
 
   if (isChannelLoading || isWorkspaceLoading || isDMLoading)
     return <p>로딩 중입니다!</p>;
@@ -47,13 +55,39 @@ const WorkspaceChannelPanel = () => {
 
   return (
     <div className=" min-w-16 bg-yellow-200 text-white flex py-2 flex-col gap-2 text-wrap h-screen">
-      <h2 className="mt-3 px-4 scroll-m-20 text-2xl font-semibold tracking-tight text-white flex justify-between items-center">
+      <h2
+        className="mt-3 px-4 scroll-m-20 text-2xl font-semibold tracking-tight text-white flex justify-between items-center"
+        onClick={() => {
+          openModal('WorkspaceMenu');
+        }}
+      >
         <span>{workspacesInfo?.name} </span>
         <div>
           <ArrorIcon className="rotate-90" />
         </div>
       </h2>
-      <WorkspaceMenu workspaceName={workspacesInfo?.name ?? ''} />
+      {isOpen('WorkspaceMenu') && (
+        <WorkspaceMenu
+          workspaceName={workspacesInfo?.name ?? ''}
+          onInvite={() => {
+            openModal('WorkspaceUserInviteModal');
+          }}
+          onLogout={() => console.log('로그아웃')}
+          onDelete={() => {
+            removeWorkspace(workspaceId!);
+          }}
+          onLeave={() => {
+            leaveWorkspace(workspaceId!);
+          }}
+        />
+      )}
+      {isOpen('WorkspaceUserInviteModal') && (
+        <WorkspaceUserInviteModal
+          title={workspacesInfo?.name || ''}
+          closeModal={() => closeModal()}
+        />
+      )}
+      {isOpen('WorkspaceDeleteModal') && <div>WorkspaceDeleteModal</div>}
       <WorkspaceAccordionSection
         sectionTitle="채널"
         createButtonIcon={<MdOutlineAddBox />}
