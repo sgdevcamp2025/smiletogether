@@ -17,7 +17,7 @@ const WorkspaceUserInviteModal = ({
   title,
   closeModal,
 }: WorkspaceUserInviteModalProps) => {
-  const { workspaceID } = useParams();
+  const { workspaceId } = useParams();
   const [emails, setEmails] = useState<string[]>([]);
   const [inviteChannel, setInviteChannel] = useState<string[]>([]);
   const [isValid, setIsValid] = useState(false);
@@ -27,7 +27,7 @@ const WorkspaceUserInviteModal = ({
     data: channelList,
     isLoading: channelIsLoading,
     isError: channelIsError,
-  } = useWorkspaceChannelListQuery(workspaceID!);
+  } = useWorkspaceChannelListQuery(workspaceId!);
   const { mutate: inviteUserChannels } = useInviteChannelMutation();
 
   const onCustomUserIviteMode = () => {
@@ -35,7 +35,7 @@ const WorkspaceUserInviteModal = ({
   };
 
   const handleSubmit = () => {
-    if (!workspaceID) {
+    if (!workspaceId) {
       alert('워크스페이스 ID가 없습니다.');
       return;
     }
@@ -47,7 +47,7 @@ const WorkspaceUserInviteModal = ({
 
     if (!customUserIviteMode) {
       inviteUserWorkspace(
-        { workspaceId: workspaceID, emails },
+        { workspaceId: workspaceId, emails },
         {
           onSuccess: () => {
             alert('완료되었습니다.!');
@@ -62,7 +62,7 @@ const WorkspaceUserInviteModal = ({
       }
       inviteUserChannels(
         {
-          workspaceId: workspaceID,
+          workspaceId: workspaceId,
           emails: emails,
           channels: inviteChannel,
         },
@@ -76,7 +76,7 @@ const WorkspaceUserInviteModal = ({
     }
   };
 
-  if (!workspaceID) return <p>워크스페이스 ID가 없습니다.</p>;
+  if (!workspaceId) return <p>워크스페이스 ID가 없습니다.</p>;
   if (channelIsLoading) return <p>로딩중입니다.</p>;
   if (channelIsError) return <p>에러입니다.</p>;
 

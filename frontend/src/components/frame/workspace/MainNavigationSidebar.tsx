@@ -6,10 +6,10 @@ import { useNavigate, useParams } from 'react-router';
 const MainNavigationSidebar = () => {
   const icons = Object.values(NAVIGATION_ICONS);
   const navigate = useNavigate();
-  const { workspaceID } = useParams();
+  const { workspaceId } = useParams();
 
   const { data: workspaceChannelList } = useWorkspaceChannelListQuery(
-    workspaceID!
+    workspaceId!
   );
 
   return (
@@ -23,14 +23,14 @@ const MainNavigationSidebar = () => {
               if (item.type === 'Home') {
                 if (workspaceChannelList && workspaceChannelList.length > 0) {
                   navigate(
-                    `/workspace/${workspaceID}/channel/${workspaceChannelList[0].channelId}`
+                    `/workspace/${workspaceId}/channel/${workspaceChannelList[0].channelId}`
                   );
                 } else {
-                  navigate(`/workspace/${workspaceID}`);
+                  navigate(`/workspace/${workspaceId}`);
                 }
               }
               if (item.type === 'DM') {
-                navigate(`/workspace/${workspaceID}/dm`);
+                navigate(`/workspace/${workspaceId}/dm`);
               }
               if (item.type === 'ETC') console.log('더보기 클릭');
             }}
