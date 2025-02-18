@@ -1,15 +1,15 @@
 export class WorkspaceUserDto {
-  user_id: string;
+  userId: string;
   nickname: string;
   role: string;
 }
 
 export class WorkspaceDetailResponseDto {
-  workspace_id: string;
+  workspaceId: string;
   name: string;
-  owner_id: string;
-  profile_image: string;
+  ownerId: string;
+  profileImage: string;
   users: WorkspaceUserDto[];
-  created_at: Date;
-  updated_at: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }

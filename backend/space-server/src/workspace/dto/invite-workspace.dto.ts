@@ -4,5 +4,5 @@ export class InviteWorkspaceDto {
   @IsArray()
   @IsString()
   @IsNotEmpty()
-  invite_user_list: string[];
+  inviteUserList: string[];
 }

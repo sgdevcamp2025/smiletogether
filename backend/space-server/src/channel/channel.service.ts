@@ -195,8 +195,8 @@ export class ChannelService {
 
     if (channelUser) {
       return {
-        message: 'User is already a member of the channel.',
         channelId: channelId,
+        message: 'User is already a member of the channel.',
       };
     }
 
@@ -299,7 +299,7 @@ export class ChannelService {
     });
 
     return {
-      channel_id: deletedChannel.channel_id,
+      channelId: deletedChannel.channel_id,
       status: 'channel deleted',
     };
   }
