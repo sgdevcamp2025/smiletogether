@@ -1,15 +1,20 @@
 export class ChannelDetailsDto {
   channelId: string;
-  name: string;
+  channelName: string;
   description: string | null;
-  isPrivate: boolean;
-  members: MemberDto[];
   createdAt: string;
-  lastActiveAt: string;
+  createdBy: MemberDto;
+  isPrivate: boolean;
+  totalMembers: number;
+  members: MemberDto[];
 }
 
 export class MemberDto {
   userId: string;
   nickname: string;
+  displayName: string | null;
   profileImage: string;
+  position: string | null;
+  isActive: boolean;
+  statusMessage: string | null;
 }

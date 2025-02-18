@@ -128,6 +128,7 @@ export class ChannelService {
       where: { channel_id: channelId },
       select: {
         user_id: true,
+        channel_role: true,
       },
     });
 
@@ -143,20 +144,40 @@ export class ChannelService {
       },
     });
 
+    const adminUserId = channelUsers.find(
+      (user) => user.channel_role === 'admin',
+    )?.user_id;
+    const adminUser = members.find((member) => member.user_id === adminUserId);
+
+    const mappedAdminUser = {
+      userId: adminUser.user_id,
+      nickname: adminUser.profile_name,
+      displayName: '',
+      profileImage: adminUser.profile_image,
+      position: '',
+      isActive: true,
+      statusMessage: '',
+    };
+
     const mappedMembers = members.map((member) => ({
       userId: member.user_id,
       nickname: member.profile_name,
+      displayName: '',
       profileImage: member.profile_image,
+      position: '',
+      isActive: true,
+      statusMessage: '',
     }));
 
     return {
       channelId: channel.channel_id,
-      name: channel.name,
+      channelName: channel.name,
+      createdBy: mappedAdminUser,
       description: channel.description,
       isPrivate: channel.is_private,
+      totalMembers: mappedMembers.length,
       members: mappedMembers,
       createdAt: channel.created_at.toISOString(),
-      lastActiveAt: channel.updated_at.toISOString(),
     };
   }
 
