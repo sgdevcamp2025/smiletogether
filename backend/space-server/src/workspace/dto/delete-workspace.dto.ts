@@ -1,4 +1,4 @@
 export class WorkspaceDeleteResponseDto {
-  workspace_id: string;
+  workspaceId: string;
   status: string;
 }

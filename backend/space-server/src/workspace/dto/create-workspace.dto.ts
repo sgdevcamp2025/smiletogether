@@ -3,20 +3,20 @@ import { IsString, IsOptional, IsArray, IsNotEmpty } from 'class-validator';
 export class CreateWorkspaceDto {
   @IsString()
   @IsNotEmpty()
-  workspace_name: string;
+  workspaceName: string;
 
   @IsString()
   @IsNotEmpty()
-  owner_id: string;
+  ownerId: string;
 
   @IsString()
   @IsNotEmpty()
-  user_name: string;
+  userName: string;
 
   @IsOptional()
-  profile_image?: string;
+  profileImage?: string;
 
   @IsArray()
   @IsString()
-  invite_user_list: string[];
+  inviteUserList: string[];
 }

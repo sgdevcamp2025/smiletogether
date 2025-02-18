@@ -48,13 +48,13 @@ export class WorkspaceService {
       userWorkspaces: {
         email: 'temp@email.com',
         workspaces: workspaces.map((workspace) => ({
-          workspace_id: workspace.workspace_id,
+          workspaceId: workspace.workspace_id,
           name: workspace.name,
-          profile_image: workspace.workspace_image,
-          member_count: workspace._count.WorkspaceUser,
-          workspace_members: workspace.WorkspaceUser.map((member) => ({
-            user_id: member.user_id,
-            profile_image: member.profile_image,
+          profileImage: workspace.workspace_image,
+          memberCount: workspace._count.WorkspaceUser,
+          workspaceMembers: workspace.WorkspaceUser.map((member) => ({
+            userId: member.user_id,
+            profileImage: member.profile_image,
           })),
         })),
       },
@@ -64,13 +64,8 @@ export class WorkspaceService {
   async createWorkspace(
     createWorkspaceDto: CreateWorkspaceDto,
   ): Promise<WorkspaceResponseDto> {
-    const {
-      workspace_name,
-      owner_id,
-      user_name,
-      profile_image,
-      invite_user_list,
-    } = createWorkspaceDto;
+    const { workspaceName, ownerId, userName, profileImage, inviteUserList } =
+      createWorkspaceDto;
 
     const inviteResults = {
       success: [],
@@ -81,8 +76,8 @@ export class WorkspaceService {
       // 워크스페이스 생성
       const workspace = await prisma.workspace.create({
         data: {
-          name: workspace_name,
-          workspace_image: profile_image || 'default.jpg',
+          name: workspaceName,
+          workspace_image: profileImage || 'default.jpg',
         },
       });
 
@@ -90,10 +85,10 @@ export class WorkspaceService {
       await prisma.workspaceUser.create({
         data: {
           workspace_id: workspace.workspace_id,
-          user_id: owner_id,
+          user_id: ownerId,
           role: 'admin',
-          profile_name: user_name,
-          profile_image: profile_image || 'default.jpg',
+          profile_name: userName,
+          profile_image: profileImage || 'default.jpg',
         },
       });
 
@@ -111,13 +106,13 @@ export class WorkspaceService {
       await prisma.channelUser.create({
         data: {
           channel_id: defaultChannel.channel_id,
-          user_id: owner_id,
+          user_id: ownerId,
           channel_role: 'admin',
         },
       });
 
       // 초대된 사용자들 처리
-      for (const userId of invite_user_list) {
+      for (const userId of inviteUserList) {
         try {
           // 워크스페이스 멤버로 추가
           await prisma.workspaceUser.create({
@@ -149,10 +144,10 @@ export class WorkspaceService {
       // response
       return {
         workspaceId: workspace.workspace_id,
-        name: workspace_name,
-        creator: owner_id,
+        name: workspaceName,
+        creator: ownerId,
         defaultChannel: defaultChannel.channel_id,
-        profileImage: profile_image || 'default.jpg',
+        profileImage: profileImage || 'default.jpg',
         inviteResults,
         createdAt: workspace.created_at,
       };
@@ -181,9 +176,9 @@ export class WorkspaceService {
 
     return {
       workspaces: workspaces.map((workspace) => ({
-        workspace_id: workspace.workspace_id,
+        workspaceId: workspace.workspace_id,
         name: workspace.name,
-        owner_id: workspace.WorkspaceUser[0].user_id,
+        ownerId: workspace.WorkspaceUser[0].user_id,
         nickname: workspace.WorkspaceUser[0].profile_name,
       })),
     };
@@ -193,7 +188,7 @@ export class WorkspaceService {
     workspaceId: string,
     inviteWorkspaceDto: InviteWorkspaceDto,
   ) {
-    const { invite_user_list } = inviteWorkspaceDto;
+    const { inviteUserList } = inviteWorkspaceDto;
 
     const inviteResults = {
       success: [],
@@ -230,7 +225,7 @@ export class WorkspaceService {
 
       const existingMemberIds = existingMembers.map((member) => member.user_id);
 
-      for (const userId of invite_user_list) {
+      for (const userId of inviteUserList) {
         try {
           if (existingMemberIds.includes(userId)) {
             inviteResults.failed.push(userId);
@@ -300,18 +295,18 @@ export class WorkspaceService {
     }
 
     return {
-      workspace_id: workspace.workspace_id,
+      workspaceId: workspace.workspace_id,
       name: workspace.name,
-      owner_id: workspace.WorkspaceUser.find((user) => user.role === 'admin')
+      ownerId: workspace.WorkspaceUser.find((user) => user.role === 'admin')
         ?.user_id,
-      profile_image: workspace.workspace_image,
+      profileImage: workspace.workspace_image,
       users: workspace.WorkspaceUser.map((user) => ({
-        user_id: user.user_id,
+        userId: user.user_id,
         nickname: user.profile_name,
         role: user.role,
       })),
-      created_at: workspace.created_at,
-      updated_at: workspace.updated_at,
+      createdAt: workspace.created_at,
+      updatedAt: workspace.updated_at,
     };
   }
 
@@ -350,7 +345,7 @@ export class WorkspaceService {
     });
 
     return {
-      workspace_id: deletedWorkspace.workspace_id,
+      workspaceId: deletedWorkspace.workspace_id,
       status: 'workspace deleted',
     };
   }
