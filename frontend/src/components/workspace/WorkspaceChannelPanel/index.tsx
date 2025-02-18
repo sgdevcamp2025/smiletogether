@@ -12,7 +12,7 @@ import WorkspaceMenu from '@/components/workspace/WorkspaceMenu';
 import useLeaveWorkspaceMutation from '@/hooks/workspace/useLeaveWorkspaceMutation';
 import useRemoveWorkspaceMutation from '@/hooks/workspace/useRemoveWorkspaceMutation';
 import WorkspaceActionModal from '@/components/workspace/Modal/WorkspaceActionModal';
-import { modalStore } from '@/stores/modalStore';
+import { ModalType, useModalStore } from '@/stores/modalStore';
 
 const WorkspaceChannelPanel = () => {
   const { workspaceId } = useParams();
@@ -35,8 +35,9 @@ const WorkspaceChannelPanel = () => {
   } = useWorkspaceChannelListQuery(workspaceId!);
 
   const workspaceName = workspacesInfo?.name ?? '알 수 없는 워크스페이스';
-  const isOpen = modalStore(state => state.isOpen);
-  const setModal = modalStore(state => state.setModal);
+  const modal = useModalStore(state => state.modal);
+  const setModal = useModalStore(state => state.setModal);
+  const isOpen = (key: ModalType) => modal === key;
 
   if (!workspaceId) return <p>워크스페이스 정보를 불러오는 중...</p>;
   if (isChannelLoading || isWorkspaceLoading || isDMLoading)
@@ -106,7 +107,10 @@ interface ModalManagerProps {
 const ModalManager = ({ workspaceName, workspaceId }: ModalManagerProps) => {
   const { mutate: leaveWorkspace } = useLeaveWorkspaceMutation();
   const { mutate: removeWorkspace } = useRemoveWorkspaceMutation();
-  const { isOpen, closeModal } = modalStore();
+  const modal = useModalStore(state => state.modal);
+  const closeModal = useModalStore(state => state.closeModal);
+  const isOpen = (key: ModalType) => modal === key;
+
   return (
     <>
       {isOpen('USER_INVITE') && (
