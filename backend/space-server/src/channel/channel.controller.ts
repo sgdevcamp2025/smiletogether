@@ -63,4 +63,12 @@ export class ChannelController {
   ): Promise<any> {
     return await this.channelService.leaveChannel(channelId, userId);
   }
+
+  @Delete(':channel_id')
+  async deleteChannel(
+    @UserId() userId: string,
+    @Param('channel_id') channelId: string,
+  ): Promise<any> {
+    return await this.channelService.deleteChannel(channelId, userId);
+  }
 }

@@ -2,6 +2,7 @@ import {
   ForbiddenException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
 import { ChannelResponseDto } from './dto/channel-response.dto';
@@ -263,6 +264,43 @@ export class ChannelService {
 
     return {
       message: 'Successfuly deleted',
+    };
+  }
+
+  async deleteChannel(channelId: string, userId: string): Promise<any> {
+    const channel = await this.prismaService.channel.findUnique({
+      where: {
+        channel_id: channelId,
+      },
+      include: {
+        ChannelUser: {
+          where: {
+            channel_role: 'admin',
+            user_id: userId,
+          },
+        },
+      },
+    });
+
+    if (!channel) {
+      throw new NotFoundException(`Channel with ID ${channelId} not found`);
+    }
+
+    if (channel.ChannelUser.length === 0) {
+      throw new UnauthorizedException(
+        'You do not have permission to delete this channel.',
+      );
+    }
+
+    const deletedChannel = await this.prismaService.channel.delete({
+      where: {
+        channel_id: channelId,
+      },
+    });
+
+    return {
+      channel_id: deletedChannel.channel_id,
+      status: 'channel deleted',
     };
   }
 }
