@@ -9,7 +9,7 @@ const WorkspaceAvatarList = ({ members }: WorkspaceAvatarListProps) => {
   return (
     <div className="flex -space-x-1">
       {members.slice(0, 5).map(item => (
-        <Avatar src={item.profile_image} alt="user_profile_image" />
+        <Avatar src={item.profileImage} alt="user_profile_image" />
       ))}
     </div>
   );

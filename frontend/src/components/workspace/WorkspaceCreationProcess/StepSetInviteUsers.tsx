@@ -23,11 +23,11 @@ const StepSetInviteUsers = () => {
     alert('제출 완료');
     mutate(
       {
-        workspace_name: workspaceName,
-        owner_id: '1',
-        user_name: userName,
-        profile_image: workspaceProfileImage,
-        invite_user_list: invitedUsers,
+        workspaceName: workspaceName,
+        ownerId: '1',
+        username: userName,
+        profileImage: workspaceProfileImage,
+        inviteResults: invitedUsers,
       },
       {
         onSuccess: data => {

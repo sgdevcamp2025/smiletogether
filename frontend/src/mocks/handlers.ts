@@ -9,7 +9,7 @@ import {
 let db = JSON.parse(JSON.stringify(dummy));
 
 interface InvitedUser {
-  user_id: string;
+  userId: string;
   status: string;
 }
 
@@ -23,8 +23,8 @@ export const handlers = [
   http.get(`/api/workspaces/:workspaceId`, ({ params }) => {
     const { workspaceId } = params;
     const workspace = db.userWorkspaces.workspaces.find(
-      (item: { workspace_id: string | readonly string[] | undefined }) =>
-        item.workspace_id === workspaceId
+      (item: { workspaceId: string | readonly string[] | undefined }) =>
+        item.workspaceId === workspaceId
     );
     return HttpResponse.json(workspace);
   }),
@@ -33,13 +33,13 @@ export const handlers = [
       const newPost: PostNewWorkspaceRequestDto =
         (await request.json()) as PostNewWorkspaceRequestDto;
 
-      if (!newPost.workspace_name) {
+      if (!newPost.workspaceName) {
         return HttpResponse.json(
           { error: 'workspace name is required' },
           { status: 400 }
         );
       }
-      if (!newPost.user_name) {
+      if (!newPost.username) {
         return HttpResponse.json(
           { error: 'username is required' },
           { status: 400 }
@@ -48,30 +48,30 @@ export const handlers = [
 
       const workspaceId = nanoid(8);
       const userList = [];
-      for (let i = 0; i < newPost.invite_user_list.length; i++) {
+      for (let i = 0; i < newPost.inviteResults.length; i++) {
         const dummyUser = {
-          user_id: 'user_12345',
-          profile_image: 'https://example.com/user_12345.png',
+          userId: 'user_12345',
+          profileImage: 'https://example.com/user_12345.png',
         };
         userList.push(dummyUser);
       }
 
       const workspaceData = {
-        workspace_id: workspaceId,
-        name: newPost.workspace_name,
-        profile_image: newPost.profile_image,
-        member_count: newPost.invite_user_list.length,
-        workspace_members: userList,
+        workspaceId: workspaceId,
+        name: newPost.workspaceName,
+        profileImage: newPost.profileImage,
+        memberCount: newPost.inviteResults.length,
+        workspaceMembers: userList,
       };
       const responseData: PostNewWorkspaceResponseDto = {
         workspaceId,
-        name: String(newPost.workspace_name),
-        creator: newPost.owner_id,
+        name: String(newPost.workspaceName),
+        creator: newPost.ownerId,
         defaultChannel: 'general',
-        profileImage: newPost.profile_image,
+        profileImage: newPost.profileImage,
         inviteResults: {
           success: [],
-          failed: newPost.invite_user_list,
+          failed: newPost.inviteResults,
         },
         createdAt: new Date().toISOString(),
       };
@@ -98,16 +98,16 @@ export const handlers = [
         );
       }
       const { workspaceId } = params;
-      const inviteUserListResult: InvitedUser[] = [];
+      const inviteResultsResult: InvitedUser[] = [];
       requestBody.map(email => {
-        inviteUserListResult.push({
-          user_id: email,
+        inviteResultsResult.push({
+          userId: email,
           status: 'invitation_sent',
         });
       });
       const response = {
-        workspace_id: workspaceId,
-        invited_users: inviteUserListResult,
+        workspaceId: workspaceId,
+        invited_users: inviteResultsResult,
       };
       return HttpResponse.json(response, { status: 200 });
     }

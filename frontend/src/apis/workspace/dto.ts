@@ -1,22 +1,22 @@
 interface WorkspaceMember {
-  user_id: string;
-  profile_image: string;
+  userId: string;
+  profileImage: string;
   role?: 'member' | 'admin';
 }
 
 interface Workspace {
-  workspace_id: string;
+  workspaceId: string;
   name: string;
-  profile_image: string;
-  member_count: number;
-  workspace_members: WorkspaceMember[];
+  profileImage: string;
+  memberCount: number;
+  workspaceMembers: WorkspaceMember[];
 }
 
 export interface GetUserWorkspaceResponse {
-  workspace_id: string;
+  workspaceId: string;
   name: string;
-  owner_id: string;
-  profile_image: string;
+  ownerId: string;
+  profileImage: string;
   users: WorkspaceMember[];
   created_at: string;
   updated_at: string;
@@ -28,11 +28,11 @@ export interface GetUserWorkspaceListeResponse {
 }
 
 export interface PostNewWorkspaceRequestDto {
-  workspace_name: string;
-  owner_id: string;
-  user_name: string;
-  profile_image: string;
-  invite_user_list: string[];
+  workspaceName: string;
+  ownerId: string;
+  username: string;
+  profileImage: string;
+  inviteResults: string[];
 }
 
 export interface PostNewWorkspaceResponseDto {

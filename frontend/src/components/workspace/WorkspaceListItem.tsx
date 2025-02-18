@@ -12,8 +12,8 @@ interface WorkspaceListItemProps {
 }
 
 export interface MemberProps {
-  user_id: string;
-  profile_image: string;
+  userId: string;
+  profileImage: string;
 }
 
 const WorkspaceListItem = ({
