@@ -20,7 +20,7 @@ services:
     environment:
       DATABASE_URL: postgresql://myuser:mypassword@space_db_postgres:5432/mydatabase
     ports:
-      - "3000:3000"
+      - "8090:8090"
     depends_on:
       - postgres
     command: >
