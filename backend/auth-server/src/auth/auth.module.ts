@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { RedisModule } from '@liaoliaots/nestjs-redis';
         port: parseInt(process.env.REDIS_PORT) || 6380,
       },
     }),
+    JwtModule,
   ],
   controllers: [AuthController],
   providers: [AuthService],
