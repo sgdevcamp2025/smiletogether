@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { useModalStore } from '@/stores/modalStore';
 import useUserWorkspaceQuery from '@/hooks/workspace/useUserWorkspaceQuery';
@@ -24,7 +24,20 @@ const ChannelCreateSecondStepModal = ({
   const [totalUserInvite, setTotalUserInvite] = useState('total');
   const closeModla = useModalStore(state => state.closeModal);
   const { workspaceId } = useParams();
-  const { data: workspacesInfo } = useUserWorkspaceQuery(workspaceId!);
+  const {
+    data: workspacesInfo,
+    isLoading: isWorkspaceLoading,
+    isError: isWorkspaceError,
+  } = useUserWorkspaceQuery(workspaceId!);
+
+  useEffect(() => {
+    if (totalUserInvite === 'total' && workspacesInfo) {
+      setEmails(workspacesInfo.users.map(user => user.userEmail));
+    }
+  }, [totalUserInvite, workspacesInfo, setEmails]);
+
+  if (isWorkspaceError) return <div>error</div>;
+  if (isWorkspaceLoading) return <div>loading</div>;
 
   return (
     <ModalPortal>

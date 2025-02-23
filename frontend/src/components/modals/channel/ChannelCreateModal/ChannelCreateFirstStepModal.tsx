@@ -9,13 +9,11 @@ import XButton from '@/components/common/button/XButton';
 
 const ChannelCreateModal = ({
   channelName,
-  channelVisibility,
   setStep,
   setChannelName,
   setChannelVisibility,
 }: {
   channelName: string;
-  channelVisibility: boolean;
   setStep: (step: number) => void;
   setChannelName: (name: string) => void;
   setChannelVisibility: (channelVisibility: boolean) => void;
@@ -25,7 +23,6 @@ const ChannelCreateModal = ({
       <div className="bg-white w-full max-w-4xl rounded-sm shadow-lg flex h-screen  max-h-[70vh]">
         <ChannelCreateModalLeftPannel
           channelName={channelName}
-          channelVisibility={channelVisibility}
           setStep={setStep}
           setChannelName={setChannelName}
           setChannelVisibility={setChannelVisibility}
@@ -40,13 +37,11 @@ export default ChannelCreateModal;
 
 const ChannelCreateModalLeftPannel = ({
   channelName,
-  channelVisibility,
   setStep,
   setChannelName,
   setChannelVisibility,
 }: {
   channelName: string;
-  channelVisibility: boolean;
   setStep: (step: number) => void;
   setChannelName: (name: string) => void;
   setChannelVisibility: (channelVisibility: boolean) => void;

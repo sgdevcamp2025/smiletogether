@@ -24,10 +24,10 @@ const ChannelCreateModal = () => {
       },
       {
         onSuccess: () => {
-          alert(`${channelName} 채널 성공에 생성하셨습니다.`);
+          alert(`${channelName} 채널 생성에 하셨습니다.`);
         },
         onError: () => {
-          alert(`${channelName} 채널 성공에 생성하셨습니다.`);
+          alert(`${channelName} 채널 생성에 실패하였습니다. `);
         },
       }
     );
@@ -39,7 +39,6 @@ const ChannelCreateModal = () => {
       case 1:
         return (
           <ChannelCreateFirstStepModal
-            channelVisibility={channelVisibility}
             channelName={channelName}
             setStep={setStep}
             setChannelName={setChannelName}
