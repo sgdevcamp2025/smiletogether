@@ -1,4 +1,4 @@
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { MdOutlineAddBox } from 'react-icons/md';
 import WorkspaceAccordionSection from '@/components/workspace/WorkspaceAccordionList';
 import WorkspaceChannelListItem from '@/components/workspace/WorkspaceChannelPanel/WorkspaceChannelListItem';
@@ -13,9 +13,12 @@ import useLeaveWorkspaceMutation from '@/hooks/workspace/useLeaveWorkspaceMutati
 import useRemoveWorkspaceMutation from '@/hooks/workspace/useRemoveWorkspaceMutation';
 import WorkspaceActionModal from '@/components/workspace/Modal/WorkspaceActionModal';
 import { ModalType, useModalStore } from '@/stores/modalStore';
+import ChannelMenu from '@/components/channel/ChannelMenu';
+import ChannelCreateModal from '@/components/channel/modal/ChannelCreateModal';
 
 const WorkspaceChannelPanel = () => {
   const { workspaceId } = useParams();
+  const navigate = useNavigate();
 
   const {
     data: workspacesInfo,
@@ -77,11 +80,21 @@ const WorkspaceChannelPanel = () => {
         sectionTitle="채널"
         createButtonIcon={<MdOutlineAddBox />}
         createButtonText="채널 추가"
+        createButtonOnClick={() => setModal('CHANNEL_MENU')}
       >
         {channelList?.map((channel, index) => (
           <WorkspaceChannelListItem channel={channel} key={index} />
         ))}
       </WorkspaceAccordionSection>
+      {isOpen('CHANNEL_MENU') && (
+        <ChannelMenu
+          onCreateChannel={() => setModal('CHANNEL_CREATE')}
+          onExploreChannels={() => {
+            //navigate('workspace/:workspaceId/channel/find)
+            console.log('navigate channel find');
+          }}
+        />
+      )}
       <WorkspaceAccordionSection
         sectionTitle="다이렉트 메세지"
         createButtonIcon={<MdOutlineAddBox className="text-2xl" />}
@@ -141,6 +154,7 @@ const ModalManager = ({ workspaceName, workspaceId }: ModalManagerProps) => {
           closeModal={() => closeModal()}
         />
       )}
+      {isOpen('CHANNEL_CREATE') && <ChannelCreateModal />}
     </>
   );
 };
