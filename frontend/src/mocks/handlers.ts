@@ -20,10 +20,10 @@ export const handlers = [
   http.get('/api/workspaces', () => {
     return HttpResponse.json(db.userWorkspaces);
   }),
-  http.post(`/api/workspaces/:workspaceId/leave`, ({ params }) => {
+  http.post(`/api/workspaces/:workspaceId/leave`, () => {
     return HttpResponse.json({ message: 'success' }, { status: 200 });
   }),
-  http.delete(`/api/workspaces/:workspaceId`, ({ params }) => {
+  http.delete(`/api/workspaces/:workspaceId`, () => {
     return HttpResponse.json({ message: 'success' }, { status: 200 });
   }),
   http.get(`/api/workspaces/:workspaceId`, ({ params }) => {
@@ -58,16 +58,22 @@ export const handlers = [
         const dummyUser = {
           userId: 'user_12345',
           profileImage: 'https://example.com/user_12345.png',
+          role: 'member',
         };
         userList.push(dummyUser);
       }
+      userList.push({
+        userId: 'user_123457',
+        profileImage: 'https://example.com/user_12345.png',
+        role: 'admin',
+      });
 
       const workspaceData = {
         workspaceId: workspaceId,
         name: newPost.workspaceName,
         profileImage: newPost.profileImage,
         memberCount: newPost.inviteResults.length,
-        workspaceMembers: userList,
+        users: userList,
       };
       const responseData: PostNewWorkspaceResponseDto = {
         workspaceId,
@@ -118,8 +124,9 @@ export const handlers = [
       return HttpResponse.json(response, { status: 200 });
     }
   ),
-  http.post(`/api/workspaces/:workspaceId/channels`, request => {
-    console.log('channel create', request);
+  http.post(`/api/workspaces/:workspaceId/channels`, async ({ request }) => {
+    const requsetBody = await request.json();
+    console.log('채널 생성 요청 확인', requsetBody);
     return HttpResponse.json({ status: 200 });
   }),
   http.get(`/api/workspaces/:workspaceId/channels`, ({ request }) => {

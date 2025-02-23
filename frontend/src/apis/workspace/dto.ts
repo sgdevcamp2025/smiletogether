@@ -1,6 +1,7 @@
 interface WorkspaceMember {
   userId: string;
   profileImage: string;
+  userEmail: string;
   role?: 'member' | 'admin';
 }
 

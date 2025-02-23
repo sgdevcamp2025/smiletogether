@@ -120,7 +120,7 @@ const ChannelCreateModalRightPannel = () => {
   return (
     <div className="w-3/5 px-8 py-10 bg-yellow-100 flex flex-col">
       <div className="flex justify-end">
-        <XButton className="p-0" onClick={closeModal} />
+        <XButton className="pb-2" onClick={closeModal} />
       </div>
       <div className="flex items-center justify-center w-full h-full">
         <div className="w-full h-full shadow-lg shadow-black"></div>

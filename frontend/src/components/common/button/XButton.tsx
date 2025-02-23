@@ -1,6 +1,5 @@
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { IoClose } from 'react-icons/io5';
 
 interface XButtonProps {
   className?: string;
@@ -11,12 +10,12 @@ const XButton = ({ className, onClick }: XButtonProps) => {
   return (
     <Button
       className={cn(
-        'bg-transparent hover:bg-transparent text-black ',
+        'bg-transparent hover:bg-transparent p-0 text-black flex items-center justify-center text-2xl h-full',
         className
       )}
       onClick={onClick}
     >
-      <IoClose className="" />
+      x
     </Button>
   );
 };
