@@ -17,6 +17,20 @@ export interface GetChannelResponse {
   members: User[];
 }
 
+export interface postWorkspaceChannelsRequestDto {
+  workspaceId: string;
+  name: string;
+  isPrivate: boolean;
+  emails: string[];
+}
+
+export interface postWorkspaceChannelsResponseDto {
+  channelId: string;
+  name: string;
+  isPrivate: boolean;
+  createdAt: string;
+}
+
 interface Reaction {
   emoji: string;
   count: number;

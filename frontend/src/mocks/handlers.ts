@@ -118,7 +118,8 @@ export const handlers = [
       return HttpResponse.json(response, { status: 200 });
     }
   ),
-  http.post(`/api/workspaces/:workspaceId/channels/invite`, request => {
+  http.post(`/api/workspaces/:workspaceId/channels`, request => {
+    console.log('channel create', request);
     return HttpResponse.json({ status: 200 });
   }),
   http.get(`/api/workspaces/:workspaceId/channels`, ({ request }) => {

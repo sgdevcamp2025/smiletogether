@@ -15,10 +15,10 @@ const ChannelCreateModal = ({
   setChannelVisibility,
 }: {
   channelName: string;
-  channelVisibility: string;
+  channelVisibility: boolean;
   setStep: (step: number) => void;
   setChannelName: (name: string) => void;
-  setChannelVisibility: (channelVisibility: string) => void;
+  setChannelVisibility: (channelVisibility: boolean) => void;
 }) => {
   return (
     <ModalPortal>
@@ -46,13 +46,13 @@ const ChannelCreateModalLeftPannel = ({
   setChannelVisibility,
 }: {
   channelName: string;
-  channelVisibility: string;
+  channelVisibility: boolean;
   setStep: (step: number) => void;
   setChannelName: (name: string) => void;
-  setChannelVisibility: (channelVisibility: string) => void;
+  setChannelVisibility: (channelVisibility: boolean) => void;
 }) => {
   const handleChennelVisibility = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setChannelVisibility(e.target.value);
+    setChannelVisibility(e.target.value === 'public');
   };
 
   const handleChannelName = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -106,7 +106,7 @@ const ChannelCreateModalLeftPannel = ({
         </div>
       </form>
       <Button
-        className="bg-gray-200 text-black w-full mt-auto"
+        className="w-full mt-auto bg-yellow-300 hover:bg-yellow-200"
         onClick={handleChannelCreateButtonHandler}
       >
         새로 만들기
@@ -118,8 +118,13 @@ const ChannelCreateModalLeftPannel = ({
 const ChannelCreateModalRightPannel = () => {
   const closeModal = useModalStore(state => state.closeModal);
   return (
-    <div className="w-3/5 px-6 py-8 bg-purple-100">
-      <XButton onClick={closeModal} />
+    <div className="w-3/5 px-8 py-10 bg-yellow-100 flex flex-col">
+      <div className="flex justify-end">
+        <XButton className="p-0" onClick={closeModal} />
+      </div>
+      <div className="flex items-center justify-center w-full h-full">
+        <div className="w-full h-full shadow-lg shadow-black"></div>
+      </div>
     </div>
   );
 };

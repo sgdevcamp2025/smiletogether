@@ -10,9 +10,11 @@ import SkipButton from '@/components/common/button/SkipButton';
 const ChannelCreateSecondStepModal = ({
   emails,
   setEmails,
+  onSubmit,
 }: {
   emails: string[];
   setEmails: (emails: string[]) => void;
+  onSubmit: () => void;
 }) => {
   const [isValid, setIsValid] = useState(false);
   const [totalUserInvite, setTotalUserInvite] = useState('');
@@ -59,6 +61,7 @@ const ChannelCreateSecondStepModal = ({
               <SkipButton
                 onClick={() => {
                   closeModla();
+                  onSubmit();
                 }}
               />
             </>
@@ -66,6 +69,7 @@ const ChannelCreateSecondStepModal = ({
             <Button
               onClick={() => {
                 closeModla();
+                onSubmit();
               }}
             >
               추가

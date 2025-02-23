@@ -1,5 +1,9 @@
 import https from '@/lib/https';
-import { getWorkspaceChannelsResponseDto } from '@/apis/channel/dto';
+import {
+  getWorkspaceChannelsResponseDto,
+  postWorkspaceChannelsRequestDto,
+  postWorkspaceChannelsResponseDto,
+} from '@/apis/channel/dto';
 import { GetChannelResponse, GetMessagesResponse } from './dto';
 
 export const getChannel = async (
@@ -20,6 +24,21 @@ export const getWorkspaceChannels = async (
   workspaceId: string
 ): Promise<getWorkspaceChannelsResponseDto[]> => {
   const { data } = await https.get(`/api/workspaces/${workspaceId}/channels`);
+  return data;
+};
+
+export const postNewWorkspaceChannels = async ({
+  workspaceId,
+  name,
+  isPrivate,
+  emails,
+}: postWorkspaceChannelsRequestDto): Promise<postWorkspaceChannelsResponseDto> => {
+  const { data } = await https.post(`/api/workspaces/${workspaceId}/channels`, {
+    workspaceId,
+    name,
+    isPrivate,
+    emails,
+  });
   return data;
 };
 
