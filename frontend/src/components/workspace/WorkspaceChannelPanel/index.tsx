@@ -45,32 +45,19 @@ const WorkspaceChannelPanel = () => {
 
   return (
     <div className=" min-w-16 bg-yellow-200 text-white flex py-2 flex-col gap-2 text-wrap h-screen">
-      <h2
-        className="mt-3 px-4 scroll-m-20 text-2xl font-semibold tracking-tight text-white flex justify-between items-center"
-        onClick={() => {
-          setModal('WORKSPACE_MENU');
+      <WorkspaceMenu
+        workspaceName={workspaceName}
+        onInvite={() => {
+          setModal('USER_INVITE');
         }}
-      >
-        <span>{workspaceName} </span>
-        <div>
-          <ArrorIcon className="rotate-90" />
-        </div>
-      </h2>
-      {isOpen('WORKSPACE_MENU') && (
-        <WorkspaceMenu
-          workspaceName={workspaceName}
-          onInvite={() => {
-            setModal('USER_INVITE');
-          }}
-          onLogout={() => alert('로그아웃이 완료되었습니다.')}
-          onDelete={() => {
-            setModal('WORKSPACE_DELETE');
-          }}
-          onLeave={() => {
-            setModal('WORKSPACE_LEAVE');
-          }}
-        />
-      )}
+        onLogout={() => alert('로그아웃이 완료되었습니다.')}
+        onDelete={() => {
+          setModal('WORKSPACE_DELETE');
+        }}
+        onLeave={() => {
+          setModal('WORKSPACE_LEAVE');
+        }}
+      />
       <WorkspaceAccordionSection
         sectionTitle="채널"
         createButtonIcon={<MdOutlineAddBox />}
