@@ -1,15 +1,35 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import ArrorIcon from '@/components/common/ArrorIcon';
 import ModalPortal from '@/components/common/ModalPortal';
-import { ModalType, useModalStore } from '@/stores/modalStore';
+import { useModalStore } from '@/stores/modalStore';
+import RadioButton from '@/components/common/button/RadioButton';
+import XButton from '@/components/common/button/XButton';
 
-const ChannelCreateModal = () => {
+const ChannelCreateModal = ({
+  channelName,
+  channelVisibility,
+  setStep,
+  setChannelName,
+  setChannelVisibility,
+}: {
+  channelName: string;
+  channelVisibility: string;
+  setStep: (step: number) => void;
+  setChannelName: (name: string) => void;
+  setChannelVisibility: (channelVisibility: string) => void;
+}) => {
   return (
     <ModalPortal>
       <div className="bg-white w-full max-w-4xl rounded-sm shadow-lg flex h-screen  max-h-[70vh]">
-        <ChannelCreateModalLeftPannel />
+        <ChannelCreateModalLeftPannel
+          channelName={channelName}
+          channelVisibility={channelVisibility}
+          setStep={setStep}
+          setChannelName={setChannelName}
+          setChannelVisibility={setChannelVisibility}
+        />
         <ChannelCreateModalRightPannel />
       </div>
     </ModalPortal>
@@ -18,39 +38,19 @@ const ChannelCreateModal = () => {
 
 export default ChannelCreateModal;
 
-const ChannelCreateModalRadioButton = ({
-  id,
-  name,
-  value,
-  children,
-  defaultChecked = false,
-  onChange,
+const ChannelCreateModalLeftPannel = ({
+  channelName,
+  channelVisibility,
+  setStep,
+  setChannelName,
+  setChannelVisibility,
 }: {
-  id: string;
-  name: string;
-  value: string;
-  defaultChecked?: boolean;
-  children: React.ReactNode;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  channelName: string;
+  channelVisibility: string;
+  setStep: (step: number) => void;
+  setChannelName: (name: string) => void;
+  setChannelVisibility: (channelVisibility: string) => void;
 }) => {
-  return (
-    <div className="flex items-center gap-2">
-      <input
-        type="radio"
-        id={id}
-        name={name}
-        value={value}
-        defaultChecked={defaultChecked}
-        onChange={onChange}
-      />
-      <label htmlFor={id}>{children}</label>
-    </div>
-  );
-};
-
-const ChannelCreateModalLeftPannel = () => {
-  const [channelName, setChannelName] = useState('');
-  const [channelVisibility, setChannelVisibility] = useState('public');
   const handleChennelVisibility = (e: React.ChangeEvent<HTMLInputElement>) => {
     setChannelVisibility(e.target.value);
   };
@@ -64,7 +64,7 @@ const ChannelCreateModalLeftPannel = () => {
       alert('채널 이름을 작성해주세요');
       return;
     }
-    console.log('채널 생성하기 버튼 클릭', channelName, channelVisibility);
+    setStep(2);
   };
 
   return (
@@ -84,7 +84,7 @@ const ChannelCreateModalLeftPannel = () => {
       </div>
       <h3 className="pt-4 font-bold">가시성</h3>
       <form action="" className="flex flex-col gap-1">
-        <ChannelCreateModalRadioButton
+        <RadioButton
           id="public"
           name="chennel"
           value="public"
@@ -93,7 +93,7 @@ const ChannelCreateModalLeftPannel = () => {
           defaultChecked={true}
         />
         <div className="space-y-1">
-          <ChannelCreateModalRadioButton
+          <RadioButton
             id="private"
             name="chennel"
             value="private"
@@ -119,13 +119,7 @@ const ChannelCreateModalRightPannel = () => {
   const closeModal = useModalStore(state => state.closeModal);
   return (
     <div className="w-3/5 px-6 py-8 bg-purple-100">
-      <Button
-        onClick={() => {
-          closeModal();
-        }}
-      >
-        X
-      </Button>
+      <XButton onClick={closeModal} />
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from 'react-router';
+import { useParams } from 'react-router';
 import { MdOutlineAddBox } from 'react-icons/md';
 import WorkspaceAccordionSection from '@/components/workspace/WorkspaceAccordionList';
 import WorkspaceChannelListItem from '@/components/workspace/WorkspaceChannelPanel/WorkspaceChannelListItem';
@@ -6,19 +6,14 @@ import WorkspaceDirectMessageListItem from '@/components/workspace/WorkspaceChan
 import useUserWorkspaceQuery from '@/hooks/workspace/useUserWorkspaceQuery';
 import useWorkspaceChannelListQuery from '@/hooks/channel/useWorkspaceChannelListQuery';
 import useGetDMListQuery from '@/hooks/dm/useGetDMListQuery';
-import WorkspaceUserInviteModal from '@/components/workspace/Modal/WorkspaceUserInviteModal';
 import ArrorIcon from '@/components/common/ArrorIcon';
 import WorkspaceMenu from '@/components/workspace/WorkspaceMenu';
-import useLeaveWorkspaceMutation from '@/hooks/workspace/useLeaveWorkspaceMutation';
-import useRemoveWorkspaceMutation from '@/hooks/workspace/useRemoveWorkspaceMutation';
-import WorkspaceActionModal from '@/components/workspace/Modal/WorkspaceActionModal';
 import { ModalType, useModalStore } from '@/stores/modalStore';
 import ChannelMenu from '@/components/channel/ChannelMenu';
-import ChannelCreateModal from '@/components/channel/modal/ChannelCreateModal';
+import ModalManager from '@/components/modals/ModalManager';
 
 const WorkspaceChannelPanel = () => {
   const { workspaceId } = useParams();
-  const navigate = useNavigate();
 
   const {
     data: workspacesInfo,
@@ -91,7 +86,6 @@ const WorkspaceChannelPanel = () => {
           onCreateChannel={() => setModal('CHANNEL_CREATE')}
           onExploreChannels={() => {
             //navigate('workspace/:workspaceId/channel/find)
-            console.log('navigate channel find');
           }}
         />
       )}
@@ -111,50 +105,3 @@ const WorkspaceChannelPanel = () => {
 };
 
 export default WorkspaceChannelPanel;
-
-interface ModalManagerProps {
-  workspaceName: string;
-  workspaceId: string;
-}
-
-const ModalManager = ({ workspaceName, workspaceId }: ModalManagerProps) => {
-  const { mutate: leaveWorkspace } = useLeaveWorkspaceMutation();
-  const { mutate: removeWorkspace } = useRemoveWorkspaceMutation();
-  const modal = useModalStore(state => state.modal);
-  const closeModal = useModalStore(state => state.closeModal);
-  const isOpen = (key: ModalType) => modal === key;
-
-  return (
-    <>
-      {isOpen('USER_INVITE') && (
-        <WorkspaceUserInviteModal
-          title={workspaceName}
-          closeModal={() => closeModal()}
-        />
-      )}
-      {isOpen('WORKSPACE_DELETE') && (
-        <WorkspaceActionModal
-          title={`${workspaceName} 삭제하기`}
-          onClick={() => {
-            closeModal();
-            removeWorkspace(workspaceId);
-          }}
-          onClickButtonName="워크스페이스 삭제하기"
-          closeModal={() => closeModal()}
-        />
-      )}
-      {isOpen('WORKSPACE_LEAVE') && (
-        <WorkspaceActionModal
-          title={`${workspaceName} 나가기`}
-          onClick={() => {
-            closeModal();
-            leaveWorkspace(workspaceId);
-          }}
-          onClickButtonName="워스크스페이스 나가기"
-          closeModal={() => closeModal()}
-        />
-      )}
-      {isOpen('CHANNEL_CREATE') && <ChannelCreateModal />}
-    </>
-  );
-};
