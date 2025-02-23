@@ -124,18 +124,13 @@ export const handlers = [
       return HttpResponse.json(response, { status: 200 });
     }
   ),
-  http.post(`/api/workspaces/:workspaceId/channels`, async ({ request }) => {
-    const requsetBody = await request.json();
-    console.log('채널 생성 요청 확인', requsetBody);
+  http.post(`/api/workspaces/:workspaceId/channels`, () => {
     return HttpResponse.json({ status: 200 });
   }),
-  http.get(`/api/workspaces/:workspaceId/channels`, ({ request }) => {
-    const url = new URL(request.url);
+  http.get(`/api/workspaces/:workspaceId/channels`, () => {
     return HttpResponse.json(dummy.channels);
   }),
-  http.get('/api/channel', ({ request }) => {
-    const url = new URL(request.url);
-    const channelId = url.searchParams.get('channelId');
+  http.get('/api/channel', () => {
     const channel = dummy.channel.find(c => c.channelId === '12345');
     if (channel) {
       return HttpResponse.json(channel);
@@ -152,9 +147,7 @@ export const handlers = [
       { status: 200 }
     );
   }),
-  http.get('/api/chatMessage', ({ request }) => {
-    const url = new URL(request.url);
-    const channelId = url.searchParams.get('channelId');
+  http.get('/api/chatMessage', () => {
     if ('12345' === dummy.messages.channelId) {
       return HttpResponse.json(dummy.messages);
     }

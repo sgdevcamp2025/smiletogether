@@ -50,7 +50,6 @@ const ChatHeader = ({
 
   const onClickDelteChannel = () => {
     setOpenDeleteChannel(false);
-    console.log('채널에서 나가기 API 연동해야합니다');
     if (workspaceId && channelId) {
       mutate(
         { workspaceId, channelId },
