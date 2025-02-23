@@ -10,7 +10,7 @@ interface DMLastMessage {
   createdAt: string;
 }
 
-interface DMItem {
+export interface DMItem {
   dmId: string;
   participants: DMParticipant[];
   lastMessage: DMLastMessage;

@@ -32,7 +32,7 @@ const WorkspaceMenu = ({
       <DropdownMenuTrigger asChild className="w-full">
         <Button
           variant="outline"
-          className="bg-transparent border-none shadow-none w-full justify-between p-0 text-2xl hover:bg-transparent px-3"
+          className="bg-transparent border-none shadow-none w-full justify-between p-0 text-2xl hover:bg-transparent px-4"
         >
           <span> {workspaceName}</span>
           <div>

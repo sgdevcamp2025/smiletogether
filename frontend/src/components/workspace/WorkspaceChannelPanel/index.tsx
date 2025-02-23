@@ -1,16 +1,12 @@
 import { useParams } from 'react-router';
-import { MdOutlineAddBox } from 'react-icons/md';
-import WorkspaceAccordionSection from '@/components/workspace/WorkspaceAccordionList';
-import WorkspaceChannelListItem from '@/components/workspace/WorkspaceChannelPanel/WorkspaceChannelListItem';
-import WorkspaceDirectMessageListItem from '@/components/workspace/WorkspaceChannelPanel/WorkspaceDirectMessageListItem';
 import useUserWorkspaceQuery from '@/hooks/workspace/useUserWorkspaceQuery';
 import useWorkspaceChannelListQuery from '@/hooks/channel/useWorkspaceChannelListQuery';
 import useGetDMListQuery from '@/hooks/dm/useGetDMListQuery';
-import ArrorIcon from '@/components/common/ArrorIcon';
 import WorkspaceMenu from '@/components/workspace/WorkspaceMenu';
-import { ModalType, useModalStore } from '@/stores/modalStore';
-import ChannelMenu from '@/components/channel/ChannelMenu';
+import { useModalStore } from '@/stores/modalStore';
 import ModalManager from '@/components/modals/ModalManager';
+import WorkspaceChannels from '@/components/workspace/WorkspaceChannelPanel/WorkspaceChannels';
+import WorkspaceDMs from '@/components/workspace/WorkspaceChannelPanel/WorkspaceDMs';
 
 const WorkspaceChannelPanel = () => {
   const { workspaceId } = useParams();
@@ -21,7 +17,7 @@ const WorkspaceChannelPanel = () => {
     isError: isWorkspaceError,
   } = useUserWorkspaceQuery(workspaceId!);
   const {
-    data: dmList,
+    data: dmList = { dms: [] },
     isLoading: isDMLoading,
     isError: isDMError,
   } = useGetDMListQuery(workspaceId!);
@@ -33,9 +29,7 @@ const WorkspaceChannelPanel = () => {
   } = useWorkspaceChannelListQuery(workspaceId!);
 
   const workspaceName = workspacesInfo?.name ?? '알 수 없는 워크스페이스';
-  const modal = useModalStore(state => state.modal);
   const setModal = useModalStore(state => state.setModal);
-  const isOpen = (key: ModalType) => modal === key;
 
   if (!workspaceId) return <p>워크스페이스 정보를 불러오는 중...</p>;
   if (isChannelLoading || isWorkspaceLoading || isDMLoading)
@@ -58,34 +52,16 @@ const WorkspaceChannelPanel = () => {
           setModal('WORKSPACE_LEAVE');
         }}
       />
-      <WorkspaceAccordionSection
-        sectionTitle="채널"
-        createButtonIcon={<MdOutlineAddBox />}
-        createButtonText="채널 추가"
-        createButtonOnClick={() => setModal('CHANNEL_MENU')}
-      >
-        {channelList?.map((channel, index) => (
-          <WorkspaceChannelListItem channel={channel} key={index} />
-        ))}
-      </WorkspaceAccordionSection>
-      {isOpen('CHANNEL_MENU') && (
-        <ChannelMenu
-          onCreateChannel={() => setModal('CHANNEL_CREATE')}
-          onExploreChannels={() => {
-            //navigate('workspace/:workspaceId/channel/find)
-          }}
-        />
-      )}
-      <WorkspaceAccordionSection
-        sectionTitle="다이렉트 메세지"
-        createButtonIcon={<MdOutlineAddBox className="text-2xl" />}
-        createButtonText="직장 동류 추가"
-        createButtonOnClick={() => setModal('USER_INVITE')}
-      >
-        {dmList?.dms?.map((dm, index) => (
-          <WorkspaceDirectMessageListItem dm={dm} key={index} />
-        ))}
-      </WorkspaceAccordionSection>
+
+      <WorkspaceChannels
+        onCreateChannel={() => setModal('CHANNEL_CREATE')}
+        onExploreChannels={() => console.log('채널 탐색')}
+        channelList={channelList}
+      />
+      <WorkspaceDMs
+        dmList={dmList.dms ?? []}
+        onAddColleauge={() => setModal('USER_INVITE')}
+      />
       <ModalManager workspaceName={workspaceName} workspaceId={workspaceId!} />
     </div>
   );
