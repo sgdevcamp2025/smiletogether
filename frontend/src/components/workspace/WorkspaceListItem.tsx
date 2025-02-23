@@ -2,18 +2,14 @@ import { useNavigate } from 'react-router';
 import Avatar from '@/components/common/Avatar';
 import ArrorIcon from '@/components/common/ArrorIcon';
 import WorkspaceListItemDetail from '@/components/workspace/WorkspaceListItemDetail';
+import { WorkspaceMember } from '@/types/user';
 
 interface WorkspaceListItemProps {
   name: string;
   profileImage: string;
   memberCount: number;
-  members: MemberProps[];
+  members: WorkspaceMember[];
   workspaceId: string;
-}
-
-export interface MemberProps {
-  userId: string;
-  profileImage: string;
 }
 
 const WorkspaceListItem = ({

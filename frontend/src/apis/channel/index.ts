@@ -56,3 +56,13 @@ export const postInviteWorkspaceChannels = async (
   );
   return data;
 };
+
+export const leaveWorkspaceChannel = async (
+  workspaceId: string,
+  channelId: string
+) => {
+  const { data } = await https.delete(
+    `/api/workspaces/${workspaceId}/channels/${channelId}/leave`
+  );
+  return data;
+};

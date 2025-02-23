@@ -39,7 +39,7 @@ const WorkSpaceListPage = () => {
                 name={item.name}
                 profileImage={item.profileImage}
                 memberCount={item.memberCount}
-                members={item.workspaceMembers}
+                members={item.users}
                 workspaceId={item.workspaceId}
               />
             );

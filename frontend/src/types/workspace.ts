@@ -5,5 +5,5 @@ export interface Workspace {
   name: string;
   profileImage: string;
   memberCount: number;
-  workspaceMembers: WorkspaceMember[];
+  users: WorkspaceMember[];
 }

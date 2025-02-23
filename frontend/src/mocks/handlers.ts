@@ -146,6 +146,12 @@ export const handlers = [
       { status: 404 }
     );
   }),
+  http.delete('/api/workspaces/:workspaceId/channels/:channelId/leave', () => {
+    return HttpResponse.json(
+      { message: 'leave the chaneel suc' },
+      { status: 200 }
+    );
+  }),
   http.get('/api/chatMessage', ({ request }) => {
     const url = new URL(request.url);
     const channelId = url.searchParams.get('channelId');

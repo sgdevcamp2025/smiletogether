@@ -15,6 +15,8 @@ import {
 } from '@/components/ui/tooltip';
 import ChannleDelete from '../channel/ChannleDelete';
 import ChannleInfoModal from '../channel/infoModal';
+import useLeaveWorkspaceChannelMutation from '@/hooks/channel/useLeaveWorkspaceChannelMutation';
+import { useParams } from 'react-router';
 
 interface ChatHeaderProps {
   name: string;
@@ -35,6 +37,8 @@ const ChatHeader = ({
   const [openInfoChannel, setOpenInfoChannel] = useState(false);
   const [infoTab, setInfoTab] = useState<'정보' | '멤버'>('정보');
   const displayMembers = members ? members?.slice(0, 3) : [];
+  const { mutate } = useLeaveWorkspaceChannelMutation();
+  const { workspaceId, channelId } = useParams();
 
   const handleDeleteChannel = () => {
     if (isPrivate) {
@@ -47,6 +51,19 @@ const ChatHeader = ({
   const onClickDelteChannel = () => {
     setOpenDeleteChannel(false);
     console.log('채널에서 나가기 API 연동해야합니다');
+    if (workspaceId && channelId) {
+      mutate(
+        { workspaceId, channelId },
+        {
+          onSuccess: () => {
+            alert('채널 삭제 성공');
+          },
+          onError: () => {
+            alert('채널 삭제 실패');
+          },
+        }
+      );
+    }
   };
 
   return (
