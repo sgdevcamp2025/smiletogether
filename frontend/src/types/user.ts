@@ -8,3 +8,8 @@ export interface User {
   isActive?: boolean;
   isMessage?: boolean;
 }
+
+export interface WorkspaceMember extends User {
+  userEmail: string;
+  role?: 'member' | 'admin';
+}

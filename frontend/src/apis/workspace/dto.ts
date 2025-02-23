@@ -1,17 +1,5 @@
-interface WorkspaceMember {
-  userId: string;
-  profileImage: string;
-  userEmail: string;
-  role?: 'member' | 'admin';
-}
-
-interface Workspace {
-  workspaceId: string;
-  name: string;
-  profileImage: string;
-  memberCount: number;
-  workspaceMembers: WorkspaceMember[];
-}
+import { WorkspaceMember } from '@/types/user';
+import { Workspace } from '@/types/workspace';
 
 export interface GetUserWorkspaceResponse {
   workspaceId: string;
