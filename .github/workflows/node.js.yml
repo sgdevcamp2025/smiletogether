@@ -20,20 +20,15 @@ jobs:
 
         steps:
             - uses: actions/checkout@v4
-
-            - name: Use Node.js ${{ matrix.node-version }}
-              uses: actions/setup-node@v4
+            - uses: pnpm/action-setup@v2
               with:
-                  node-version: ${{ matrix.node-version }}
+                  version: 6.32.9
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: '14'
                   cache: 'pnpm'
-
-            - name: Install pnpm
-              working-directory: ./frontend
-              run: npm install -g pnpm
-
-            - name: Install dependencies
-              working-directory: ./frontend
-              run: pnpm install
+            - run: pnpm install
+            - run: pnpm test
 
             - name: Install dependencies and build project
               working-directory: ./frontend
