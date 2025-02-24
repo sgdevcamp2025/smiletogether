@@ -100,7 +100,7 @@ export class AuthService {
         throw new UnauthorizedException('토큰에 userId가 존재하지 않습니다.');
       }
 
-      if (!this.getRefreshToken(payload.userId))
+      if (token != (await this.getRefreshToken(payload.userId)))
         throw new UnauthorizedException('RefreshToken이 존재하지 않습니다.');
 
       return payload;
