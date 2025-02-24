@@ -1,0 +1,55 @@
+name: Node.js CI
+
+on:
+    push:
+        branches: ['merge/front']
+    pull_request:
+        branches: ['merge/front']
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                node-version: [18.x]
+        steps:
+            # 1. 리포지토리 코드 체크아웃
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            # 2. pnpm 설치 (버전 9.15.4)
+            - name: Set up pnpm
+              uses: pnpm/action-setup@v2
+              with:
+                  version: 9.15.4
+
+            # 3. Node.js 환경 설정 (노드 버전 '18', pnpm 캐싱 사용)
+            - name: Set up Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '18'
+                  cache: 'pnpm'
+                  cache-dependency-path: ./frontend/package-lock.json
+
+            # 4. 프론트엔드 폴더에서 의존성 설치
+            - name: Install dependencies in frontend
+              working-directory: frontend
+              run: pnpm install
+
+            # 5. 프론트엔드 폴더에서 테스트 실행
+            - name: Run build in frontend
+              working-directory: frontend
+              run: pnpm build
+
+            # 6. 빌드 결과물이 있는 폴더를 AWS S3로 배포
+            # (리포지토리 루트 기준에서 SOURCE_DIR을 지정)
+            - name: Deploy to S3
+              uses: awact/s3-action@master
+              with:
+                  args: --acl public-read --follow-symlinks --delete
+              env:
+                  AWS_REGION: 'ap-northeast-2'
+                  AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+                  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  SOURCE_DIR: './frontend/dist'
