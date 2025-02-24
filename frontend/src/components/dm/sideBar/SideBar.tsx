@@ -1,5 +1,7 @@
+import { useParams } from 'react-router';
 import DMList from './DMList';
 import SideBarHeader from './SideBarHeader';
+import useGetDMListQuery from '@/hooks/dm/useGetDMListQuery';
 
 //여기는 나중에 API 연결하면 바뀔 부분!
 const DM_DATA = [
@@ -32,13 +34,17 @@ const DM_DATA = [
 ];
 
 const SideBar = () => {
+  const { workspaceId } = useParams();
+  const { data, isLoading, isError } = useGetDMListQuery(workspaceId!);
+
+  if (isLoading) return <p>로딩중입니다.</p>;
+  if (isError) return <p>로딩중입니다.</p>;
+
   return (
-    <div className="flex flex-col  h-screen bg-amber-200 gap-2">
+    <div className="flex flex-col h-screen gap-2 bg-amber-200">
       <SideBarHeader />
       <div className="flex flex-col">
-        {DM_DATA.map((dm, index) => (
-          <DMList key={index} {...dm} />
-        ))}
+        {data?.dms.map((dm, index) => <DMList key={index} {...dm} />)}
       </div>
     </div>
   );

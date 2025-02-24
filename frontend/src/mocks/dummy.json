@@ -281,6 +281,7 @@
       ]
     }
   },
+
   "workspacedmList": {
     "userId": "1",
     "dms": [
@@ -290,32 +291,38 @@
           {
             "userId": "2",
             "username": "Subin Kim",
-            "profileImage": "https://github.com/shadcn.png"
+            "profileImage": "https://github.com/shadcn.png",
+            "displayName": "Subin Kim"
           },
           {
             "userId": "4",
             "username": "박건우",
-            "profileImage": "https://github.com/shadcn.png"
+            "profileImage": "https://github.com/shadcn.png",
+            "displayName": "박건우"
           },
           {
             "userId": "5",
             "username": "이지은",
-            "profileImage": "https://github.com/shadcn.png"
+            "profileImage": "https://github.com/shadcn.png",
+            "displayName": "이지은"
           },
           {
             "userId": "2",
             "username": "Subin Kim",
-            "profileImage": "https://github.com/shadcn.png"
+            "profileImage": "https://github.com/shadcn.png",
+            "displayName": "Subin Kim"
           },
           {
             "userId": "4",
             "username": "박건우",
-            "profileImage": "https://github.com/shadcn.png"
+            "profileImage": "https://github.com/shadcn.png",
+            "displayName": "박건우"
           },
           {
             "userId": "5",
             "username": "이지은",
-            "profileImage": "https://github.com/shadcn.png"
+            "profileImage": "https://github.com/shadcn.png",
+            "displayName": "이지은"
           }
         ],
         "lastMessage": {
@@ -331,12 +338,14 @@
           {
             "userId": "3",
             "username": "안연아",
-            "profileImage": "https://github.com/shadcn.png"
+            "profileImage": "https://github.com/shadcn.png",
+            "displayName": "안연아"
           },
           {
             "userId": "6",
             "username": "김민재",
-            "profileImage": "https://github.com/shadcn.png"
+            "profileImage": "https://github.com/shadcn.png",
+            "displayName": "김민재"
           }
         ],
         "lastMessage": {
@@ -352,7 +361,8 @@
           {
             "userId": "7",
             "username": "정수빈",
-            "profileImage": "https://github.com/shadcn.png"
+            "profileImage": "https://github.com/shadcn.png",
+            "displayName": "정수빈"
           }
         ],
         "lastMessage": {
