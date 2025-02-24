@@ -57,9 +57,9 @@ jobs:
             - name: Invalidate CloudFront Cache
               uses: chetan/invalidate-cloudfront-action@master
               env:
-                  AWS_DISTRIBUTION: ${{ secrets.AWS_DISTRIBUTION_ID }}
+                  DISTRIBUTION: ${{ secrets.AWS_DISTRIBUTION_ID }}
+                  AWS_REGION: 'ap-northeast-2'
+                  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
                   PATHS: '/index.html'
-                  # 작업 실행 중 에러가 발생해도 다음 단계를 실행하도록 설정한다.
-                  # 이렇게 설정하면 cloudFront 캐시 무효화 작업에서 에러가 발생해도
-                  # workflow를 중단시키지 않는다.
               continue-on-error: true
