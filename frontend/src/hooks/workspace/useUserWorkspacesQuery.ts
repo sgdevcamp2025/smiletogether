@@ -2,12 +2,16 @@ import { getUserWorkspaces } from '@/apis/workspace';
 import { useQuery } from '@tanstack/react-query';
 
 const useUserWorkspacesQuery = () => {
-  const { data, isError, isLoading } = useQuery({
+  const {
+    data: workspacesInfo,
+    isLoading: isWorkspacesLoading,
+    isError: isWorkspacesError,
+  } = useQuery({
     queryKey: ['workspaces'],
     queryFn: getUserWorkspaces,
   });
 
-  return { data, isError, isLoading };
+  return { workspacesInfo, isWorkspacesLoading, isWorkspacesError };
 };
 
 export default useUserWorkspacesQuery;

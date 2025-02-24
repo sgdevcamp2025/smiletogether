@@ -11,8 +11,8 @@ interface ModalManagerProps {
 }
 
 const ModalManager = ({ workspaceName, workspaceId }: ModalManagerProps) => {
-  const { mutate: leaveWorkspace } = useLeaveWorkspaceMutation();
-  const { mutate: removeWorkspace } = useRemoveWorkspaceMutation();
+  const { leaveWorkspace } = useLeaveWorkspaceMutation();
+  const { removeWorkspace } = useRemoveWorkspaceMutation();
   const modal = useModalStore(state => state.modal);
   const closeModal = useModalStore(state => state.closeModal);
   const isOpen = (key: ModalType) => modal === key;

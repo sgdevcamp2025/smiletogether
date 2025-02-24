@@ -11,11 +11,8 @@ import WorkspaceDMs from '@/components/workspace/WorkspaceChannelPanel/Workspace
 const WorkspaceChannelPanel = () => {
   const { workspaceId } = useParams();
 
-  const {
-    data: workspacesInfo,
-    isLoading: isWorkspaceLoading,
-    isError: isWorkspaceError,
-  } = useUserWorkspaceQuery(workspaceId!);
+  const { workspaceInfo, isWorkspaceLoading, isWorkspaceError } =
+    useUserWorkspaceQuery(workspaceId!);
   const {
     data: dmList = { dms: [] },
     isLoading: isDMLoading,
@@ -23,12 +20,12 @@ const WorkspaceChannelPanel = () => {
   } = useGetDMListQuery(workspaceId!);
 
   const {
-    data: channelList = [],
-    isLoading: isChannelLoading,
-    isError: isChannelError,
+    channelList = [],
+    isChannelLoading,
+    isChannelError,
   } = useWorkspaceChannelListQuery(workspaceId!);
 
-  const workspaceName = workspacesInfo?.name ?? '알 수 없는 워크스페이스';
+  const workspaceName = workspaceInfo?.name ?? '알 수 없는 워크스페이스';
   const setModal = useModalStore(state => state.setModal);
 
   if (!workspaceId) return <p>워크스페이스 정보를 불러오는 중...</p>;

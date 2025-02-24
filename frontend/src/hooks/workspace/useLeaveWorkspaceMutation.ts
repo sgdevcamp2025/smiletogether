@@ -1,9 +1,9 @@
-import { leaveWorkspace } from '@/apis/workspace';
+import { postLeaveWorkspace } from '@/apis/workspace';
 import { useMutation } from '@tanstack/react-query';
 
 const useLeaveWorkspaceMutation = () => {
-  return useMutation({
-    mutationFn: (workpspaceId: string) => leaveWorkspace(workpspaceId),
+  const { mutate: leaveWorkspace, ...rest } = useMutation({
+    mutationFn: (workpspaceId: string) => postLeaveWorkspace(workpspaceId),
     onSuccess: () => {
       alert('성공적으로 나가졌습니다.');
     },
@@ -11,6 +11,8 @@ const useLeaveWorkspaceMutation = () => {
       alert('워크스페이스 나가기 에러');
     },
   });
+
+  return { leaveWorkspace, ...rest };
 };
 
 export default useLeaveWorkspaceMutation;

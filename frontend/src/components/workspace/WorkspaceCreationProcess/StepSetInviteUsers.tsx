@@ -16,12 +16,12 @@ const StepSetInviteUsers = () => {
     initWorkspaceStore,
   } = useWorkspaceCreationStore();
   const [validEmail, setValidEmail] = useState(false);
-  const { mutate } = useCreateWorkspace();
+  const { createWorkspace } = useCreateWorkspace();
   const navigate = useNavigate();
 
   const submitWorkspaceInfo = () => {
     alert('제출 완료');
-    mutate(
+    createWorkspace(
       {
         workspaceName: workspaceName,
         ownerId: '1',

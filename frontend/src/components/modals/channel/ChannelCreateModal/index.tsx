@@ -11,11 +11,11 @@ const ChannelCreateModal = () => {
   const [channelVisibility, setChannelVisibility] = useState(true);
   const [emails, setEmails] = useState<string[]>([]);
   const { workspaceId } = useParams();
-  const { mutate } = useCreateChannelMutation(workspaceId ?? '');
+  const { createChannel } = useCreateChannelMutation(workspaceId ?? '');
   const closeModla = useModalStore(state => state.closeModal);
 
   const handleNewChannelSubmit = () => {
-    mutate(
+    createChannel(
       {
         workspaceId: workspaceId ?? '',
         name: channelName,

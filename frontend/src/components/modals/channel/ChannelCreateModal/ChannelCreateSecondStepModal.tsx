@@ -24,17 +24,14 @@ const ChannelCreateSecondStepModal = ({
   const [totalUserInvite, setTotalUserInvite] = useState('total');
   const closeModla = useModalStore(state => state.closeModal);
   const { workspaceId } = useParams();
-  const {
-    data: workspacesInfo,
-    isLoading: isWorkspaceLoading,
-    isError: isWorkspaceError,
-  } = useUserWorkspaceQuery(workspaceId!);
+  const { workspaceInfo, isWorkspaceLoading, isWorkspaceError } =
+    useUserWorkspaceQuery(workspaceId!);
 
   useEffect(() => {
-    if (totalUserInvite === 'total' && workspacesInfo) {
-      setEmails(workspacesInfo.users.map(user => user.userEmail));
+    if (totalUserInvite === 'total' && workspaceInfo) {
+      setEmails(workspaceInfo.users.map(user => user.userEmail));
     }
-  }, [totalUserInvite, workspacesInfo, setEmails]);
+  }, [totalUserInvite, workspaceInfo, setEmails]);
 
   if (isWorkspaceError) return <div>error</div>;
   if (isWorkspaceLoading) return <div>loading</div>;
@@ -54,9 +51,7 @@ const ChannelCreateSecondStepModal = ({
             children={`채널의 모든 멤버 추가`}
             onChange={e => {
               setTotalUserInvite(e.target.value);
-              setEmails(
-                workspacesInfo?.users.map(user => user.userEmail) || []
-              );
+              setEmails(workspaceInfo?.users.map(user => user.userEmail) || []);
             }}
             defaultChecked={true}
           />
