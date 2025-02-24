@@ -54,6 +54,10 @@ export class AuthService {
     return await this.redis.get(`userId:${userId}`);
   }
 
+  async deleteRefreshToken(userId: string): Promise<void> {
+    await this.redis.del(`userId:${userId}`);
+  }
+
   async generateAccessToken(payload: {
     userId: string;
   }): Promise<string | null> {

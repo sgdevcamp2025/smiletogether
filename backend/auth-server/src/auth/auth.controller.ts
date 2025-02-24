@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Get,
-  Param,
   Post,
   Req,
   Res,
@@ -31,6 +30,32 @@ export class AuthController {
     return res.json({ message: 'Login successful' });
   }
 
+  @Post('logout')
+  async logout(@Req() req: Request, @Res() res: Response) {
+    const accessToken = req.headers['authorization']
+      .replace('Bearer ', '')
+      .trim();
+
+    if (!accessToken) {
+      throw new UnauthorizedException('Access token not found.');
+    }
+
+    const refreshToken = req.cookies['refreshToken']
+      .replace('refreshToken=', '')
+      .trim();
+
+    if (!refreshToken) {
+      throw new UnauthorizedException('Refresh token not found.');
+    }
+
+    const payload = await this.authService.verifyAccessToken(accessToken);
+    await this.authService.deleteRefreshToken(payload.userId);
+
+    res.clearCookie('refreshToken');
+
+    return res.json({ message: 'logout successful' });
+  }
+
   @Post('refresh')
   async refreshAccessToken(@Req() req: Request, @Res() res: Response) {
     const refreshToken = req.cookies['refreshToken']
@@ -57,10 +82,5 @@ export class AuthController {
       .replace('Bearer ', '')
       .trim();
     return this.authService.verifyAccessToken(accessToken);
-  }
-
-  @Get('refreshtoken/:userId')
-  async getRefreshToken(@Param('userId') userId: string): Promise<string> {
-    return await this.authService.getRefreshToken(userId);
   }
 }
