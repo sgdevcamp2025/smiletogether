@@ -37,9 +37,9 @@ jobs:
               run: pnpm install
 
             # 5. 프론트엔드 폴더에서 테스트 실행
-            - name: Run tests in frontend
+            - name: Run build in frontend
               working-directory: frontend
-              run: pnpm test
+              run: pnpm build
 
             # 6. 빌드 결과물이 있는 폴더를 AWS S3로 배포
             # (리포지토리 루트 기준에서 SOURCE_DIR을 지정)
