@@ -1,7 +1,7 @@
-import { DMItem } from '@/apis/dm/dto';
 import { Button } from '@/components/ui/button';
 import WorkspaceAccordionSection from '@/components/workspace/WorkspaceAccordionList';
 import WorkspaceDirectMessageListItem from '@/components/workspace/WorkspaceChannelPanel/WorkspaceDirectMessageListItem';
+import { DMItem } from '@/types/dm';
 import { MdOutlineAddBox } from 'react-icons/md';
 
 interface WorkspaceDMsProps {
@@ -16,7 +16,7 @@ const WorkspaceDMs = ({ dmList, onAddColleauge }: WorkspaceDMsProps) => {
         <WorkspaceDirectMessageListItem dm={dm} key={index} />
       ))}
       <Button
-        className=" w-full bg-transparent shadow-none hover:bg-gray-50 flex justify-start text-xs  py-0"
+        className="flex justify-start w-full py-0 text-xs bg-transparent shadow-none hover:bg-gray-50"
         onClick={onAddColleauge}
       >
         {<MdOutlineAddBox className="text-2xl" />}

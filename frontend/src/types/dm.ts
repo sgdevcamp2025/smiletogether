@@ -6,14 +6,9 @@ interface DMLastMessage {
   createdAt: string;
 }
 
-interface DMItem {
+export interface DMItem {
   dmId: string;
   participants: User[];
   lastMessage: DMLastMessage;
   unreadCount: number;
-}
-
-export interface DMListResponseDto {
-  userId: string;
-  dms: DMItem[];
 }

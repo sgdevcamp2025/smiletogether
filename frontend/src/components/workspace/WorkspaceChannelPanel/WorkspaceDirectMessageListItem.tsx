@@ -1,55 +1,37 @@
 import { Button } from '@/components/ui/button';
-
-interface DMParticipant {
-  userId: string;
-  username: string;
-  profileImage: string;
-}
-
-interface LastMessage {
-  senderId: string;
-  content: string;
-  createdAt: string;
-}
-
-interface DirectMessage {
-  dmId: string;
-  participants: DMParticipant[];
-  lastMessage: LastMessage;
-  unreadCount: number;
-}
+import { DMItem } from '@/types/dm';
 
 interface WorkspaceDirectMessageListItemProps {
-  dm: DirectMessage;
+  dm: DMItem;
 }
 
 const WorkspaceDirectMessageListItem = ({
   dm,
 }: WorkspaceDirectMessageListItemProps) => {
   return (
-    <Button className="w-full shadow-none flex items-center justify-start text-xs rounded-lg bg-transparent hover:bg-transparent">
-      <div className="relative w-6 h-6 flex-shrink-0 ">
+    <Button className="flex items-center justify-start w-full text-xs bg-transparent rounded-lg shadow-none hover:bg-transparent">
+      <div className="relative flex-shrink-0 w-6 h-6 ">
         <img
           src={dm.participants[0]?.profileImage}
           className="w-5 h-5 rounded-full"
         />
         {dm.participants.length > 1 ? (
-          <span className="absolute -bottom-1 -right-1 w-6 h-6 flex items-center justify-center text-xs text-white rounded-full">
+          <span className="absolute flex items-center justify-center w-6 h-6 text-xs text-white rounded-full -bottom-1 -right-1">
             {dm.participants.length}
           </span>
         ) : (
-          <div className="absolute -bottom-1 -right-0 w-3 h-3 flex items-center justify-center text-xs bg-green-400 text-white rounded-full"></div>
+          <div className="absolute flex items-center justify-center w-3 h-3 text-xs text-white bg-green-400 rounded-full -bottom-1 -right-0"></div>
         )}
       </div>
 
       <div className="flex-1 min-w-0">
-        <span className="text-start block overflow-hidden whitespace-nowrap text-ellipsis truncate">
+        <span className="block overflow-hidden truncate text-start whitespace-nowrap text-ellipsis">
           {dm.participants.map(participant => participant.username).join(', ')}
         </span>
       </div>
 
       {dm.unreadCount > 0 && (
-        <div className="w-6 h-6 bg-purple-300 text-white flex items-center justify-center rounded-full">
+        <div className="flex items-center justify-center w-6 h-6 text-white bg-purple-300 rounded-full">
           {dm.unreadCount}
         </div>
       )}
