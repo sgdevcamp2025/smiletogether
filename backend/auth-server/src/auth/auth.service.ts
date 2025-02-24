@@ -21,7 +21,7 @@ export class AuthService {
 
     await this.setRefreshToken(
       `userId:${userId}`,
-      await tokens.refreshToken,
+      tokens.refreshToken,
       this.REFRESH_TOKEN_EXPIRATION,
     );
 
@@ -99,6 +99,9 @@ export class AuthService {
       if (!payload.userId) {
         throw new UnauthorizedException('토큰에 userId가 존재하지 않습니다.');
       }
+
+      if (!this.getRefreshToken(payload.userId))
+        throw new UnauthorizedException('RefreshToken이 존재하지 않습니다.');
 
       return payload;
     } catch (error) {

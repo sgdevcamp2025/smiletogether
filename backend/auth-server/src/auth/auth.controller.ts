@@ -1,5 +1,14 @@
-import { Body, Controller, Get, Param, Post, Req, Res } from '@nestjs/common';
-import { Response } from 'express';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Req,
+  Res,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { Response, Request } from 'express';
 import { AuthService } from './auth.service';
 
 @Controller('api/auth')
@@ -22,16 +31,35 @@ export class AuthController {
     return res.json({ message: 'Login successful' });
   }
 
+  @Post('refresh')
+  async refreshAccessToken(@Req() req: Request, @Res() res: Response) {
+    const refreshToken = req.cookies['refreshToken']
+      .replace('refreshToken=', '')
+      .trim();
+
+    if (!refreshToken) {
+      throw new UnauthorizedException('Refresh token not found.');
+    }
+
+    const payload = await this.authService.verifyRefreshToken(refreshToken);
+
+    const newAccessToken = await this.authService.generateAccessToken({
+      userId: payload.userId,
+    });
+
+    res.setHeader('Authorization', `Bearer ${newAccessToken}`);
+    return res.json({ message: 'issue AccessToken successful' });
+  }
+
   @Get('verifyAccessToken')
   async verifyAccessToken(@Req() req: Request) {
     const accessToken = req.headers['authorization']
       .replace('Bearer ', '')
       .trim();
-    console.log(req.headers, accessToken);
     return this.authService.verifyAccessToken(accessToken);
   }
 
-  @Get('getRefreshToken/:userId')
+  @Get('refreshtoken/:userId')
   async getRefreshToken(@Param('userId') userId: string): Promise<string> {
     return await this.authService.getRefreshToken(userId);
   }
