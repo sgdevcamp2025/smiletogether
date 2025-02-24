@@ -7,6 +7,7 @@ import { useModalStore } from '@/stores/modalStore';
 import ModalManager from '@/components/modals/ModalManager';
 import WorkspaceChannels from '@/components/workspace/WorkspaceChannelPanel/WorkspaceChannels';
 import WorkspaceDMs from '@/components/workspace/WorkspaceChannelPanel/WorkspaceDMs';
+import { useUserStore } from '@/stores/userStore';
 
 const WorkspaceChannelPanel = () => {
   const { workspaceId } = useParams();
@@ -27,6 +28,9 @@ const WorkspaceChannelPanel = () => {
 
   const workspaceName = workspaceInfo?.name ?? '알 수 없는 워크스페이스';
   const setModal = useModalStore(state => state.setModal);
+  const user = useUserStore(state => state.user);
+  const currentUserRole =
+    workspaceInfo?.ownerId === user.userId ? 'admin' : 'member';
 
   if (!workspaceId) return <p>워크스페이스 정보를 불러오는 중...</p>;
   if (isChannelLoading || isWorkspaceLoading || isDMLoading)
@@ -38,6 +42,7 @@ const WorkspaceChannelPanel = () => {
     <div className=" min-w-16 bg-yellow-200 text-white flex py-2 flex-col gap-2 text-wrap h-screen">
       <WorkspaceMenu
         workspaceName={workspaceName}
+        userRole={currentUserRole}
         onInvite={() => {
           setModal('USER_INVITE');
         }}
