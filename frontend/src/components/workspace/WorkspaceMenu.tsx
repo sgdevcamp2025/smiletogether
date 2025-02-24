@@ -12,6 +12,7 @@ import ArrorIcon from '@/components/common/ArrorIcon';
 
 interface WorkspaceMenuProps {
   workspaceName: string;
+  userRole: 'member' | 'admin';
   onInvite: () => void;
   onLogout: () => void;
   onLeave: () => void;
@@ -21,6 +22,7 @@ interface WorkspaceMenuProps {
 
 const WorkspaceMenu = ({
   workspaceName,
+  userRole,
   onInvite,
   onLogout,
   onLeave,
@@ -61,12 +63,15 @@ const WorkspaceMenu = ({
           {`${workspaceName} 으로 사용자 초대`}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={onLogout}>로그아웃</DropdownMenuItem>
-        <DropdownMenuItem onClick={onLeave}>
-          워크스페이스 나가기
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={onDelete}>
-          워크스페이스 삭제
-        </DropdownMenuItem>
+        {userRole === 'member' ? (
+          <DropdownMenuItem onClick={onLeave}>
+            워크스페이스 나가기
+          </DropdownMenuItem>
+        ) : (
+          <DropdownMenuItem onClick={onDelete}>
+            워크스페이스 삭제
+          </DropdownMenuItem>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );
