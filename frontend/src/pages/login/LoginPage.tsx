@@ -20,7 +20,6 @@ const LoginPage = () => {
       <div className="text-2xl font-bold text-zinc-950 mb-8">smileTogether</div>
       <div className="w-full max-w-md space-y-6">
         <div className="text-center space-y-2">
-          d
           <h1 className="text-3xl font-bold text-zinc-950">
             먼저 이메일부터 입력해 보세요
           </h1>
