@@ -27,10 +27,12 @@
         "name": "Home",
         "profileImage": "https://example.com/home.png",
         "memberCount": 1,
-        "workspaceMembers": [
+        "users": [
           {
             "userId": "user_001",
-            "profileImage": "https://example.com/user_001.png"
+            "userEmail": "12313@naver.com",
+            "profileImage": "https://example.com/user_001.png",
+            "role": "admin"
           }
         ]
       },
@@ -39,18 +41,24 @@
         "name": "Project Alpha",
         "profileImage": "https://example.com/project_alpha.png",
         "memberCount": 3,
-        "workspaceMembers": [
+        "users": [
           {
             "userId": "user_002",
-            "profileImage": "https://example.com/user_002.png"
+            "userEmail": "user_002@naver.com",
+            "profileImage": "https://example.com/user_002.png",
+            "role": "member"
           },
           {
             "userId": "user_003",
-            "profileImage": "https://example.com/user_003.png"
+            "userEmail": "user_003@naver.com",
+            "profileImage": "https://example.com/user_003.png",
+            "role": "admin"
           },
           {
             "userId": "user_004",
-            "profileImage": "https://example.com/user_004.png"
+            "userEmail": "user_004@naver.com",
+            "profileImage": "https://example.com/user_004.png",
+            "role": "member"
           }
         ]
       },
@@ -59,26 +67,36 @@
         "name": "Smilegate DevCamp",
         "profileImage": "https://example.com/smilegate.png",
         "memberCount": 5,
-        "workspaceMembers": [
+        "users": [
           {
             "userId": "user_005",
-            "profileImage": "https://example.com/user_005.png"
+            "userEmail": "user_005@naver.com",
+            "profileImage": "https://example.com/user_005.png",
+            "role": "member"
           },
           {
             "userId": "user_006",
-            "profileImage": "https://example.com/user_006.png"
+            "userEmail": "user_006@naver.com",
+            "profileImage": "https://example.com/user_006.png",
+            "role": "admin"
           },
           {
             "userId": "user_007",
-            "profileImage": "https://example.com/user_007.png"
+            "userEmail": "user_007@naver.com",
+            "profileImage": "https://example.com/user_007.png",
+            "role": "member"
           },
           {
             "userId": "user_008",
-            "profileImage": "https://example.com/user_008.png"
+            "userEmail": "user_008@naver.com",
+            "profileImage": "https://example.com/user_008.png",
+            "role": "member"
           },
           {
             "userId": "user_009",
-            "profileImage": "https://example.com/user_009.png"
+            "userEmail": "user_009@naver.com",
+            "profileImage": "https://example.com/user_009.png",
+            "role": "admin"
           }
         ]
       }

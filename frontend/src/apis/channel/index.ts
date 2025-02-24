@@ -1,5 +1,9 @@
 import https from '@/lib/https';
-import { getWorkspaceChannelsResponseDto } from '@/apis/channel/dto';
+import {
+  getWorkspaceChannelsResponseDto,
+  postWorkspaceChannelsRequestDto,
+  postWorkspaceChannelsResponseDto,
+} from '@/apis/channel/dto';
 import { GetChannelResponse, GetMessagesResponse } from './dto';
 
 export const getChannel = async (
@@ -23,6 +27,21 @@ export const getWorkspaceChannels = async (
   return data;
 };
 
+export const postNewWorkspaceChannels = async ({
+  workspaceId,
+  name,
+  isPrivate,
+  emails,
+}: postWorkspaceChannelsRequestDto): Promise<postWorkspaceChannelsResponseDto> => {
+  const { data } = await https.post(`/api/workspaces/${workspaceId}/channels`, {
+    workspaceId,
+    name,
+    isPrivate,
+    emails,
+  });
+  return data;
+};
+
 export const postInviteWorkspaceChannels = async (
   workspaceId: string,
   emails: string[],
@@ -34,6 +53,16 @@ export const postInviteWorkspaceChannels = async (
       emails,
       channels,
     }
+  );
+  return data;
+};
+
+export const leaveWorkspaceChannel = async (
+  workspaceId: string,
+  channelId: string
+) => {
+  const { data } = await https.delete(
+    `/api/workspaces/${workspaceId}/channels/${channelId}/leave`
   );
   return data;
 };

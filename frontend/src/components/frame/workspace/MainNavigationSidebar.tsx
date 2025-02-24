@@ -7,10 +7,7 @@ const MainNavigationSidebar = () => {
   const icons = Object.values(NAVIGATION_ICONS);
   const navigate = useNavigate();
   const { workspaceId } = useParams();
-
-  const { data: workspaceChannelList } = useWorkspaceChannelListQuery(
-    workspaceId!
-  );
+  const { channelList } = useWorkspaceChannelListQuery(workspaceId!);
 
   return (
     <div className=" min-w-16 bg-yellow-200 text-white flex py-3 flex-col items-center border-r-2">
@@ -21,9 +18,9 @@ const MainNavigationSidebar = () => {
             className="bg-transparent"
             onClick={() => {
               if (item.type === 'Home') {
-                if (workspaceChannelList && workspaceChannelList.length > 0) {
+                if (channelList && channelList.length > 0) {
                   navigate(
-                    `/workspace/${workspaceId}/channel/${workspaceChannelList[0].channelId}`
+                    `/workspace/${workspaceId}/channel/${channelList[0].channelId}`
                   );
                 } else {
                   navigate(`/workspace/${workspaceId}`);

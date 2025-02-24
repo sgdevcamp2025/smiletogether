@@ -5,22 +5,15 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@radix-ui/react-accordion';
-import { Button } from '@/components/ui/button';
 
 interface WorkspaceAccordionSectionProps {
   sectionTitle: string;
   children: React.ReactNode;
-  createButtonIcon?: React.ReactNode;
-  createButtonText?: string;
-  createButtonOnClick?: () => void;
 }
 
 const WorkspaceAccordionSection = ({
   sectionTitle,
   children,
-  createButtonIcon,
-  createButtonText,
-  createButtonOnClick,
 }: WorkspaceAccordionSectionProps) => {
   return (
     <Accordion
@@ -33,16 +26,7 @@ const WorkspaceAccordionSection = ({
         <AccordionTrigger className="px-4 pb-0 text-white text-xs ">
           {sectionTitle}
         </AccordionTrigger>
-        <AccordionContent className="pb-0">
-          {children}
-          <Button
-            className=" w-full bg-transparent shadow-none hover:bg-gray-50 flex justify-start text-xs  py-0"
-            onClick={createButtonOnClick}
-          >
-            {createButtonIcon}
-            <span>{createButtonText}</span>
-          </Button>
-        </AccordionContent>
+        <AccordionContent className="pb-0">{children}</AccordionContent>
       </AccordionItem>
     </Accordion>
   );

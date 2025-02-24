@@ -4,7 +4,9 @@ export type ModalType =
   | 'WORKSPACE_MENU'
   | 'USER_INVITE'
   | 'WORKSPACE_LEAVE'
-  | 'WORKSPACE_DELETE';
+  | 'WORKSPACE_DELETE'
+  | 'CHANNEL_CREATE'
+  | 'CHANNEL_MENU';
 
 interface ModalStoreProps {
   modal: ModalType | null;

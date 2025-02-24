@@ -20,10 +20,10 @@ export const handlers = [
   http.get('/api/workspaces', () => {
     return HttpResponse.json(db.userWorkspaces);
   }),
-  http.post(`/api/workspaces/:workspaceId/leave`, ({ params }) => {
+  http.post(`/api/workspaces/:workspaceId/leave`, () => {
     return HttpResponse.json({ message: 'success' }, { status: 200 });
   }),
-  http.delete(`/api/workspaces/:workspaceId`, ({ params }) => {
+  http.delete(`/api/workspaces/:workspaceId`, () => {
     return HttpResponse.json({ message: 'success' }, { status: 200 });
   }),
   http.get(`/api/workspaces/:workspaceId`, ({ params }) => {
@@ -58,16 +58,22 @@ export const handlers = [
         const dummyUser = {
           userId: 'user_12345',
           profileImage: 'https://example.com/user_12345.png',
+          role: 'member',
         };
         userList.push(dummyUser);
       }
+      userList.push({
+        userId: 'user_123457',
+        profileImage: 'https://example.com/user_12345.png',
+        role: 'admin',
+      });
 
       const workspaceData = {
         workspaceId: workspaceId,
         name: newPost.workspaceName,
         profileImage: newPost.profileImage,
         memberCount: newPost.inviteResults.length,
-        workspaceMembers: userList,
+        users: userList,
       };
       const responseData: PostNewWorkspaceResponseDto = {
         workspaceId,
@@ -118,16 +124,13 @@ export const handlers = [
       return HttpResponse.json(response, { status: 200 });
     }
   ),
-  http.post(`/api/workspaces/:workspaceId/channels/invite`, request => {
+  http.post(`/api/workspaces/:workspaceId/channels`, () => {
     return HttpResponse.json({ status: 200 });
   }),
-  http.get(`/api/workspaces/:workspaceId/channels`, ({ request }) => {
-    const url = new URL(request.url);
+  http.get(`/api/workspaces/:workspaceId/channels`, () => {
     return HttpResponse.json(dummy.channels);
   }),
-  http.get('/api/channel', ({ request }) => {
-    const url = new URL(request.url);
-    const channelId = url.searchParams.get('channelId');
+  http.get('/api/channel', () => {
     const channel = dummy.channel.find(c => c.channelId === '12345');
     if (channel) {
       return HttpResponse.json(channel);
@@ -138,9 +141,13 @@ export const handlers = [
       { status: 404 }
     );
   }),
-  http.get('/api/chatMessage', ({ request }) => {
-    const url = new URL(request.url);
-    const channelId = url.searchParams.get('channelId');
+  http.delete('/api/workspaces/:workspaceId/channels/:channelId/leave', () => {
+    return HttpResponse.json(
+      { message: 'leave the chaneel suc' },
+      { status: 200 }
+    );
+  }),
+  http.get('/api/chatMessage', () => {
     if ('12345' === dummy.messages.channelId) {
       return HttpResponse.json(dummy.messages);
     }

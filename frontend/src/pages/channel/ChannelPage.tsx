@@ -2,7 +2,7 @@ import ChannelInfo from '@/components/channel/ChannelInfo';
 import ChatHeader from '@/components/common/ChatHeader';
 import DateBadge from '@/components/common/DateBadge';
 import Message from '@/components/common/Message';
-import { useGetChannel } from '@/hooks/channel/useGetChaneel';
+import { useGetChannel } from '@/hooks/channel/useGetChannel';
 import { useGetMessages } from '@/hooks/channel/useGetMessage';
 import { useParams } from 'react-router';
 import MessageBox from '@/components/common/MessageBox';

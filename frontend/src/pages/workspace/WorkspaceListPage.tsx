@@ -6,10 +6,11 @@ import { useNavigate } from 'react-router';
 
 const WorkSpaceListPage = () => {
   const navigate = useNavigate();
-  const { data, isError, isLoading } = useUserWorkspacesQuery();
+  const { workspacesInfo, isWorkspacesError, isWorkspacesLoading } =
+    useUserWorkspacesQuery();
 
-  if (isLoading) return <div>로딩중...</div>;
-  if (isError) return <div>에러 발생</div>;
+  if (isWorkspacesLoading) return <div>로딩중...</div>;
+  if (isWorkspacesError) return <div>에러 발생</div>;
 
   const navigateToCreateWorkspace = () => {
     navigate(`/workspace/create`);
@@ -28,18 +29,20 @@ const WorkSpaceListPage = () => {
       </blockquote>
       <Card className="w-2/5 max-w-2lg mt-5">
         <div className="flex items-center px-6 py-4 w-full border  shadow hover:bg-gray-50">
-          <h1 className="text-lg font-semibold">{data && data.email}</h1>
+          <h1 className="text-lg font-semibold">
+            {workspacesInfo && workspacesInfo.email}
+          </h1>
           <div className="text-gray-600">님의 워크스페이스 관리 </div>
         </div>
-        {data &&
-          data.workspaces.map(item => {
+        {workspacesInfo &&
+          workspacesInfo.workspaces.map(item => {
             return (
               <WorkspaceListItem
                 key={item.workspaceId}
                 name={item.name}
                 profileImage={item.profileImage}
                 memberCount={item.memberCount}
-                members={item.workspaceMembers}
+                members={item.users}
                 workspaceId={item.workspaceId}
               />
             );
