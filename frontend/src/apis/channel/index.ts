@@ -20,21 +20,26 @@ export const getMessages = async (
   return response.data;
 };
 
-export const getWorkspaceChannels = async (
+// export const getWorkspaceChannels = async (
+//   workspaceId: string
+// ): Promise<getWorkspaceChannelsResponseDto[]> => {
+//   const { data } = await https.get(`/api/workspaces/${workspaceId}/channels`);
+//   return data;
+// };
+
+export const getUserJoinedWorkspaceChannels = async (
   workspaceId: string
 ): Promise<getWorkspaceChannelsResponseDto[]> => {
-  const { data } = await https.get(`/api/workspaces/${workspaceId}/channels`);
+  const { data } = await https.get(`/api/channels/workspaces/${workspaceId}`);
   return data;
 };
 
 export const postNewWorkspaceChannels = async ({
-  workspaceId,
   name,
   isPrivate,
   emails,
 }: postWorkspaceChannelsRequestDto): Promise<postWorkspaceChannelsResponseDto> => {
-  const { data } = await https.post(`/api/workspaces/${workspaceId}/channels`, {
-    workspaceId,
+  const { data } = await https.post(`/api/channels`, {
     name,
     isPrivate,
     emails,
@@ -43,26 +48,17 @@ export const postNewWorkspaceChannels = async ({
 };
 
 export const postInviteWorkspaceChannels = async (
-  workspaceId: string,
   emails: string[],
   channels: string[]
 ) => {
-  const { data } = await https.post(
-    `/api/workspaces/${workspaceId}/channels/invite`,
-    {
-      emails,
-      channels,
-    }
-  );
+  const { data } = await https.post(`/api/channels/invite`, {
+    emails,
+    channels,
+  });
   return data;
 };
 
-export const leaveWorkspaceChannel = async (
-  workspaceId: string,
-  channelId: string
-) => {
-  const { data } = await https.delete(
-    `/api/workspaces/${workspaceId}/channels/${channelId}/leave`
-  );
+export const leaveWorkspaceChannel = async (channelId: string) => {
+  const { data } = await https.delete(`/api/channels/${channelId}/leave`);
   return data;
 };

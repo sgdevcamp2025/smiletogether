@@ -5,6 +5,13 @@ import {
 } from '@/apis/workspace/dto';
 import https from '@/lib/https';
 
+export const postNewWorkspace = async (
+  workspaceInfo: PostNewWorkspaceRequestDto
+) => {
+  const { data } = await https.post('/api/workspaces', workspaceInfo);
+  return data;
+};
+
 export const getUserWorkspace = async (
   workspaceId: string
 ): Promise<GetUserWorkspaceResponse> => {
@@ -18,10 +25,8 @@ export const getUserWorkspaces =
     return data;
   };
 
-export const postWorkspace = async (
-  workspaceInfo: PostNewWorkspaceRequestDto
-) => {
-  const { data } = await https.post('/api/workspaces', workspaceInfo);
+export const postRemoveWorkspace = async (workspaceId: string) => {
+  const { data } = await https.delete(`/api/workspaces/${workspaceId}`);
   return data;
 };
 
@@ -38,10 +43,5 @@ export const postInviteWorkspace = async (
 
 export const postLeaveWorkspace = async (workspaceId: string) => {
   const { data } = await https.post(`/api/workspaces/${workspaceId}/leave`);
-  return data;
-};
-
-export const postRemoveWorkspace = async (workspaceId: string) => {
-  const { data } = await https.delete(`/api/workspaces/${workspaceId}`);
   return data;
 };
