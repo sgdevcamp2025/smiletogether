@@ -1,19 +1,26 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { DMItem } from '@/types/dm';
+import clsx from 'clsx';
+import { useNavigate, useParams } from 'react-router';
 
 //@TODO 단체 채팅일 경우 고려해야함
 
 const DMList = ({ dmId, participants, lastMessage, unreadCount }: DMItem) => {
   const date = new Date(lastMessage.createdAt);
+  const { workspaceId, dmId: currentDMId } = useParams();
+  const navigate = useNavigate();
 
   const month = date.getMonth() + 1;
   const day = date.getDate();
 
   return (
     <div
-      className="flex w-full gap-2 px-4 py-4 border-b hover:bg-amber-300 border-b-white"
+      className={clsx(
+        'flex w-full gap-2 px-4 py-4 border-b hover:bg-amber-300 border-b-white',
+        String(currentDMId) === String(dmId) && 'bg-amber-300'
+      )}
       onClick={() => {
-        console.log(dmId);
+        navigate(`/workspace/${workspaceId}/dm/${dmId}`);
       }}
     >
       <Avatar className="w-12 h-12 rounded-lg">
