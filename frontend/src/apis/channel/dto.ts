@@ -37,7 +37,7 @@ interface Reaction {
   users: string[];
 }
 
-interface Message {
+export interface Message {
   messageId: string;
   user: User;
   content: string;

@@ -1,4 +1,5 @@
 import { User } from '@/types/user';
+import { Message } from '../channel/dto';
 
 interface DMLastMessage {
   senderId: string;
@@ -16,4 +17,11 @@ interface DMItem {
 export interface DMListResponseDto {
   userId: string;
   dms: DMItem[];
+}
+
+export interface DMResponseDto {
+  dmId: string;
+  participants: User[];
+  isGroup: boolean;
+  messages: Record<string, Message[]>;
 }
