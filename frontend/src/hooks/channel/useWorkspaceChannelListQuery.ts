@@ -1,4 +1,4 @@
-import { getWorkspaceChannels } from '@/apis/channel';
+import { getUserJoinedWorkspaceChannels } from '@/apis/channel';
 import { useQuery } from '@tanstack/react-query';
 
 const useWorkspaceChannelListQuery = (workspaceId: string) => {
@@ -8,7 +8,7 @@ const useWorkspaceChannelListQuery = (workspaceId: string) => {
     isError: isChannelError,
   } = useQuery({
     queryKey: ['channels', workspaceId],
-    queryFn: () => getWorkspaceChannels(workspaceId),
+    queryFn: () => getUserJoinedWorkspaceChannels(workspaceId),
     enabled: !!workspaceId,
   });
   return { channelList, isChannelLoading, isChannelError };

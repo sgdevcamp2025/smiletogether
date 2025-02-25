@@ -59,7 +59,6 @@ const WorkspaceUserInviteModal = ({
       }
       inviteUserChannels(
         {
-          workspaceId: workspaceId,
           emails: emails,
           channels: inviteChannel,
         },

@@ -5,14 +5,12 @@ const useInviteChannelMutation = () => {
   return useMutation({
     mutationKey: ['inviteWorkspace'],
     mutationFn: ({
-      workspaceId,
       emails,
       channels,
     }: {
-      workspaceId: string;
       emails: string[];
       channels: string[];
-    }) => postInviteWorkspaceChannels(workspaceId, emails, channels),
+    }) => postInviteWorkspaceChannels(emails, channels),
   });
 };
 

@@ -17,23 +17,7 @@ export const handlers = [
   http.get('/api/users', () => {
     return HttpResponse.json(dummy.userProfiles);
   }),
-  http.get('/api/workspaces', () => {
-    return HttpResponse.json(db.userWorkspaces);
-  }),
-  http.post(`/api/workspaces/:workspaceId/leave`, () => {
-    return HttpResponse.json({ message: 'success' }, { status: 200 });
-  }),
-  http.delete(`/api/workspaces/:workspaceId`, () => {
-    return HttpResponse.json({ message: 'success' }, { status: 200 });
-  }),
-  http.get(`/api/workspaces/:workspaceId`, ({ params }) => {
-    const { workspaceId } = params;
-    const workspace = db.userWorkspaces.workspaces.find(
-      (item: { workspaceId: string | readonly string[] | undefined }) =>
-        item.workspaceId === workspaceId
-    );
-    return HttpResponse.json(workspace);
-  }),
+  // 워크스페이스 생성
   http.post('/api/workspaces', async ({ request }) => {
     try {
       const newPost: PostNewWorkspaceRequestDto =
@@ -97,6 +81,24 @@ export const handlers = [
       );
     }
   }),
+  // 워크스페이스 상세 조회
+  http.get(`/api/workspaces/:workspaceId`, ({ params }) => {
+    const { workspaceId } = params;
+    const workspace = db.userWorkspaces.workspaces.find(
+      (item: { workspaceId: string | readonly string[] | undefined }) =>
+        item.workspaceId === workspaceId
+    );
+    return HttpResponse.json(workspace);
+  }),
+  // 본인 워크스페이스 목록 조회
+  http.get('/api/workspaces', () => {
+    return HttpResponse.json(db.userWorkspaces);
+  }),
+  // 워크스페이스 삭제
+  http.delete(`/api/workspaces/:workspaceId`, () => {
+    return HttpResponse.json({ message: 'success' }, { status: 200 });
+  }),
+  // 워크스페이스 초대
   http.post(
     `/api/workspaces/:workspaceId/invite`,
     async ({ request, params }) => {
@@ -124,12 +126,39 @@ export const handlers = [
       return HttpResponse.json(response, { status: 200 });
     }
   ),
-  http.post(`/api/workspaces/:workspaceId/channels`, () => {
+  // 워크스페이스 나가기
+  http.delete(`/api/workspaces/:workspaceId/leave`, () => {
+    return HttpResponse.json({ message: 'success' }, { status: 200 });
+  }),
+
+  // 채널 생성
+  http.post(`/api/channels`, () => {
     return HttpResponse.json({ status: 200 });
   }),
-  http.get(`/api/workspaces/:workspaceId/channels`, () => {
+  // (유저가 소속된) 채널 목록 조회
+  http.get(`/api/channels/workspaces/:workspaceId`, () => {
     return HttpResponse.json(dummy.channels);
   }),
+  // 채널 초대
+  http.post(`/api/channels/invite`, () => {
+    return HttpResponse.json({ status: 200 });
+  }),
+  // 채널 참여
+  http.post(`/api/channels/:channelId/join`, () => {
+    return HttpResponse.json({ status: 200 });
+  }),
+  // 채널 삭제
+  http.delete(`/api/channels/:channelId`, () => {
+    return HttpResponse.json({ status: 200 });
+  }),
+  // 채널 나가기
+  http.delete('/api/channels/:channelId/leave', () => {
+    return HttpResponse.json(
+      { message: 'leave the chaneel suc' },
+      { status: 200 }
+    );
+  }),
+
   http.get('/api/channel', () => {
     const channel = dummy.channel.find(c => c.channelId === '12345');
     if (channel) {
@@ -141,12 +170,7 @@ export const handlers = [
       { status: 404 }
     );
   }),
-  http.delete('/api/workspaces/:workspaceId/channels/:channelId/leave', () => {
-    return HttpResponse.json(
-      { message: 'leave the chaneel suc' },
-      { status: 200 }
-    );
-  }),
+
   http.get('/api/chatMessage', () => {
     if ('12345' === dummy.messages.channelId) {
       return HttpResponse.json(dummy.messages);

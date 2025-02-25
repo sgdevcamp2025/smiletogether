@@ -38,7 +38,7 @@ const ChatHeader = ({
   const [infoTab, setInfoTab] = useState<'정보' | '멤버'>('정보');
   const displayMembers = members ? members?.slice(0, 3) : [];
   const { mutate } = useLeaveWorkspaceChannelMutation();
-  const { workspaceId, channelId } = useParams();
+  const { channelId } = useParams();
 
   const handleDeleteChannel = () => {
     if (isPrivate) {
@@ -50,9 +50,9 @@ const ChatHeader = ({
 
   const onClickDelteChannel = () => {
     setOpenDeleteChannel(false);
-    if (workspaceId && channelId) {
+    if (channelId) {
       mutate(
-        { workspaceId, channelId },
+        { channelId },
         {
           onSuccess: () => {
             alert('채널 삭제 성공');

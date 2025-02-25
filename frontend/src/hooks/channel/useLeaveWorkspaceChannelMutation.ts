@@ -3,13 +3,8 @@ import { useMutation } from '@tanstack/react-query';
 
 const useLeaveWorkspaceChannelMutation = () => {
   return useMutation({
-    mutationFn: ({
-      workspaceId,
-      channelId,
-    }: {
-      workspaceId: string;
-      channelId: string;
-    }) => leaveWorkspaceChannel(workspaceId, channelId),
+    mutationFn: ({ channelId }: { channelId: string }) =>
+      leaveWorkspaceChannel(channelId),
   });
 };
 
