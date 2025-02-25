@@ -3,21 +3,18 @@ import ChannelCreateSecondStepModal from '@/components/modals/channel/ChannelCre
 import useCreateChannelMutation from '@/hooks/channel/useCreateChannelMutation';
 import { useModalStore } from '@/stores/modalStore';
 import { useState } from 'react';
-import { useParams } from 'react-router';
 
 const ChannelCreateModal = () => {
   const [step, setStep] = useState(1);
   const [channelName, setChannelName] = useState('');
   const [channelVisibility, setChannelVisibility] = useState(true);
   const [emails, setEmails] = useState<string[]>([]);
-  const { workspaceId } = useParams();
-  const { createChannel } = useCreateChannelMutation(workspaceId ?? '');
+  const { createChannel } = useCreateChannelMutation();
   const closeModla = useModalStore(state => state.closeModal);
 
   const handleNewChannelSubmit = () => {
     createChannel(
       {
-        workspaceId: workspaceId ?? '',
         name: channelName,
         isPrivate: channelVisibility,
         emails,
