@@ -78,8 +78,9 @@ public class ChannelMessageService {
 
     public void saveMessage(ChannelMessageSaveRequest channelMessage) {
         ChannelMessageDocument newMessage = ChannelMessageDocument.builder()
+                .id(channelMessage.messageId())
                 .channelId(channelMessage.channelId())
-                .senderId("1")
+                .senderId(channelMessage.user().userId())
                 .content(channelMessage.content())
                 .createdAt(channelMessage.createdAt())
                 .build();
@@ -101,9 +102,9 @@ public class ChannelMessageService {
                 .channelId(channelMessageDocument.getChannelId())
                 .content(channelMessageUpdateRequest.content())
                 .isDeleted(false)
-                .isUpdated(channelMessageDocument.isUpdated())
+                .isUpdated(true)
                 .createdAt(channelMessageDocument.getCreatedAt())
-                .updatedAt(LocalDateTime.now())
+                .updatedAt(channelMessageUpdateRequest.updatedAt())
                 .reactions(channelMessageDocument.getReactions())
                 .isHasThread(channelMessageDocument.isHasThread())
                 .threadCount(channelMessageDocument.getThreadCount())
@@ -117,8 +118,9 @@ public class ChannelMessageService {
 
     public ChannelMessageDeleteResponse deleteChannelMessage(ChannelMessageDeleteRequest channelMessageDeleteRequest) {
         ChannelMessageDocument channelMessageDocument = findMessageById(channelMessageDeleteRequest.messageId());
-        channelMessageDocument = ChannelMessageDocument.builder()
-                .id(channelMessageDocument.getId())
+
+        ChannelMessageDocument updatedMessage = ChannelMessageDocument.builder()
+                .id(channelMessageDocument.getId())  // 기존 ID 유지
                 .senderId(channelMessageDocument.getSenderId())
                 .workspaceId(channelMessageDocument.getWorkspaceId())
                 .channelId(channelMessageDocument.getChannelId())
@@ -126,14 +128,15 @@ public class ChannelMessageService {
                 .isDeleted(true)
                 .isUpdated(channelMessageDocument.isUpdated())
                 .createdAt(channelMessageDocument.getCreatedAt())
-                .updatedAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())  // ✅ 업데이트 시간 반영
                 .reactions(channelMessageDocument.getReactions())
                 .isHasThread(channelMessageDocument.isHasThread())
                 .threadCount(channelMessageDocument.getThreadCount())
                 .treads(channelMessageDocument.getTreads())
                 .build();
 
-        channelMessageRepository.save(channelMessageDocument);
+        // ✅ ID가 동일하기 때문에 MongoDB에서 기존 Document를 덮어쓰기 함
+        channelMessageRepository.save(updatedMessage);
 
         return new ChannelMessageDeleteResponse("200",SUCCESSES_DELETE_MESSAGE);
     }
