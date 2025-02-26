@@ -29,6 +29,7 @@ public class ChatConfig implements WebSocketMessageBrokerConfigurer {
                 .setAllowedOriginPatterns("*");
 //                .withSockJS();
     }
+
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         // channel -> 채널 메시지 토픽
@@ -37,7 +38,7 @@ public class ChatConfig implements WebSocketMessageBrokerConfigurer {
     }
 
     @Override
-    public void configureClientInboundChannel(ChannelRegistration registration){
+    public void configureClientInboundChannel(ChannelRegistration registration) {
         registration.interceptors(filterChannelInterceptor);
     }
 }

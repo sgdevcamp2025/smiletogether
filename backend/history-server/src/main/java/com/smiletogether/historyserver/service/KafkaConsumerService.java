@@ -18,27 +18,28 @@ public class KafkaConsumerService {
     private final ObjectMapper objectMapper;
     private final ChannelMessageService channelMessageService;
 
-    @KafkaListener(topics = "channel-message", groupId = "history-group")
+    @KafkaListener(topics = "history-topic", groupId = "history-server-group")
     public void consumeChannelMessage(String messageJson) {
         try {
             JsonNode jsonNode = objectMapper.readTree(messageJson);
             String type = jsonNode.get("type").asText();
+            log.info("Received channel message: {}", messageJson);
 
             switch (type) {
-                case "SAVE":
-                    ChannelMessageSaveRequest saveRequest = objectMapper.treeToValue(jsonNode.get("data"), ChannelMessageSaveRequest.class);
+                case "SEND":
+                    ChannelMessageSaveRequest saveRequest = objectMapper.readValue(messageJson, ChannelMessageSaveRequest.class);
                     channelMessageService.saveMessage(saveRequest);
                     log.info("Kafka: 메시지 저장 성공");
                     break;
 
                 case "UPDATE":
-                    ChannelMessageUpdateRequest updateRequest = objectMapper.treeToValue(jsonNode.get("data"), ChannelMessageUpdateRequest.class);
+                    ChannelMessageUpdateRequest updateRequest = objectMapper.readValue(messageJson, ChannelMessageUpdateRequest.class);
                     channelMessageService.updateChannelMessage(updateRequest);
                     log.info("Kafka: 메시지 업데이트 성공");
                     break;
 
                 case "DELETE":
-                    ChannelMessageDeleteRequest deleteRequest = objectMapper.treeToValue(jsonNode.get("data"), ChannelMessageDeleteRequest.class);
+                    ChannelMessageDeleteRequest deleteRequest = objectMapper.readValue(messageJson, ChannelMessageDeleteRequest.class);
                     channelMessageService.deleteChannelMessage(deleteRequest);
                     log.info("Kafka: 메시지 삭제 성공");
                     break;
@@ -60,10 +61,12 @@ public class KafkaConsumerService {
             String type = channelMessageReaction.type();
             if (type.equals("CREATE")) {
                 channelMessageService.createChannelMessageReaction(channelMessageReaction);
+                log.info("성공");
             }
 
             if (type.equals("DELETE")) {
                 channelMessageService.deleteChannelMessageReaction(channelMessageReaction);
+                log.info("성공");
             }
 
         } catch (Exception e) {
