@@ -184,4 +184,14 @@ export const handlers = [
   http.get('/api/dms', () => {
     return HttpResponse.json(dummy.workspacedmList);
   }),
+  http.get('/api/dms/:dmId', ({ params }) => {
+    const { dmId } = params;
+    const dm = dummy.dummyDms.find(dm => dm.dmId === dmId);
+
+    if (!dm) {
+      return HttpResponse.json({ message: 'DM not found' }, { status: 404 });
+    }
+
+    return HttpResponse.json(dm);
+  }),
 ];

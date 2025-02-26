@@ -1,8 +1,5 @@
-interface DMParticipant {
-  userId: string;
-  username: string;
-  profileImage: string;
-}
+import { User } from '@/types/user';
+import { Message } from '../channel/dto';
 
 interface DMLastMessage {
   senderId: string;
@@ -10,9 +7,9 @@ interface DMLastMessage {
   createdAt: string;
 }
 
-export interface DMItem {
+interface DMItem {
   dmId: string;
-  participants: DMParticipant[];
+  participants: User[];
   lastMessage: DMLastMessage;
   unreadCount: number;
 }
@@ -20,4 +17,11 @@ export interface DMItem {
 export interface DMListResponseDto {
   userId: string;
   dms: DMItem[];
+}
+
+export interface DMResponseDto {
+  dmId: string;
+  participants: User[];
+  isGroup: boolean;
+  messages: Record<string, Message[]>;
 }

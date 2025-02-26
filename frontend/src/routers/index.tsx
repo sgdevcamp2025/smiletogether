@@ -43,7 +43,7 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: 'dm',
+        path: 'dm/:dmId',
         element: <DMPage />,
       },
       {

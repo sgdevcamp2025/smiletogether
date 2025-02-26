@@ -10,7 +10,7 @@ const MainNavigationSidebar = () => {
   const { channelList } = useWorkspaceChannelListQuery(workspaceId!);
 
   return (
-    <div className=" min-w-16 bg-yellow-200 text-white flex py-3 flex-col items-center border-r-2">
+    <div className="flex flex-col items-center py-3 text-white bg-yellow-200 border-r-2  min-w-16">
       {icons.map((item, index) => {
         return (
           <WorkspaceIconButton
@@ -27,7 +27,7 @@ const MainNavigationSidebar = () => {
                 }
               }
               if (item.type === 'DM') {
-                navigate(`/workspace/${workspaceId}/dm`);
+                navigate(`/workspace/${workspaceId}/dm/1`);
               }
               if (item.type === 'ETC') console.log('더보기 클릭');
             }}
