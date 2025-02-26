@@ -1,9 +1,16 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
 import { CreateWorkspaceDto } from './dto/create-workspace.dto';
 import { WorkspaceResponseDto } from './dto/workspcae-response.dto';
 import { WorkspaceSearchResponseDto } from './dto/search-workspace.dto';
 import { WorkspaceDetailResponseDto } from './dto/workspace-detail.dto';
+import { WorkspaceDeleteResponseDto } from './dto/delete-workspace.dto';
+import { InviteWorkspaceDto } from './dto/invite-workspace.dto';
 
 @Injectable()
 export class WorkspaceService {
@@ -41,13 +48,13 @@ export class WorkspaceService {
       userWorkspaces: {
         email: 'temp@email.com',
         workspaces: workspaces.map((workspace) => ({
-          workspace_id: workspace.workspace_id,
+          workspaceId: workspace.workspace_id,
           name: workspace.name,
-          profile_image: workspace.workspace_image,
-          member_count: workspace._count.WorkspaceUser,
-          workspace_members: workspace.WorkspaceUser.map((member) => ({
-            user_id: member.user_id,
-            profile_image: member.profile_image,
+          profileImage: workspace.workspace_image,
+          memberCount: workspace._count.WorkspaceUser,
+          workspaceMembers: workspace.WorkspaceUser.map((member) => ({
+            userId: member.user_id,
+            profileImage: member.profile_image,
           })),
         })),
       },
@@ -57,13 +64,8 @@ export class WorkspaceService {
   async createWorkspace(
     createWorkspaceDto: CreateWorkspaceDto,
   ): Promise<WorkspaceResponseDto> {
-    const {
-      workspace_name,
-      owner_id,
-      user_name,
-      profile_image,
-      invite_user_list,
-    } = createWorkspaceDto;
+    const { workspaceName, ownerId, userName, profileImage, inviteUserList } =
+      createWorkspaceDto;
 
     const inviteResults = {
       success: [],
@@ -74,8 +76,8 @@ export class WorkspaceService {
       // 워크스페이스 생성
       const workspace = await prisma.workspace.create({
         data: {
-          name: workspace_name,
-          workspace_image: profile_image || 'default.jpg',
+          name: workspaceName,
+          workspace_image: profileImage || 'default.jpg',
         },
       });
 
@@ -83,10 +85,10 @@ export class WorkspaceService {
       await prisma.workspaceUser.create({
         data: {
           workspace_id: workspace.workspace_id,
-          user_id: owner_id,
+          user_id: ownerId,
           role: 'admin',
-          profile_name: user_name,
-          profile_image: profile_image || 'default.jpg',
+          profile_name: userName,
+          profile_image: profileImage || 'default.jpg',
         },
       });
 
@@ -104,13 +106,13 @@ export class WorkspaceService {
       await prisma.channelUser.create({
         data: {
           channel_id: defaultChannel.channel_id,
-          user_id: owner_id,
+          user_id: ownerId,
           channel_role: 'admin',
         },
       });
 
       // 초대된 사용자들 처리
-      for (const userId of invite_user_list) {
+      for (const userId of inviteUserList) {
         try {
           // 워크스페이스 멤버로 추가
           await prisma.workspaceUser.create({
@@ -142,10 +144,10 @@ export class WorkspaceService {
       // response
       return {
         workspaceId: workspace.workspace_id,
-        name: workspace_name,
-        creator: owner_id,
+        name: workspaceName,
+        creator: ownerId,
         defaultChannel: defaultChannel.channel_id,
-        profileImage: profile_image || 'default.jpg',
+        profileImage: profileImage || 'default.jpg',
         inviteResults,
         createdAt: workspace.created_at,
       };
@@ -174,12 +176,97 @@ export class WorkspaceService {
 
     return {
       workspaces: workspaces.map((workspace) => ({
-        workspace_id: workspace.workspace_id,
+        workspaceId: workspace.workspace_id,
         name: workspace.name,
-        owner_id: workspace.WorkspaceUser[0].user_id,
+        ownerId: workspace.WorkspaceUser[0].user_id,
         nickname: workspace.WorkspaceUser[0].profile_name,
       })),
     };
+  }
+
+  async inviteWorkspace(
+    workspaceId: string,
+    inviteWorkspaceDto: InviteWorkspaceDto,
+  ) {
+    const { inviteUserList } = inviteWorkspaceDto;
+
+    const inviteResults = {
+      success: [],
+      failed: [],
+    };
+    return await this.prismaService.$transaction(async (prisma) => {
+      const workspace = await prisma.workspace.findUnique({
+        where: {
+          workspace_id: workspaceId,
+        },
+      });
+
+      if (!workspace) {
+        throw new NotFoundException(
+          `Workspace with ID ${workspaceId} not found`,
+        );
+      }
+
+      const defaultChannels = await prisma.channel.findMany({
+        where: {
+          workspace_id: workspaceId,
+          is_private: false,
+        },
+      });
+
+      const existingMembers = await prisma.workspaceUser.findMany({
+        where: {
+          workspace_id: workspaceId,
+        },
+        select: {
+          user_id: true,
+        },
+      });
+
+      const existingMemberIds = existingMembers.map((member) => member.user_id);
+
+      for (const userId of inviteUserList) {
+        try {
+          if (existingMemberIds.includes(userId)) {
+            inviteResults.failed.push(userId);
+            continue;
+          }
+
+          // 워크스페이스 멤버로 추가
+          await prisma.workspaceUser.create({
+            data: {
+              workspace_id: workspaceId,
+              user_id: userId,
+              role: 'member',
+              profile_name: `${userId}번 유저`, // 추후 사용자 DB에서 이름 가져오기
+              profile_image: 'default.jpg',
+            },
+          });
+
+          // 기본 채널에 추가
+          for (const defaultChannel of defaultChannels) {
+            await prisma.channelUser.create({
+              data: {
+                channel_id: defaultChannel.channel_id,
+                user_id: userId,
+                channel_role: 'member',
+              },
+            });
+          }
+
+          inviteResults.success.push(userId);
+        } catch (error) {
+          this.logger.error(`Failed to invite user ${userId}:`, error);
+          inviteResults.failed.push(userId);
+        }
+      }
+
+      // response
+      return {
+        workspaceId: workspaceId,
+        inviteResults,
+      };
+    });
   }
 
   async getWorkspaceById(
@@ -208,18 +295,111 @@ export class WorkspaceService {
     }
 
     return {
-      workspace_id: workspace.workspace_id,
+      workspaceId: workspace.workspace_id,
       name: workspace.name,
-      owner_id: workspace.WorkspaceUser.find((user) => user.role === 'admin')
+      ownerId: workspace.WorkspaceUser.find((user) => user.role === 'admin')
         ?.user_id,
-      profile_image: workspace.workspace_image,
+      profileImage: workspace.workspace_image,
       users: workspace.WorkspaceUser.map((user) => ({
-        user_id: user.user_id,
+        userId: user.user_id,
         nickname: user.profile_name,
         role: user.role,
       })),
-      created_at: workspace.created_at,
-      updated_at: workspace.updated_at,
+      createdAt: workspace.created_at,
+      updatedAt: workspace.updated_at,
+    };
+  }
+
+  async deleteWorkspaceById(
+    workspaceId: string,
+    userId: string,
+  ): Promise<WorkspaceDeleteResponseDto> {
+    const workspace = await this.prismaService.workspace.findUnique({
+      where: {
+        workspace_id: workspaceId,
+      },
+      include: {
+        WorkspaceUser: {
+          where: {
+            role: 'admin',
+            user_id: userId,
+          },
+        },
+      },
+    });
+
+    if (!workspace) {
+      throw new NotFoundException(`Workspace with ID ${workspaceId} not found`);
+    }
+
+    if (workspace.WorkspaceUser.length === 0) {
+      throw new UnauthorizedException(
+        'You do not have permission to delete this workspace.',
+      );
+    }
+
+    const deletedWorkspace = await this.prismaService.workspace.delete({
+      where: {
+        workspace_id: workspaceId,
+      },
+    });
+
+    return {
+      workspaceId: deletedWorkspace.workspace_id,
+      status: 'workspace deleted',
+    };
+  }
+
+  async leaveWorkspace(workspaceId: string, userId: string): Promise<any> {
+    const workspace = await this.prismaService.workspace.findUnique({
+      where: {
+        workspace_id: workspaceId,
+      },
+      include: {
+        WorkspaceUser: true,
+      },
+    });
+
+    if (!workspace) {
+      throw new NotFoundException(`Workspace with ID ${workspaceId} not found`);
+    }
+
+    const leavingUser = workspace.WorkspaceUser.find(
+      (user) => user.user_id === userId,
+    );
+
+    if (!leavingUser) {
+      throw new NotFoundException(`User is not a member of this workspace`);
+    }
+
+    // 만약 마지막 유저라면 workspace 자체를 삭제
+    if (workspace.WorkspaceUser.length === 1) {
+      await this.prismaService.workspace.delete({
+        where: {
+          workspace_id: workspaceId,
+        },
+      });
+
+      return {
+        message: 'Workspace has been deleted as you were the last member',
+      };
+    }
+
+    // admin이 탈퇴하는 경우, 탈퇴 전 ownership transfer 필요
+    if (leavingUser.role === 'admin')
+      return {
+        error: 'Workspace owner cannot leave. Transfer ownership first.',
+      };
+
+    //user 삭제
+    await this.prismaService.workspaceUser.delete({
+      where: {
+        profile_id: leavingUser.profile_id,
+      },
+    });
+
+    return {
+      message: 'Successfuly deleted',
     };
   }
 }
