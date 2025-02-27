@@ -87,4 +87,12 @@ export class WorkspaceController {
   ): Promise<ProfileResponseDto> {
     return this.workspaceService.getWorkspaceUser(workspaceId, userId);
   }
+
+  @Get(':workspaceId/search')
+  async searchUsers(
+    @Param('workspaceId') workspaceId: string,
+    @Query('username') username: string,
+  ): Promise<ProfileResponseDto> {
+    return this.workspaceService.searchUserByName(workspaceId, username);
+  }
 }
