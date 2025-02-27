@@ -11,6 +11,7 @@ import { WorkspaceSearchResponseDto } from './dto/search-workspace.dto';
 import { WorkspaceDetailResponseDto } from './dto/workspace-detail.dto';
 import { WorkspaceDeleteResponseDto } from './dto/delete-workspace.dto';
 import { InviteWorkspaceDto } from './dto/invite-workspace.dto';
+import { ProfileResponseDto } from 'src/common/dto/profile-response.dto';
 
 @Injectable()
 export class WorkspaceService {
@@ -89,6 +90,8 @@ export class WorkspaceService {
           role: 'admin',
           profile_name: userName,
           profile_image: profileImage || 'default.jpg',
+          position: '',
+          status_message: '',
         },
       });
 
@@ -122,6 +125,8 @@ export class WorkspaceService {
               role: 'member',
               profile_name: `${userId}번 유저`, // 추후 사용자 DB에서 이름 가져오기
               profile_image: 'default.jpg',
+              position: '',
+              status_message: '',
             },
           });
 
@@ -240,6 +245,8 @@ export class WorkspaceService {
               role: 'member',
               profile_name: `${userId}번 유저`, // 추후 사용자 DB에서 이름 가져오기
               profile_image: 'default.jpg',
+              position: '',
+              status_message: '',
             },
           });
 
@@ -400,6 +407,75 @@ export class WorkspaceService {
 
     return {
       message: 'Successfuly deleted',
+    };
+  }
+
+  async getWorkspaceUser(
+    workspaceId: string,
+    userId: string,
+  ): Promise<ProfileResponseDto> {
+    const workspaceUser = await this.prismaService.workspaceUser.findUnique({
+      where: {
+        user_id_workspace_id: {
+          user_id: userId,
+          workspace_id: workspaceId,
+        },
+      },
+      select: {
+        user_id: true,
+        profile_name: true,
+        profile_image: true,
+        role: true,
+        status_message: true,
+        position: true,
+        workspace: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+
+    if (!workspaceUser) {
+      throw new NotFoundException(
+        `User ${userId} not found in workspace ${workspaceId}`,
+      );
+    }
+
+    return {
+      userId: workspaceUser.user_id,
+      username: workspaceUser.profile_name,
+      displayName: workspaceUser.profile_name,
+      profileImage: workspaceUser.profile_image,
+      position: workspaceUser.position,
+      isActive: true,
+      role: workspaceUser.role,
+      statusMessage: workspaceUser.status_message,
+    };
+  }
+
+  async searchUserByName(workspaceId: string, name: string): Promise<any> {
+    const workspaceUsers = await this.prismaService.workspaceUser.findMany({
+      where: {
+        profile_name: {
+          contains: name,
+          mode: 'insensitive',
+        },
+        workspace_id: workspaceId,
+      },
+    });
+
+    return {
+      users: workspaceUsers.map((user) => ({
+        userId: user.user_id,
+        username: user.profile_name,
+        displayName: user.profile_name,
+        profileImage: user.profile_image,
+        position: user.position,
+        isActive: true,
+        role: user.role,
+        statusMessage: user.status_message,
+      })),
     };
   }
 }

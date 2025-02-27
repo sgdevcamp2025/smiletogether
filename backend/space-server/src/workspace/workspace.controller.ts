@@ -17,6 +17,7 @@ import { UserId } from 'src/decorators/user-id.decorator';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { WorkspaceDeleteResponseDto } from './dto/delete-workspace.dto';
 import { InviteWorkspaceDto } from './dto/invite-workspace.dto';
+import { ProfileResponseDto } from 'src/common/dto/profile-response.dto';
 
 @Controller('api/workspaces')
 @UseGuards(AuthGuard)
@@ -77,5 +78,21 @@ export class WorkspaceController {
     @UserId() userId: string,
   ): Promise<any> {
     return await this.workspaceService.leaveWorkspace(workspaceId, userId);
+  }
+
+  @Get(':workspaceId/users/:userId')
+  async getWorkspaceUser(
+    @Param('workspaceId') workspaceId: string,
+    @Param('userId') userId: string,
+  ): Promise<ProfileResponseDto> {
+    return this.workspaceService.getWorkspaceUser(workspaceId, userId);
+  }
+
+  @Get(':workspaceId/search')
+  async searchUsers(
+    @Param('workspaceId') workspaceId: string,
+    @Query('username') username: string,
+  ): Promise<ProfileResponseDto> {
+    return this.workspaceService.searchUserByName(workspaceId, username);
   }
 }
