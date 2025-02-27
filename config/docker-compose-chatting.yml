@@ -43,14 +43,15 @@ services:
     networks:
       - history_network
 
-  chat-server:
-    image: imjanghyeok/smiletogether-chat-server:latest  # Docker Hub에서 가져오기
-    container_name: chat-server
-    restart: always
-    ports:
-      - "8081:8081"
-    networks:
-      - chat_network
+# 히스토리 서버만 테스트시 주석 필요
+#  chat-server:
+#    image: imjanghyeok/smiletogether-chat-server:latest  # Docker Hub에서 가져오기
+#    container_name: chat-server
+#    restart: always
+#    ports:
+#      - "8081:8081"
+#    networks:
+#      - chat_network
 
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
@@ -83,6 +84,7 @@ services:
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT
       - KAFKA_LISTENERS=CONTROLLER://0.0.0.0:9093
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
     networks:
       - kafka-network
     volumes:
@@ -107,6 +109,7 @@ services:
       - KAFKA_LISTENERS=INTERNAL://0.0.0.0:9092,EXTERNAL://kafka_01:19001
       - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka_01:9092,EXTERNAL://host.docker.internal:19001
       - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
     networks:
       - kafka-network
     volumes:
@@ -130,6 +133,7 @@ services:
       - KAFKA_LISTENERS=INTERNAL://0.0.0.0:9092,EXTERNAL://kafka_02:19002
       - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka_02:9092,EXTERNAL://host.docker.internal:19002
       - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
     networks:
       - kafka-network
     volumes:
@@ -153,6 +157,7 @@ services:
       - KAFKA_LISTENERS=INTERNAL://0.0.0.0:9092,EXTERNAL://kafka_03:19003
       - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka_03:9092,EXTERNAL://host.docker.internal:19003
       - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
     networks:
       - kafka-network
     volumes:
@@ -162,8 +167,9 @@ services:
 networks:
   history_network:
     driver: bridge
-  chat_network:
-    driver: bridge
+  # 히스토리 서버만 테스트시 주석 필요
+  #  chat_network:
+#    driver: bridge
   kafka-network:
     driver: bridge
 
