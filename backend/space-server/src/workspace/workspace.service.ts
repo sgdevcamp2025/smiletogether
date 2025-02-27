@@ -427,6 +427,7 @@ export class WorkspaceService {
         profile_image: true,
         role: true,
         status_message: true,
+        position: true,
         workspace: {
           select: {
             name: true,
@@ -446,10 +447,35 @@ export class WorkspaceService {
       username: workspaceUser.profile_name,
       displayName: workspaceUser.profile_name,
       profileImage: workspaceUser.profile_image,
-      position: `${workspaceUser.workspace.name} 멤버`,
+      position: workspaceUser.position,
       isActive: true,
       role: workspaceUser.role,
       statusMessage: workspaceUser.status_message,
+    };
+  }
+
+  async searchUserByName(workspaceId: string, name: string): Promise<any> {
+    const workspaceUsers = await this.prismaService.workspaceUser.findMany({
+      where: {
+        profile_name: {
+          contains: name,
+          mode: 'insensitive',
+        },
+        workspace_id: workspaceId,
+      },
+    });
+
+    return {
+      users: workspaceUsers.map((user) => ({
+        userId: user.user_id,
+        username: user.profile_name,
+        displayName: user.profile_name,
+        profileImage: user.profile_image,
+        position: user.position,
+        isActive: true,
+        role: user.role,
+        statusMessage: user.status_message,
+      })),
     };
   }
 }
