@@ -1,8 +1,11 @@
 package com.smiletoegether.memberserver.member.domain;
 
 
+import com.fasterxml.uuid.Generators;
+import com.fasterxml.uuid.impl.TimeBasedGenerator;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.Builder.Default;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -20,8 +23,8 @@ import java.time.LocalDateTime;
 @Slf4j
 public class Member {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Builder.Default
+    private String id = uuidGenerator();
 
     @Column(nullable = false)
     private String username;
@@ -36,4 +39,9 @@ public class Member {
     @Column(nullable = false)
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    private static String uuidGenerator() {
+        TimeBasedGenerator generator = Generators.timeBasedGenerator();
+        return generator.generate().toString();
+    }
 }
