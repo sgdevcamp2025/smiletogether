@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ChannelService } from './channel.service';
@@ -14,6 +15,7 @@ import { ChannelResponseDto } from './dto/channel-response.dto';
 import { CreateChannelDto } from './dto/create-channel.dto';
 import { WorkspaceChannelDto } from './dto/workspace-channel.dto';
 import { ChannelDetailsDto } from './dto/channel-detail.dto';
+import { ProfileResponseDto } from 'src/common/dto/profile-response.dto';
 
 @Controller('api/channels')
 @UseGuards(AuthGuard)
@@ -56,19 +58,27 @@ export class ChannelController {
     return this.channelService.joinChannel(userId, channelId);
   }
 
-  @Delete(':channel_id/leave')
+  @Delete(':channelId/leave')
   async leaveChannel(
     @UserId() userId: string,
-    @Param('channel_id') channelId: string,
+    @Param('channelId') channelId: string,
   ): Promise<any> {
     return await this.channelService.leaveChannel(channelId, userId);
   }
 
-  @Delete(':channel_id')
+  @Delete(':channelId')
   async deleteChannel(
     @UserId() userId: string,
-    @Param('channel_id') channelId: string,
+    @Param('channelId') channelId: string,
   ): Promise<any> {
     return await this.channelService.deleteChannel(channelId, userId);
+  }
+
+  @Get(':channelId/search')
+  async searchUsers(
+    @Param('channelId') channelId: string,
+    @Query('username') username: string,
+  ): Promise<ProfileResponseDto> {
+    return this.channelService.searchUserByName(channelId, username);
   }
 }
