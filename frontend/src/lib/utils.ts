@@ -15,3 +15,7 @@ export const isValidKoreanEnglish = (text: string): boolean => {
   const koreanEnglishRegex = /^[가-힣a-zA-Z]+$/; // 한글 + 영어만 허용
   return koreanEnglishRegex.test(text);
 };
+
+export const getTocken = () => {
+  return 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlcklkIjoiMjVjN2VhNWYtMzY3ZC00ZDlmLThkYmItMDk2Mjk2MTYxMTcwIiwiaWF0IjoxNTE2MjM5MDIyfQ.Stu0ZXYcc47yTeOKN7LziHyb91unNElS5DCR_BCwelg';
+};

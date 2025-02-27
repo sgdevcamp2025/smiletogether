@@ -8,25 +8,25 @@ import https from '@/lib/https';
 export const postNewWorkspace = async (
   workspaceInfo: PostNewWorkspaceRequestDto
 ) => {
-  const { data } = await https.post('/api/workspaces', workspaceInfo);
+  const { data } = await https.post('/workspaces', workspaceInfo);
   return data;
 };
 
 export const getUserWorkspace = async (
   workspaceId: string
 ): Promise<GetUserWorkspaceResponse> => {
-  const { data } = await https.get(`/api/workspaces/${workspaceId}`);
+  const { data } = await https.get(`/workspaces/${workspaceId}`);
   return data;
 };
 
 export const getUserWorkspaces =
   async (): Promise<GetUserWorkspaceListeResponse> => {
-    const { data } = await https.get('/api/workspaces');
+    const { data } = await https.get('/workspaces');
     return data;
   };
 
 export const postRemoveWorkspace = async (workspaceId: string) => {
-  const { data } = await https.delete(`/api/workspaces/${workspaceId}`);
+  const { data } = await https.delete(`/workspaces/${workspaceId}`);
   return data;
 };
 
@@ -35,13 +35,13 @@ export const postInviteWorkspace = async (
   emails: string[]
 ) => {
   const { data } = await https.post(
-    `/api/workspaces/${workspaceId}/invite`,
+    `/workspaces/${workspaceId}/invite`,
     emails
   );
   return data;
 };
 
 export const postLeaveWorkspace = async (workspaceId: string) => {
-  const { data } = await https.post(`/api/workspaces/${workspaceId}/leave`);
+  const { data } = await https.post(`/workspaces/${workspaceId}/leave`);
   return data;
 };
