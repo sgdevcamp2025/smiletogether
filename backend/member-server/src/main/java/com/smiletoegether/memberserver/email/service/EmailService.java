@@ -1,20 +1,17 @@
 package com.smiletoegether.memberserver.email.service;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.util.Random;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
@@ -26,12 +23,8 @@ public class EmailService {
     private static final String EMAIL_SUCCESS_OF_VERIFICATION = "이메일로 인증코드를 전송했습니다.";
 
     private final JavaMailSender emailSender;
+    private final RedisTemplate<String, String> redisTemplate;
 
-    // 인증 코드를 저장할 ConcurrentHashMap (이메일 -> 코드)
-    private final ConcurrentHashMap<String, String> verificationCodes = new ConcurrentHashMap<>();
-
-    // ScheduledExecutorService를 사용하여 일정 시간이 지나면 코드 삭제
-    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     @Value("${spring.mail.auth-code-expiration-millis}")
     private long authCodeExpirationMillis;
@@ -40,22 +33,21 @@ public class EmailService {
     public String sendCode(String email) {
         String code = createCode();
         sendEmail(email, EMAIL_TITLE_OF_VERIFICATION, code);
-        verificationCodes.put(email, code);
 
-        scheduler.schedule(() -> {
-            verificationCodes.remove(email);
-        }, authCodeExpirationMillis, TimeUnit.MILLISECONDS);
+        redisTemplate.opsForValue().set(email, code, 300, TimeUnit.SECONDS);
 
         return EMAIL_SUCCESS_OF_VERIFICATION;
     }
 
     // 인증 코드 확인
     public boolean verifyCode(String email, String codeInput) {
-        String storedCode = verificationCodes.get(email);
+        Boolean hasKey = redisTemplate.hasKey(email);
 
-        if (storedCode == null) {
+        if (Boolean.FALSE.equals(hasKey)) {
             throw new RuntimeException("잘못된 이메일이거나 인증 코드가 만료되었습니다.");
         }
+
+        String storedCode = redisTemplate.opsForValue().get(email);
         return storedCode.equals(codeInput);
     }
 
