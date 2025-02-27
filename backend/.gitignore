@@ -264,4 +264,4 @@ gradle-app.setting
 application.yml
 gradle/
 *.properties
-*.yml
+application-local.yml

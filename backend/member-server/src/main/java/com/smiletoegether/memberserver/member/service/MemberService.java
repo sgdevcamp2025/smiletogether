@@ -17,10 +17,15 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
-
     private final EmailService emailService;
 
     private static final String SIGN_UP_VALID_EMAIL = "사용 가능한 이메일입니다.";
+
+    private String findIdByEmail(String email) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 이메일입니다."));
+        return member.getId();
+    }
 
     // 이메일 중복 확인
     @Transactional
@@ -69,5 +74,9 @@ public class MemberService {
 
         memberRepository.save(member);
         return member;
+    }
+
+    public String checkMemberId(String email) {
+        return findIdByEmail(email);
     }
 }
