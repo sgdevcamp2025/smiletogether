@@ -12,10 +12,8 @@ export interface GetUserWorkspaceResponse {
 }
 
 export interface GetUserWorkspaceListeResponse {
-  userWorkspaces: {
-    email: string;
-    workspaces: Workspace[];
-  };
+  email: string;
+  workspaces: Workspace[];
 }
 
 export interface PostNewWorkspaceRequestDto {
