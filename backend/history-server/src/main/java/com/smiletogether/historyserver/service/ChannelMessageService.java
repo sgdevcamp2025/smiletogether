@@ -48,14 +48,14 @@ public class ChannelMessageService {
     }
 
     public ChannelMessages getChannelMessages(ChannelMessagesRequest channelMessagesRequest, String workspaceId,
-            String channelId) {
+                                              String channelId) {
         log.info("📌 요청받은 afterTime: {}", channelMessagesRequest.lastTimeStamp());
 
         LocalDateTime afterTime = channelMessagesRequest.lastTimeStamp();
         log.info("📌 변환된 afterTime (LocalDateTime): {}", afterTime);
 
         List<ChannelMessageDocument> channelMessageDocuments = channelMessageRepository.findByWorkspaceIdAndChannelIdAndIsDeletedAndCreatedAtBefore(
-                workspaceId, channelId, false, afterTime, PageRequest.of(0, 20, Sort.by(Direction.ASC, "createdAt"))
+                workspaceId, channelId, false, afterTime, PageRequest.of(0, 20, Sort.by(Direction.DESC, "createdAt"))
         );
 
         log.info("📌 검색된 메시지 개수: {}", channelMessageDocuments.size());
@@ -73,7 +73,13 @@ public class ChannelMessageService {
             groupedMessages.computeIfAbsent(dateKey, k -> new ArrayList<>()).add(messageResponse);
         }
 
-        return new ChannelMessages(channelId, groupedMessages);
+        // 날짜 순서대로 그룹화된 메시지를 내림차순으로 정렬하여 가장 오래된 날짜부터 보이도록 설정
+        Map<String, List<ChannelMessageResponse>> reversedGroupedMessages = new LinkedHashMap<>();
+        groupedMessages.entrySet().stream()
+                .sorted(Map.Entry.<String, List<ChannelMessageResponse>>comparingByKey()) // 날짜 오름차순으로 정렬
+                .forEachOrdered(entry -> reversedGroupedMessages.put(entry.getKey(), entry.getValue()));
+
+        return new ChannelMessages(channelId, reversedGroupedMessages);
     }
 
     public void saveMessage(ChannelMessageSaveRequest channelMessage) {
