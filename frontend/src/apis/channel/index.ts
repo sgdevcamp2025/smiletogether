@@ -31,7 +31,7 @@ export const getUserJoinedWorkspaceChannels = async (
   workspaceId: string
 ): Promise<getWorkspaceChannelsResponseDto[]> => {
   const { data } = await https.get(`/api/channels/workspaces/${workspaceId}`);
-  return data;
+  return data.channels;
 };
 
 export const postNewWorkspaceChannels = async ({
