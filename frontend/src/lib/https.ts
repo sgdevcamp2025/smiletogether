@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { getTocken } from '@/lib/utils';
 
+const mockApiList = ['/api/dms'];
+
 const https = axios.create({
   withCredentials: true,
   timeout: 10000,
@@ -8,9 +10,15 @@ const https = axios.create({
 
 https.interceptors.request.use(
   config => {
-    config.baseURL = import.meta.env.VITE_BASE_API_URL;
+    const isMockApi = mockApiList.some(item => config.url!.startsWith(item));
+
+    if (isMockApi) {
+      config.baseURL = '';
+    } else {
+      config.baseURL = import.meta.env.VITE_BASE_API_URL;
+    }
+
     config.headers.Authorization = `Bearer ${getTocken()}`;
-    console.log(config.url, config.method, config.data);
     return config;
   },
   error => {
@@ -20,7 +28,6 @@ https.interceptors.request.use(
 
 https.interceptors.response.use(
   response => {
-    console.log(`response ${response.config.url}`, response);
     return response;
   },
   error => {

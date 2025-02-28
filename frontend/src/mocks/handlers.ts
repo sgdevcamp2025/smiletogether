@@ -81,15 +81,15 @@ export const handlers = [
   //     );
   //   }
   // }),
-  // 워크스페이스 상세 조회
-  http.get(`/api/workspaces/:workspaceId`, ({ params }) => {
-    const { workspaceId } = params;
-    const workspace = db.userWorkspaces.workspaces.find(
-      (item: { workspaceId: string | readonly string[] | undefined }) =>
-        item.workspaceId === workspaceId
-    );
-    return HttpResponse.json(workspace);
-  }),
+  // // 워크스페이스 상세 조회
+  // http.get(`/api/workspaces/:workspaceId`, ({ params }) => {
+  //   const { workspaceId } = params;
+  //   const workspace = db.userWorkspaces.workspaces.find(
+  //     (item: { workspaceId: string | readonly string[] | undefined }) =>
+  //       item.workspaceId === workspaceId
+  //   );
+  //   return HttpResponse.json(workspace);
+  // }),
   // // 본인 워크스페이스 목록 조회
   // http.get('/api/workspaces', () => {
   //   return HttpResponse.json(db.userWorkspaces);

@@ -3,12 +3,15 @@ import { Button } from '@/components/ui/button';
 import useUserWorkspacesQuery from '@/hooks/workspace/useUserWorkspacesQuery';
 import WorkspaceListItem from '@/components/workspace/WorkspaceListItem';
 import { useNavigate } from 'react-router';
+import { useEffect } from 'react';
 
 const WorkSpaceListPage = () => {
   const navigate = useNavigate();
   const { workspacesInfo, isWorkspacesError, isWorkspacesLoading } =
     useUserWorkspacesQuery();
-
+  useEffect(() => {
+    console.log(workspacesInfo?.workspaces);
+  }, [workspacesInfo]);
   if (isWorkspacesLoading) return <div>로딩중...</div>;
   if (isWorkspacesError) return <div>에러 발생</div>;
 
@@ -18,25 +21,25 @@ const WorkSpaceListPage = () => {
 
   return (
     <div className="h-screen flex items-center justify-center flex-col w-full">
-      {workspacesInfo && workspacesInfo?.workspaces.length === 0 && (
-        <div>
+      <div className="h-[20vh] flex flex-col items-center justify-end">
+        {workspacesInfo && workspacesInfo?.workspaces.length === 0 && (
           <div className="py-10 text-2xl">
-            가입되어 있는 워크스페이가 하나도 없습니다.
+            가입되어 있는 워크스페이가 없습니다.
           </div>
-        </div>
-      )}
-      <Button
-        className="px-40 py-4 bg-yellow-400 text-white rounded hover:bg-yellow-200"
-        onClick={navigateToCreateWorkspace}
-      >
-        워크스페이스 생성
-      </Button>
+        )}
+        <Button
+          className="px-40 py-4 bg-yellow-400 text-white rounded hover:bg-yellow-200 mb-5"
+          onClick={navigateToCreateWorkspace}
+        >
+          워크스페이스 생성
+        </Button>
+      </div>
       {workspacesInfo && workspacesInfo?.workspaces.length > 0 && (
         <>
-          <blockquote className="my-10 text-gray-400 italic">
+          <span className=" text-gray-400 italic">
             아래에서 워크스페이스를 선택하여 팀과 계속 협업하세요.
-          </blockquote>
-          <Card className="w-2/5 max-w-2lg mt-5">
+          </span>
+          <Card className="w-2/5 max-w-2lg mt-5 flex-col  overflow-auto">
             <div className="flex items-center px-6 py-4 w-full border  shadow hover:bg-gray-50">
               <h1 className="text-lg font-semibold">
                 {workspacesInfo && workspacesInfo.email}
