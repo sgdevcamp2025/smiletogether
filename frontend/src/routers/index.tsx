@@ -9,6 +9,7 @@ import ChannelPage from '@/pages/channel/ChannelPage';
 import ActivityPage from '@/pages/activity/ActivityPage';
 import WorkspaceChannelPanel from '@/components/workspace/WorkspaceChannelPanel';
 import SplitPaneLayout from '@/components/common/SplitPaneLayout';
+import NotFoundPage from '@/pages/NotFoundPage';
 
 export const router = createBrowserRouter([
   {
@@ -62,5 +63,9 @@ export const router = createBrowserRouter([
         ),
       },
     ],
+  },
+  {
+    path: '/*',
+    element: <NotFoundPage />,
   },
 ]);

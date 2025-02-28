@@ -10,7 +10,7 @@ https.interceptors.request.use(
   config => {
     config.baseURL = import.meta.env.VITE_BASE_API_URL;
     config.headers.Authorization = `Bearer ${getTocken()}`;
-    console.log('config', config.data);
+    console.log(config.url, config.data);
     return config;
   },
   error => {
@@ -20,7 +20,7 @@ https.interceptors.request.use(
 
 https.interceptors.response.use(
   response => {
-    console.log('response', response);
+    console.log(`response ${response.config.url}`, response);
     return response;
   },
   error => {
