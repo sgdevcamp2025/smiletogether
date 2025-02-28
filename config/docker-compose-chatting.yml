@@ -43,15 +43,14 @@ services:
     networks:
       - history_network
 
-# 히스토리 서버만 테스트시 주석 필요
-#  chat-server:
-#    image: imjanghyeok/smiletogether-chat-server:latest  # Docker Hub에서 가져오기
-#    container_name: chat-server
-#    restart: always
-#    ports:
-#      - "8081:8081"
-#    networks:
-#      - chat_network
+  chat-server:
+    image: imjanghyeok/smiletogether-chat-server:latest  # Docker Hub에서 가져오기
+    container_name: chat-server
+    restart: always
+    ports:
+      - "8081:8081"
+    networks:
+      - chat_network
 
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
@@ -167,9 +166,8 @@ services:
 networks:
   history_network:
     driver: bridge
-  # 히스토리 서버만 테스트시 주석 필요
-  #  chat_network:
-#    driver: bridge
+  chat_network:
+    driver: bridge
   kafka-network:
     driver: bridge
 
