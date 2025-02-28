@@ -324,4 +324,38 @@ export class ChannelService {
       status: 'channel deleted',
     };
   }
+
+  async searchUserByName(channelId: string, name: string): Promise<any> {
+    const channelUsers = await this.prismaService.channelUser.findMany({
+      where: {
+        channel_id: channelId,
+      },
+      select: { user_id: true },
+    });
+
+    const userIds = channelUsers.map((user) => user.user_id);
+
+    const workspaceUsers = await this.prismaService.workspaceUser.findMany({
+      where: {
+        user_id: { in: userIds }, // 채널에 속한 유저들만 필터링
+        profile_name: {
+          contains: name,
+          mode: 'insensitive',
+        },
+      },
+    });
+
+    return {
+      users: workspaceUsers.map((user) => ({
+        userId: user.user_id,
+        username: user.profile_name,
+        displayName: user.profile_name,
+        profileImage: user.profile_image,
+        position: user.position,
+        isActive: true,
+        role: user.role,
+        statusMessage: user.status_message,
+      })),
+    };
+  }
 }
