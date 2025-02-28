@@ -1,4 +1,4 @@
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import useUserWorkspaceQuery from '@/hooks/workspace/useUserWorkspaceQuery';
 import useWorkspaceChannelListQuery from '@/hooks/channel/useWorkspaceChannelListQuery';
 import useGetDMListQuery from '@/hooks/dm/useGetDMListQuery';
@@ -31,6 +31,7 @@ const WorkspaceChannelPanel = () => {
   const user = useUserStore(state => state.user);
   const currentUserRole =
     workspaceInfo?.ownerId === user.userId ? 'admin' : 'member';
+  const naviagte = useNavigate();
 
   if (!workspaceId) return <p>워크스페이스 정보를 불러오는 중...</p>;
   if (isChannelLoading || isWorkspaceLoading || isDMLoading)
@@ -46,7 +47,10 @@ const WorkspaceChannelPanel = () => {
         onInvite={() => {
           setModal('USER_INVITE');
         }}
-        onLogout={() => alert('로그아웃이 완료되었습니다.')}
+        onLogout={() => {
+          alert('로그아웃이 완료되었습니다');
+          naviagte('/');
+        }}
         onDelete={() => {
           setModal('WORKSPACE_DELETE');
         }}
@@ -57,7 +61,9 @@ const WorkspaceChannelPanel = () => {
 
       <WorkspaceChannels
         onCreateChannel={() => setModal('CHANNEL_CREATE')}
-        onExploreChannels={() => console.log('채널 탐색')}
+        onExploreChannels={() =>
+          alert('채널 탐색은 아직 준비중인 서비스입니다')
+        }
         channelList={channelList}
       />
       <WorkspaceDMs

@@ -35,11 +35,13 @@ export const getUserJoinedWorkspaceChannels = async (
 };
 
 export const postNewWorkspaceChannels = async ({
+  workspaceId,
   name,
   isPrivate,
   emails,
 }: postWorkspaceChannelsRequestDto): Promise<postWorkspaceChannelsResponseDto> => {
   const { data } = await https.post(`/api/channels`, {
+    workspaceId,
     name,
     isPrivate,
     emails,

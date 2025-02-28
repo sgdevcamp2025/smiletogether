@@ -3,15 +3,12 @@ import { Button } from '@/components/ui/button';
 import useUserWorkspacesQuery from '@/hooks/workspace/useUserWorkspacesQuery';
 import WorkspaceListItem from '@/components/workspace/WorkspaceListItem';
 import { useNavigate } from 'react-router';
-import { useEffect } from 'react';
 
 const WorkSpaceListPage = () => {
   const navigate = useNavigate();
   const { workspacesInfo, isWorkspacesError, isWorkspacesLoading } =
     useUserWorkspacesQuery();
-  useEffect(() => {
-    console.log(workspacesInfo?.workspaces);
-  }, [workspacesInfo]);
+
   if (isWorkspacesLoading) return <div>로딩중...</div>;
   if (isWorkspacesError) return <div>에러 발생</div>;
 

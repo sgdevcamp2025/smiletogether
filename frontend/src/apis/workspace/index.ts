@@ -42,6 +42,6 @@ export const postInviteWorkspace = async (
 };
 
 export const postLeaveWorkspace = async (workspaceId: string) => {
-  const { data } = await https.post(`/api/workspaces/${workspaceId}/leave`);
+  const { data } = await https.delete(`/api/workspaces/${workspaceId}/leave`);
   return data;
 };
