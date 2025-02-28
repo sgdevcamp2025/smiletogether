@@ -19,3 +19,7 @@ export const isValidKoreanEnglish = (text: string): boolean => {
 export const getTocken = () => {
   return 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlcklkIjoiMjVjN2VhNWYtMzY3ZC00ZDlmLThkYmItMDk2Mjk2MTYxMTcwIiwiaWF0IjoxNTE2MjM5MDIyfQ.Stu0ZXYcc47yTeOKN7LziHyb91unNElS5DCR_BCwelg';
 };
+
+export const getDummyOwnerId = () => {
+  return '03c6b083-e8d6-488c-aa83-2a01b3f39d00';
+};

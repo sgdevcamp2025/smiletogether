@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { useWorkspaceCreationStore } from '@/stores/workspace';
 import EmailTagInput from '@/components/common/EmailTagInput';
 import { useCreateWorkspaceMutation } from '@/hooks/workspace/useCreateWorkspaceMutation';
+import { getDummyOwnerId } from '@/lib/utils';
 
 const StepSetInviteUsers = () => {
   const {
@@ -24,7 +25,7 @@ const StepSetInviteUsers = () => {
     createWorkspace(
       {
         workspaceName: workspaceName,
-        ownerId: '03c6b083-e8d6-488c-aa83-2a01b3f39d00',
+        ownerId: getDummyOwnerId(),
         userName: userName,
         profileImage: workspaceProfileImage,
         inviteUserList: invitedUsers,
