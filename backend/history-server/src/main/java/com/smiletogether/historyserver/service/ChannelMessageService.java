@@ -55,7 +55,7 @@ public class ChannelMessageService {
         log.info("📌 변환된 afterTime (LocalDateTime): {}", afterTime);
 
         List<ChannelMessageDocument> channelMessageDocuments = channelMessageRepository.findByWorkspaceIdAndChannelIdAndIsDeletedAndCreatedAtBefore(
-                workspaceId, channelId, false, afterTime, PageRequest.of(0, 20, Sort.by(Direction.DESC, "createdAt"))
+                workspaceId, channelId, false, afterTime, PageRequest.of(0, 20, Sort.by(Direction.ASC, "createdAt"))
         );
 
         log.info("📌 검색된 메시지 개수: {}", channelMessageDocuments.size());
