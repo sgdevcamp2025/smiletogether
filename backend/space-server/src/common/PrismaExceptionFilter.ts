@@ -23,7 +23,7 @@ export class PrismaExceptionFilter implements ExceptionFilter {
     let message = '서버 내부 오류가 발생했습니다.';
 
     if (exception instanceof Prisma.PrismaClientKnownRequestError) {
-      console.error(exception.meta);
+      console.error(exception.code, exception.meta);
       switch (exception.code) {
         case 'P2002':
           statusCode = HttpStatus.CONFLICT;
@@ -38,7 +38,12 @@ export class PrismaExceptionFilter implements ExceptionFilter {
         case 'P2023':
           statusCode = HttpStatus.BAD_REQUEST;
           code = 1003;
-          message = `유효하지 않은 데이터 형식입니다.`;
+          if (exception.message.includes('Error creating UUID')) {
+            message = '유효하지 않은 UUID 형식입니다.';
+            code = 1006;
+          } else {
+            message = '유효하지 않은 데이터 형식입니다.';
+          }
           break;
         default:
           statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
