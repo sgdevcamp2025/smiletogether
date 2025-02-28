@@ -1,14 +1,47 @@
 version: '3.8'
 
 services:
-  chat-server:
-    image: imjanghyeok/smiletogether-chat-server:latest  # Docker Hub에서 가져오기
-    container_name: chat-server
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
     restart: always
     ports:
-      - "8081:8081"
+      - 27017:27017
+    volumes:
+      - data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=rootuser
+      - MONGO_INITDB_ROOT_PASSWORD=rootpass
     networks:
-      - chat_network
+      - history_network
+
+  mongo-express:
+    image: mongo-express:latest
+    container_name: mongo-express
+    restart: always
+    ports:
+      - 20000:8081  # 프론트에서 사용 가능하도록 포트 수정
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=rootuser
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=rootpass
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+    depends_on:
+      - mongodb
+    networks:
+      - history_network
+
+  history-server:
+    image: imjanghyeok/smiletogether-history-server:latest  # Docker Hub에서 가져오기
+    container_name: history-server
+    restart: always
+    ports:
+      - "8083:8083"
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://rootuser:rootpass@mongodb:27017/history-db?authSource=admin
+    depends_on:
+      - mongodb
+    networks:
+      - history_network
 
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
@@ -122,12 +155,13 @@ services:
 
 
 networks:
-  chat_network:
+  history_network:
     driver: bridge
   kafka-network:
     driver: bridge
 
 volumes:
+  data:
   kafka_00:
     driver: local
   kafka_01:
