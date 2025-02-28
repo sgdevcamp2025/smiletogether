@@ -12,16 +12,18 @@ export interface GetUserWorkspaceResponse {
 }
 
 export interface GetUserWorkspaceListeResponse {
-  email: string;
-  workspaces: Workspace[];
+  userWorkspaces: {
+    email: string;
+    workspaces: Workspace[];
+  };
 }
 
 export interface PostNewWorkspaceRequestDto {
   workspaceName: string;
   ownerId: string;
-  username: string;
+  userName: string;
   profileImage: string;
-  inviteResults: string[];
+  inviteUserList: string[];
 }
 
 export interface PostNewWorkspaceResponseDto {

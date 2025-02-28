@@ -24,10 +24,10 @@ const StepSetInviteUsers = () => {
     createWorkspace(
       {
         workspaceName: workspaceName,
-        ownerId: '1',
-        username: userName,
+        ownerId: '03c6b083-e8d6-488c-aa83-2a01b3f39d00',
+        userName: userName,
         profileImage: workspaceProfileImage,
-        inviteResults: invitedUsers,
+        inviteUserList: invitedUsers,
       },
       {
         onSuccess: data => {
