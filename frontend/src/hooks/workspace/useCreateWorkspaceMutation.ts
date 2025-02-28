@@ -1,7 +1,7 @@
 import { postNewWorkspace } from '@/apis/workspace';
 import { useMutation } from '@tanstack/react-query';
 
-export const useCreateWorkspace = () => {
+export const useCreateWorkspaceMutation = () => {
   const { mutate: createWorkspace, ...rest } = useMutation({
     mutationKey: ['makeworkspace'],
     mutationFn: postNewWorkspace,

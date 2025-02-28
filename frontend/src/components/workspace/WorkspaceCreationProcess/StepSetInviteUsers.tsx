@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { IoIosLink } from 'react-icons/io';
 import { Button } from '@/components/ui/button';
-import { useCreateWorkspace } from '@/hooks/workspace/useCreateWorkspace';
 import { useWorkspaceCreationStore } from '@/stores/workspace';
 import EmailTagInput from '@/components/common/EmailTagInput';
+import { useCreateWorkspaceMutation } from '@/hooks/workspace/useCreateWorkspaceMutation';
 
 const StepSetInviteUsers = () => {
   const {
@@ -16,7 +16,7 @@ const StepSetInviteUsers = () => {
     initWorkspaceStore,
   } = useWorkspaceCreationStore();
   const [validEmail, setValidEmail] = useState(false);
-  const { createWorkspace } = useCreateWorkspace();
+  const { createWorkspace } = useCreateWorkspaceMutation();
   const navigate = useNavigate();
 
   const submitWorkspaceInfo = () => {
