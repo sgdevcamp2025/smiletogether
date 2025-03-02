@@ -15,4 +15,13 @@ export class InviteController {
     );
     return { inviteLink };
   }
+
+  @Post('acceptlink')
+  async acceptInvite(@Body() body: { userId: string; inviteUuid: string }) {
+    const result = await this.inviteService.acceptInviteLink(
+      body.inviteUuid,
+      body.userId,
+    );
+    return result;
+  }
 }
