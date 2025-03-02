@@ -5,6 +5,7 @@ import {
   postWorkspaceChannelsResponseDto,
 } from '@/apis/channel/dto';
 import { GetChannelResponse, GetMessagesResponse } from './dto';
+import axios from 'axios';
 
 export const getChannel = async (
   channelId: string
@@ -61,4 +62,25 @@ export const postInviteWorkspaceChannels = async (
 export const leaveWorkspaceChannel = async (channelId: string) => {
   const { data } = await https.delete(`/api/channels/${channelId}/leave`);
   return data;
+};
+
+export const getChatMessages = async (
+  workspaceId: string,
+  channelId: string,
+  lastTimeStamp: string
+) => {
+  try {
+    const response = await axios.get(
+      `http://localhost:8083/api/workspaces/${workspaceId}/channels/${channelId}/messages`,
+      {
+        params: { lastTimeStamp },
+      }
+    );
+
+    if (response.data) {
+      return response.data;
+    }
+  } catch (error) {
+    console.error(error);
+  }
 };
