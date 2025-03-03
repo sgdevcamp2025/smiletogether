@@ -1,7 +1,7 @@
 import { User } from './user';
 
 export interface Chat {
-  messageId?: number;
+  messageId?: string;
   user: User;
   content: string;
   createdAt: string;

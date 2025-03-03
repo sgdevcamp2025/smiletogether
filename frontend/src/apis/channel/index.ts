@@ -6,6 +6,7 @@ import {
 } from '@/apis/channel/dto';
 import { GetChannelResponse, GetMessagesResponse } from './dto';
 import axios from 'axios';
+import { MessageType } from '@/types/chat';
 
 export const getChannel = async (
   channelId: string
@@ -68,7 +69,7 @@ export const getChatMessages = async (
   workspaceId: string,
   channelId: string,
   lastTimeStamp: string
-) => {
+): Promise<{ messages: MessageType[] }> => {
   try {
     const response = await axios.get(
       `http://localhost:8083/api/workspaces/${workspaceId}/channels/${channelId}/messages`,
@@ -78,9 +79,16 @@ export const getChatMessages = async (
     );
 
     if (response.data) {
-      return response.data;
+      const groupedMessages = response.data.groupedMessages || {};
+      const messages: MessageType[] = Object.values(
+        groupedMessages
+      ).flat() as MessageType[];
+
+      return { messages };
     }
   } catch (error) {
     console.error(error);
   }
+
+  return { messages: [] };
 };

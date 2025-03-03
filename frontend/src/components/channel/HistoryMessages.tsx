@@ -1,8 +1,8 @@
-import { getChatMessages } from '@/apis/channel';
 import DateBadge from '@/components/common/DateBadge';
 import Message from '@/components/common/Message';
+import { useChatMessages } from '@/hooks/channel/useChatMessages';
 import { MessageType } from '@/types/chat';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 interface HistoryMessageProps {
   workspaceId: string;
@@ -15,85 +15,69 @@ const HistoryMessages = ({
   channelId,
   scrollRef,
 }: HistoryMessageProps) => {
-  const [messageData, setMessageData] = useState<{
-    messages: Record<string, MessageType[]>;
-  }>({
-    messages: {},
-  });
-  const [lastTimeStamp, setLastTimeStamp] = useState<string | null>(null);
-  const [isFetching, setIsFetching] = useState(false);
   const prevScrollHeight = useRef(0);
 
-  // 스크롤 최상단 감지 → 이전 메시지 불러오기
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useChatMessages(workspaceId, channelId);
+
   const handleScroll = () => {
-    if (!scrollRef.current || isFetching) return;
-
-    if (scrollRef.current.scrollTop === 0) {
+    if (!scrollRef.current || isFetchingNextPage) return;
+    if (scrollRef.current.scrollTop === 0 && hasNextPage) {
       prevScrollHeight.current = scrollRef.current.scrollHeight;
-      fetchMessages();
+      fetchNextPage();
     }
   };
-
-  // 이전 메시지 불러오기
-  const fetchMessages = async () => {
-    if (!workspaceId || !channelId || isFetching) return;
-    setIsFetching(true);
-
-    const timeStampToUse =
-      lastTimeStamp ?? new Date().toISOString().replace('Z', '');
-
-    const response = await getChatMessages(
-      workspaceId,
-      channelId,
-      timeStampToUse
-    );
-
-    if (response) {
-      setMessageData(prevData => ({
-        messages: { ...response.groupedMessages, ...prevData.messages },
-      }));
-
-      const firstDate = Object.keys(response.groupedMessages || {})[0];
-      if (firstDate && response.groupedMessages[firstDate]?.length > 0) {
-        setLastTimeStamp(response.groupedMessages[firstDate].at(-1)?.createdAt);
-      }
-    }
-    setIsFetching(false);
-
-    // 스크롤 위치 유지 (새 메시지가 추가되었을 때 화면 튕김 방지)
-    setTimeout(() => {
-      if (scrollRef.current) {
-        scrollRef.current.scrollTop =
-          scrollRef.current.scrollHeight - prevScrollHeight.current;
-      }
-    }, 100);
-  };
-
-  useEffect(() => {
-    fetchMessages();
-  }, [workspaceId, channelId]);
 
   useEffect(() => {
     if (!scrollRef.current) return;
-
     const element = scrollRef.current;
     element.addEventListener('scroll', handleScroll);
-
     return () => {
       element.removeEventListener('scroll', handleScroll);
     };
-  }, [isFetching]);
+  }, [isFetchingNextPage, hasNextPage]);
+
+  useEffect(() => {
+    if (!scrollRef.current) return;
+    const element = scrollRef.current;
+
+    if (data?.pages.length === 1) {
+      // 첫 렌더링 시, 맨 아래로 스크롤
+      setTimeout(() => {
+        element.scrollTop = element.scrollHeight;
+      }, 0);
+    } else {
+      // 새 데이터 로드 후, 기존 스크롤 위치 유지
+      setTimeout(() => {
+        element.scrollTop = element.scrollHeight - prevScrollHeight.current;
+      }, 0);
+    }
+  }, [data]);
+
+  const messagesByDate: Record<string, MessageType[]> =
+    data?.pages.reduce(
+      (acc, page) => {
+        page.messages.forEach(message => {
+          const date = message.createdAt.split('T')[0];
+          if (!acc[date]) acc[date] = [];
+          acc[date].push(message);
+        });
+        return acc;
+      },
+      {} as Record<string, MessageType[]>
+    ) || {};
 
   return (
-    <>
-      {Object.entries(messageData.messages).map(
-        ([date, messages], index, arr) => {
-          const showDateBadge = index === 0 || date !== arr[index - 1][0];
-
-          return (
-            <div key={date}>
-              {showDateBadge && <DateBadge date={date} />}
-              {messages.map(msg => (
+    <div ref={scrollRef} style={{ overflowY: 'auto', maxHeight: '500px' }}>
+      {Object.entries(messagesByDate)
+        .reverse() // 날짜순 정렬 (최신 날짜가 아래로 가도록)
+        .map(([date, messages]) => (
+          <div key={date}>
+            <DateBadge date={date} />
+            {messages
+              .slice()
+              .reverse() // 개별 날짜의 메시지들도 최신 것이 아래로 가도록 정렬
+              .map(msg => (
                 <Message
                   key={msg.messageId}
                   user={msg.user}
@@ -101,12 +85,10 @@ const HistoryMessages = ({
                   createdAt={msg.createdAt}
                 />
               ))}
-            </div>
-          );
-        }
-      )}
-      {isFetching && <p>메시지 불러오는 중...</p>}
-    </>
+          </div>
+        ))}
+      {isFetchingNextPage && <p>메시지 불러오는 중...</p>}
+    </div>
   );
 };
 
