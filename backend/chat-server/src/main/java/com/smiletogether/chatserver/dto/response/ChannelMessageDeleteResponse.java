@@ -14,6 +14,6 @@ public record ChannelMessageDeleteResponse(
                 channelMessageDeleteDto.messageId(),
                 channelMessageDeleteDto.code(),
                 channelMessageDeleteDto.message()
-        )
+        );
     }
 }
