@@ -8,13 +8,14 @@ export class InviteController {
   constructor(private readonly inviteService: InviteService) {}
 
   @UseGuards(AuthGuard)
-  @Post('link')
+  @Post('link/:workspaceId')
   async createInviteLink(
-    @Body() body: { domain: string; workspaceId: string },
+    @Param('workspaceId') workspaceId: string,
+    @Body('domain') domain: string,
   ) {
     const inviteLink = await this.inviteService.generateInviteLink(
-      body.domain,
-      body.workspaceId,
+      domain,
+      workspaceId,
     );
     return { inviteLink };
   }
