@@ -7,6 +7,7 @@ import { useParams } from 'react-router';
 import useWorkspaceChannelListQuery from '@/hooks/channel/useWorkspaceChannelListQuery';
 import ChannelTagInput from '@/components/common/ChannelTagInput';
 import useInviteChannelMutation from '@/hooks/channel/useInviteChannelMutation';
+import { handleCopyClipBoard } from '@/lib/utils';
 
 interface WorkspaceUserInviteModalProps {
   title: string;
@@ -122,7 +123,16 @@ const WorkspaceUserInviteModal = ({
           </div>
         )}
         <div className="mt-6 flex justify-between border-t pt-4">
-          <Button className="text-blue-500 hover:bg-yellow-200 text-sm bg-transparent shadow-none ">
+          <Button
+            className="text-blue-500 hover:bg-yellow-200 text-sm bg-transparent shadow-none"
+            onClick={() => {
+              handleCopyClipBoard(
+                'content',
+                '복사에 성공하였습니다.',
+                '복사에 실패하였습니다.'
+              );
+            }}
+          >
             🔗 초대 링크 복사
           </Button>
           <Button
