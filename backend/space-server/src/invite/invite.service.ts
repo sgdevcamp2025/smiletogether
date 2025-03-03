@@ -41,6 +41,7 @@ export class InviteService {
   async acceptInviteLink(
     inviteUuid: string,
     userId: string,
+    userName: string,
   ): Promise<{ workspaceId: string }> {
     const inviteKey = `invite_link:${inviteUuid}`;
 
@@ -74,14 +75,12 @@ export class InviteService {
         workspace_id: workspace.workspace_id,
         user_id: userId,
         role: 'member',
-        profile_name: `${userId}번 유저`,
+        profile_name: userName,
         profile_image: 'default.jpg',
         position: '',
         status_message: '',
       },
     });
-
-    await this.redis.del(inviteKey);
 
     return { workspaceId };
   }

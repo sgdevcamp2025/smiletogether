@@ -1,11 +1,14 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Param, Post, UseGuards } from '@nestjs/common';
 import { InviteService } from './invite.service';
+import { UserId } from 'src/decorators/user-id.decorator';
+import { AuthGuard } from 'src/guards/auth.guard';
 
 @Controller('api/invite')
 export class InviteController {
   constructor(private readonly inviteService: InviteService) {}
 
-  @Post('generatelink')
+  @UseGuards(AuthGuard)
+  @Post('link')
   async createInviteLink(
     @Body() body: { domain: string; workspaceId: string },
   ) {
@@ -16,11 +19,17 @@ export class InviteController {
     return { inviteLink };
   }
 
-  @Post('acceptlink')
-  async acceptInvite(@Body() body: { userId: string; inviteUuid: string }) {
+  @UseGuards(AuthGuard)
+  @Post('acceptlink/:inviteCode')
+  async acceptInvite(
+    @UserId() userId: string,
+    @Param('inviteCode') inviteCode: string,
+    @Body('userName') userName: string,
+  ) {
     const result = await this.inviteService.acceptInviteLink(
-      body.inviteUuid,
-      body.userId,
+      inviteCode,
+      userId,
+      userName,
     );
     return result;
   }
