@@ -82,6 +82,23 @@ export class InviteService {
       },
     });
 
+    const defaultChannels = await this.prismaService.channel.findMany({
+      where: {
+        workspace_id: workspaceId,
+        is_private: false,
+      },
+    });
+
+    for (const defaultChannel of defaultChannels) {
+      await this.prismaService.channelUser.create({
+        data: {
+          channel_id: defaultChannel.channel_id,
+          user_id: userId,
+          channel_role: 'member',
+        },
+      });
+    }
+
     return { workspaceId };
   }
 }
