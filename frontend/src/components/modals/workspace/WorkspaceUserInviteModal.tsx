@@ -1,6 +1,6 @@
 import EmailTagInput from '@/components/common/EmailTagInput';
 import ModalPortal from '@/components/common/ModalPortal';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import useInviteWorkspaceMutation from '@/hooks/workspace/useInviteWorkspaceMutation';
 import { useParams } from 'react-router';
@@ -8,6 +8,7 @@ import useWorkspaceChannelListQuery from '@/hooks/channel/useWorkspaceChannelLis
 import ChannelTagInput from '@/components/common/ChannelTagInput';
 import useInviteChannelMutation from '@/hooks/channel/useInviteChannelMutation';
 import { handleCopyClipBoard } from '@/lib/utils';
+import useWorkspaceInviteLinkUrlMutation from '@/hooks/workspace/useWorkspaceInviteLinkUrlMutation';
 
 interface WorkspaceUserInviteModalProps {
   title: string;
@@ -27,6 +28,29 @@ const WorkspaceUserInviteModal = ({
   const { channelList, isChannelLoading, isChannelError } =
     useWorkspaceChannelListQuery(workspaceId!);
   const { mutate: inviteUserChannels } = useInviteChannelMutation();
+
+  const [inviteUrl, setInviteUrl] = useState('');
+  const { mutate: inviteWorkspaceUrl } = useWorkspaceInviteLinkUrlMutation();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    inviteWorkspaceUrl(
+      {
+        workspaceId: workspaceId!,
+        domain: 'http://localhost:5173',
+      },
+      {
+        onSuccess: data => {
+          setInviteUrl(data.inviteLink);
+          setIsLoading(true);
+        },
+        onError: err => {
+          console.log(err);
+          setIsLoading(true);
+        },
+      }
+    );
+  }, []);
 
   const onCustomUserIviteMode = () => {
     setCustomUserIviteMode(true);
@@ -125,15 +149,16 @@ const WorkspaceUserInviteModal = ({
         <div className="mt-6 flex justify-between border-t pt-4">
           <Button
             className="text-blue-500 hover:bg-yellow-200 text-sm bg-transparent shadow-none"
+            disabled={isLoading}
             onClick={() => {
               handleCopyClipBoard(
-                'content',
+                inviteUrl,
                 '복사에 성공하였습니다.',
                 '복사에 실패하였습니다.'
               );
             }}
           >
-            🔗 초대 링크 복사
+            {isLoading ? '초대 링크 로딩중' : '🔗 초대 링크 복사'}
           </Button>
           <Button
             className="text-gray-500 hover:text-gray-700 text-sm font-black bg-gray-100 shadow-none px-6 hover:bg-yellow-200"
