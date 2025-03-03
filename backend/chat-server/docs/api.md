@@ -25,17 +25,13 @@ Response:
 ```
 {
     "type": "SEND",
-    "messageId": "someMessageId",
-    "workspaceId": "workspaceId",
     "channelId": "channelId",
     "user": {
                 "userId": "userId",
                 "userName": "username"
             },
     "content": "Hello, this is a test message",
-    "createdAt": "2025-02-25T15:30:00.000000",
-    "updatedAt": "2025-02-25T15:30:00.000000",
-    "isUpdated": false
+    "createdAt": "2025-02-25T15:30:00.000000"
 }
 ```
 2. 채널 메시지 수정
@@ -48,7 +44,7 @@ Request:
     "type": "UPDATE",
     "messageId": "someMessageId",
     "content": "Updated message content",
-    "updateAt": "2025-02-25T16:00:00.000000"
+    "createdAt": "2025-02-25T16:00:00.000000"
 }
 ```
 
@@ -63,8 +59,6 @@ Response:
 ```
 {
     "type": "update",
-    "workspaceId": "workspaceId",
-    "channelId": "channelId",
     "messageId": "someMessageId",
     "user": {
                 "userId": "userId",
@@ -99,8 +93,6 @@ Response:
 ```
 {
     "type": "delete",
-    "workspaceId": "workspaceId",
-    "channelId": "channelId",
     "messageId": "someMessageId",
     "code": "200",
     "message": "Message deleted successfully"
