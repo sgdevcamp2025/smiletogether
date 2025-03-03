@@ -1,4 +1,4 @@
-import { Chat } from '@/types/chat';
+import { MessageType } from '@/types/chat';
 import { Client } from '@stomp/stompjs';
 import { useEffect, useState } from 'react';
 
@@ -8,7 +8,7 @@ interface UseWebSocketProps {
 }
 
 export const useWebSocket = ({ workspaceId, channelId }: UseWebSocketProps) => {
-  const [messages, setMessages] = useState<Chat[]>([]);
+  const [messages, setMessages] = useState<MessageType[]>([]);
   const [client, setClient] = useState<Client | null>(null);
 
   useEffect(() => {
@@ -22,7 +22,7 @@ export const useWebSocket = ({ workspaceId, channelId }: UseWebSocketProps) => {
     stompClient.onConnect = () => {
       const subscriptionPath = `/sub/workspaces/${workspaceId}/channels/${channelId}`;
       stompClient.subscribe(subscriptionPath, message => {
-        const receivedMessage: Chat = JSON.parse(message.body);
+        const receivedMessage: MessageType = JSON.parse(message.body);
         setMessages(prev => [...prev, receivedMessage]);
       });
     };

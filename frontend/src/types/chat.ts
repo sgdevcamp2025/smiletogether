@@ -14,13 +14,14 @@ interface Reaction {
 }
 
 export interface MessageType {
+  type?: string;
   content: string;
   createdAt: string;
-  hasThread: boolean;
+  hasThread?: boolean;
   isUpdated: boolean;
   messageId: string;
-  reactions: Reaction[];
-  threadCount: number;
+  reactions?: Reaction[];
+  threadCount?: number;
   updateAt: string | null;
   user: User;
 }

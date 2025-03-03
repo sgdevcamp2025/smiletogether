@@ -26,7 +26,7 @@ const ChannelPage = () => {
 
   useEffect(() => {
     scrollToBottom();
-  }, []);
+  }, [messages]);
 
   if (isChannelLoading) return <p>로딩중입니다.</p>;
   if (isChannelError) return <p>에러입니다.</p>;
