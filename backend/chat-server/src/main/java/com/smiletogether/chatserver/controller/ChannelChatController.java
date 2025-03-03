@@ -1,17 +1,16 @@
 package com.smiletogether.chatserver.controller;
 
+import com.smiletogether.chatserver.dto.ChannelMessageReactionDto;
+import com.smiletogether.chatserver.dto.request.ChannelMessageDeleteRequest;
+import com.smiletogether.chatserver.dto.request.ChannelMessageRequest;
+import com.smiletogether.chatserver.dto.request.ChannelMessageUpdateRequest;
+import com.smiletogether.chatserver.infrastructure.JwtExtractor;
 import com.smiletogether.chatserver.service.ChatService;
 import com.smiletogether.chatserver.service.EmojiService;
-import com.smiletogether.chatserver.service.JwtExtractor;
-import com.smiletogether.chatserver.service.dto.ChannelMessageDeleteRequest;
-import com.smiletogether.chatserver.service.dto.ChannelMessageReaction;
-import com.smiletogether.chatserver.service.dto.ChannelMessageUpdateRequest;
-import com.smiletogether.chatserver.service.dto.MessageRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,18 +22,12 @@ public class ChannelChatController {
     private final ChatService chatService;
     private final EmojiService emojiService;
 
-    @MessageMapping("/hello")
-    @SendTo("/topic/greeting")
-    public void test(MessageRequest message) {
-        chatService.testMessage(message);
-    }
-
     @MessageMapping("/workspaces/{workspaceId}/channels/{channelId}")
     public void sendChannelMessage(
             @DestinationVariable("workspaceId") String workspaceId,
             @DestinationVariable("channelId") String channelId,
             StompHeaderAccessor headerAccessor,
-            MessageRequest message) {
+            ChannelMessageRequest message) {
         JwtExtractor jwtExtractor = new JwtExtractor();
         String userId = jwtExtractor.extractMemberId(headerAccessor);
         chatService.sendChannelMessage(userId, workspaceId, channelId, message);
@@ -69,8 +62,8 @@ public class ChannelChatController {
     public void channelMessageReaction(
             @DestinationVariable("channelId") String channelId,
             StompHeaderAccessor headerAccessor,
-            ChannelMessageReaction channelMessageReaction
+            ChannelMessageReactionDto channelMessageReactionDto
     ) {
-        emojiService.sendEmoji(channelMessageReaction);
+        emojiService.sendEmoji(channelMessageReactionDto);
     }
 }
