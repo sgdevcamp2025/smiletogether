@@ -29,7 +29,7 @@ export const handlers = [
           { status: 400 }
         );
       }
-      if (!newPost.username) {
+      if (!newPost.userName) {
         return HttpResponse.json(
           { error: 'username is required' },
           { status: 400 }
@@ -38,7 +38,7 @@ export const handlers = [
 
       const workspaceId = nanoid(8);
       const userList = [];
-      for (let i = 0; i < newPost.inviteResults.length; i++) {
+      for (let i = 0; i < newPost.inviteUserList.length; i++) {
         const dummyUser = {
           userId: 'user_12345',
           profileImage: 'https://example.com/user_12345.png',
@@ -56,7 +56,7 @@ export const handlers = [
         workspaceId: workspaceId,
         name: newPost.workspaceName,
         profileImage: newPost.profileImage,
-        memberCount: newPost.inviteResults.length,
+        memberCount: newPost.inviteUserList.length,
         users: userList,
       };
       const responseData: PostNewWorkspaceResponseDto = {
@@ -67,7 +67,7 @@ export const handlers = [
         profileImage: newPost.profileImage,
         inviteResults: {
           success: [],
-          failed: newPost.inviteResults,
+          failed: newPost.inviteUserList,
         },
         createdAt: new Date().toISOString(),
       };

@@ -18,36 +18,47 @@ const WorkSpaceListPage = () => {
 
   return (
     <div className="h-screen flex items-center justify-center flex-col w-full">
-      <Button
-        className="px-40 py-4 bg-yellow-400 text-white rounded hover:bg-yellow-200"
-        onClick={navigateToCreateWorkspace}
-      >
-        워크스페이스 생성
-      </Button>
-      <blockquote className="my-10 text-gray-400 italic">
-        아래에서 워크스페이스를 선택하여 팀과 계속 협업하세요.
-      </blockquote>
-      <Card className="w-2/5 max-w-2lg mt-5">
-        <div className="flex items-center px-6 py-4 w-full border  shadow hover:bg-gray-50">
-          <h1 className="text-lg font-semibold">
-            {workspacesInfo && workspacesInfo.email}
-          </h1>
-          <div className="text-gray-600">님의 워크스페이스 관리 </div>
-        </div>
-        {workspacesInfo &&
-          workspacesInfo.workspaces.map(item => {
-            return (
-              <WorkspaceListItem
-                key={item.workspaceId}
-                name={item.name}
-                profileImage={item.profileImage}
-                memberCount={item.memberCount}
-                members={item.users}
-                workspaceId={item.workspaceId}
-              />
-            );
-          })}
-      </Card>
+      <div className="h-[20vh] flex flex-col items-center justify-end">
+        {workspacesInfo && workspacesInfo?.workspaces.length === 0 && (
+          <div className="py-10 text-2xl">
+            가입되어 있는 워크스페이가 없습니다.
+          </div>
+        )}
+        <Button
+          className="px-40 py-4 bg-yellow-400 text-white rounded hover:bg-yellow-200 mb-5"
+          onClick={navigateToCreateWorkspace}
+        >
+          워크스페이스 생성
+        </Button>
+      </div>
+      {workspacesInfo && workspacesInfo?.workspaces.length > 0 && (
+        <>
+          <span className=" text-gray-400 italic">
+            아래에서 워크스페이스를 선택하여 팀과 계속 협업하세요.
+          </span>
+          <Card className="w-2/5 max-w-2lg mt-5 flex-col  overflow-auto">
+            <div className="flex items-center px-6 py-4 w-full border  shadow hover:bg-gray-50">
+              <h1 className="text-lg font-semibold">
+                {workspacesInfo && workspacesInfo.email}
+              </h1>
+              <div className="text-gray-600">님의 워크스페이스 관리 </div>
+            </div>
+            {workspacesInfo &&
+              workspacesInfo.workspaces.map(item => {
+                return (
+                  <WorkspaceListItem
+                    key={item.workspaceId}
+                    name={item.name}
+                    profileImage={item.profileImage}
+                    memberCount={item.memberCount}
+                    members={item.users}
+                    workspaceId={item.workspaceId}
+                  />
+                );
+              })}
+          </Card>
+        </>
+      )}
     </div>
   );
 };

@@ -19,9 +19,9 @@ export interface GetUserWorkspaceListeResponse {
 export interface PostNewWorkspaceRequestDto {
   workspaceName: string;
   ownerId: string;
-  username: string;
+  userName: string;
   profileImage: string;
-  inviteResults: string[];
+  inviteUserList: string[];
 }
 
 export interface PostNewWorkspaceResponseDto {

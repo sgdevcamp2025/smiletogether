@@ -22,7 +22,7 @@ export const getUserWorkspace = async (
 export const getUserWorkspaces =
   async (): Promise<GetUserWorkspaceListeResponse> => {
     const { data } = await https.get('/api/workspaces');
-    return data;
+    return data.userWorkspaces;
   };
 
 export const postRemoveWorkspace = async (workspaceId: string) => {
@@ -42,6 +42,6 @@ export const postInviteWorkspace = async (
 };
 
 export const postLeaveWorkspace = async (workspaceId: string) => {
-  const { data } = await https.post(`/api/workspaces/${workspaceId}/leave`);
+  const { data } = await https.delete(`/api/workspaces/${workspaceId}/leave`);
   return data;
 };

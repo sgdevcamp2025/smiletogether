@@ -18,6 +18,7 @@ export interface GetChannelResponse {
 }
 
 export interface postWorkspaceChannelsRequestDto {
+  workspaceId: string;
   name: string;
   isPrivate: boolean;
   emails: string[];

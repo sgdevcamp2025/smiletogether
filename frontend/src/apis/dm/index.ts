@@ -7,6 +7,6 @@ export const getDMList = async (): Promise<DMListResponseDto> => {
 };
 
 export const getDMMessage = async (dmId: string): Promise<DMResponseDto> => {
-  const { data } = await https.get(`api/dms/${dmId}`);
+  const { data } = await https.get(`/api/dms/${dmId}`);
   return data;
 };
