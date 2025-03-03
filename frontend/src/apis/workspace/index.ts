@@ -2,6 +2,8 @@ import {
   GetUserWorkspaceResponse,
   GetUserWorkspaceListeResponse,
   PostNewWorkspaceRequestDto,
+  PostWorkspaceInviteUrlResponsetDto,
+  PostWorkspaceInviteUrlRequestDto,
 } from '@/apis/workspace/dto';
 import https from '@/lib/https';
 
@@ -27,6 +29,16 @@ export const getUserWorkspaces =
 
 export const postRemoveWorkspace = async (workspaceId: string) => {
   const { data } = await https.delete(`/api/workspaces/${workspaceId}`);
+  return data;
+};
+
+export const postWorkspaceInviteLinkUrl = async ({
+  workspaceId,
+  domain,
+}: PostWorkspaceInviteUrlRequestDto): Promise<PostWorkspaceInviteUrlResponsetDto> => {
+  const { data } = await https.post(`/api/invite/link/${workspaceId}`, {
+    domain,
+  });
   return data;
 };
 
