@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { InviteService } from './invite.service';
 import { UserId } from 'src/decorators/user-id.decorator';
 import { AuthGuard } from 'src/guards/auth.guard';
@@ -22,7 +22,7 @@ export class InviteController {
 
   @UseGuards(AuthGuard)
   @Post('acceptlink/:inviteCode')
-  async acceptInvite(
+  async acceptInviteLink(
     @UserId() userId: string,
     @Param('inviteCode') inviteCode: string,
     @Body('userName') userName: string,
@@ -32,6 +32,48 @@ export class InviteController {
       userId,
       userName,
     );
+    return result;
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('email/:workspaceId')
+  async createInviteEmail(
+    @Param('workspaceId') workspaceId: string,
+    @Body('domain') domain: string,
+    @Body('inviteEmailList') inviteEmailList: string[],
+  ) {
+    const result = await this.inviteService.generateEmailInvites(
+      domain,
+      inviteEmailList,
+      workspaceId,
+    );
+    return { inviteResults: result };
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('acceptemail/:inviteCode')
+  async acceptInviteEmail(
+    @UserId() userId: string,
+    @Param('inviteCode') inviteCode: string,
+    @Body('userName') userName: string,
+  ) {
+    const result = await this.inviteService.acceptInviteEmail(
+      inviteCode,
+      userId,
+      userName,
+    );
+    return result;
+  }
+
+  @Get('getPendingInvites/:workspaceId')
+  async getPendingInvites(@Param('workspaceId') workspaceId: string) {
+    const result = await this.inviteService.getPendingInvites(workspaceId);
+    return result;
+  }
+
+  @Get('getAllInviteData')
+  async getAllInviteData() {
+    const result = await this.inviteService.getAllInviteData();
     return result;
   }
 }
