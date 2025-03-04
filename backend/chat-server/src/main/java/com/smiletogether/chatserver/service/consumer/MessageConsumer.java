@@ -1,10 +1,13 @@
-package com.smiletogether.chatserver.service;
+package com.smiletogether.chatserver.service.consumer;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smiletogether.chatserver.service.dto.ChannelChatDto;
-import com.smiletogether.chatserver.service.dto.ChannelMessageDeleteResponse;
-import com.smiletogether.chatserver.service.dto.ChannelMessageUpdateResponse;
+import com.smiletogether.chatserver.dto.ChannelMessageDeleteDto;
+import com.smiletogether.chatserver.dto.ChannelMessageDto;
+import com.smiletogether.chatserver.dto.ChannelMessageUpdateDto;
+import com.smiletogether.chatserver.dto.response.ChannelMessageDeleteResponse;
+import com.smiletogether.chatserver.dto.response.ChannelMessageUpdateResponse;
+import com.smiletogether.chatserver.dto.response.ChannelMessageResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -49,30 +52,45 @@ public class MessageConsumer {
     }
 
     private void handleSendMessage(String jsonData) throws Exception {
-        ChannelChatDto channelChatDto = objectMapper.readValue(jsonData, ChannelChatDto.class);
-        log.info("✅ Kafka: 메시지 전송 처리: {}", channelChatDto);
+        ChannelMessageDto channelMessageDto = objectMapper.readValue(jsonData, ChannelMessageDto.class);
+        ChannelMessageResponse channelMessageResponse = ChannelMessageResponse.of(channelMessageDto);
 
-        sendMessageToWebSocket(channelChatDto.workspaceId(), channelChatDto.channelId(), channelChatDto);
+        log.info("✅ Kafka: 메시지 전송 처리: {}", channelMessageDto);
+
+        sendMessageToWebSocket(channelMessageDto.workspaceId(), channelMessageDto.channelId(), channelMessageResponse);
     }
 
     private void handleUpdateMessage(String jsonData) throws Exception {
-        ChannelMessageUpdateResponse updateResponse = objectMapper.readValue(jsonData, ChannelMessageUpdateResponse.class);
-        log.info("✅ Kafka: 메시지 업데이트 처리: {}", updateResponse);
+        ChannelMessageUpdateDto channelMessageUpdateDto = objectMapper.readValue(jsonData,
+                ChannelMessageUpdateDto.class);
+        ChannelMessageUpdateResponse channelMessageUpdateResponse = ChannelMessageUpdateResponse.of(
+                channelMessageUpdateDto);
 
-        sendMessageToWebSocket(updateResponse.workspaceId(), updateResponse.channelId(), updateResponse);
+        log.info("✅ Kafka: 메시지 업데이트 처리: {}", channelMessageUpdateResponse);
+
+        sendMessageToWebSocket(channelMessageUpdateDto.workspaceId(), channelMessageUpdateDto.channelId(),
+                channelMessageUpdateResponse);
     }
 
     private void handleDeleteMessage(String jsonData) throws Exception {
-        ChannelMessageDeleteResponse deleteResponse = objectMapper.readValue(jsonData, ChannelMessageDeleteResponse.class);
-        log.info("✅ Kafka: 메시지 삭제 처리: {}", deleteResponse);
+        ChannelMessageDeleteDto channelMessageDeleteDto = objectMapper.readValue(jsonData,
+                ChannelMessageDeleteDto.class);
 
-        sendMessageToWebSocket(deleteResponse.workspaceId(), deleteResponse.channelId(), deleteResponse);
+        ChannelMessageDeleteResponse channelMessageDeleteResponse = ChannelMessageDeleteResponse.of(
+                channelMessageDeleteDto);
+
+        log.info("✅ Kafka: 메시지 삭제 처리: {}", channelMessageDeleteResponse);
+
+        sendMessageToWebSocket(channelMessageDeleteDto.workspaceId(), channelMessageDeleteDto.channelId(),
+                channelMessageDeleteResponse);
     }
 
 
     private void sendMessageToWebSocket(String workspaceId, String channelId, Object dto) throws Exception {
         String formattedJson = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(dto);
+
         log.info("formatted json: {}", formattedJson);
+
         messagingTemplate.convertAndSend(
                 "/sub/workspaces/" + workspaceId + "/channels/" + channelId,
                 formattedJson

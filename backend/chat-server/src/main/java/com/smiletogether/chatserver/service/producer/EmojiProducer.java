@@ -1,7 +1,7 @@
-package com.smiletogether.chatserver.service;
+package com.smiletogether.chatserver.service.producer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smiletogether.chatserver.service.dto.ChannelMessageReaction;
+import com.smiletogether.chatserver.dto.ChannelMessageReactionDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -17,7 +17,7 @@ public class EmojiProducer {
     private static final String HISTORY_TOPIC = "channel-message";
 
 
-    public void createEmoji(ChannelMessageReaction reaction) {
+    public void createEmoji(ChannelMessageReactionDto reaction) {
         try {
             String jsonMessage = objectMapper.writeValueAsString(reaction);
             kafkaTemplate.send(CHAT_TOPIC, jsonMessage);
@@ -27,7 +27,7 @@ public class EmojiProducer {
         }
     }
 
-    public void deleteEmoji(ChannelMessageReaction reaction) {
+    public void deleteEmoji(ChannelMessageReactionDto reaction) {
         try {
             String jsonMessage = objectMapper.writeValueAsString(reaction);
             kafkaTemplate.send(CHAT_TOPIC, jsonMessage);
