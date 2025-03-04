@@ -15,25 +15,26 @@ interface InvitedUser {
 
 export const handlers = [
   http.post(`/api/auth/login`, () => {
-    // return new HttpResponse(null, {
-    //   status: 200,
-    //   headers: {
-    //     Authorization:
-    //       'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlcklkIjoiMDNjNmIwODMtZThkNi00ODhjLWFhODMtMmEwMWIzZjM5ZDAwIiwiaWF0IjoxNTE2MjM5MDIyfQ.iVTdh4kkGh6f6gEZLf9MJPwkjusaXf58z_Tc4ncummw',
-    //     'Set-Cookie':
-    //       'refresh-token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlcklkIjoiMDNjNmIwODMtZThkNi00ODhjLWFhODMtMmEwMWIzZjM5ZDAwIiwiaWF0IjoxNTE2MjM5MDIyfQ.iVTdh4kkGh6f6gEZLf9MJPwkjusaXf58z_Tc4ncummw; HttpOnly; Secure; Path=/; SameSite=Strict',
-    //   },
-    // });
-    return HttpResponse.json(
-      {
-        message: 'Authorization header missing',
-        error: 'Unauthorized',
-        statusCode: 401,
+    return new HttpResponse(null, {
+      status: 200,
+      headers: {
+        Authorization:
+          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlcklkIjoiMDNjNmIwODMtZThkNi00ODhjLWFhODMtMmEwMWIzZjM5ZDAwIiwiaWF0IjoxNTE2MjM5MDIyfQ.iVTdh4kkGh6f6gEZLf9MJPwkjusaXf58z_Tc4ncummw',
+        'Set-Cookie':
+          'refresh-token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlcklkIjoiMDNjNmIwODMtZThkNi00ODhjLWFhODMtMmEwMWIzZjM5ZDAwIiwiaWF0IjoxNTE2MjM5MDIyfQ.iVTdh4kkGh6f6gEZLf9MJPwkjusaXf58z_Tc4ncummw; HttpOnly; Secure; Path=/; SameSite=Strict',
       },
-      {
-        status: 401,
-      }
-    );
+    });
+    // // accessToken 만료시 상황을 연습하기 위한 코드입니다.
+    // return HttpResponse.json(
+    //   {
+    //     message: 'Authorization header missing',
+    //     error: 'Unauthorized',
+    //     statusCode: 401,
+    //   },
+    //   {
+    //     status: 401,
+    //   }
+    // );
   }),
   http.post(`/api/auth/refresh`, () => {
     return HttpResponse.json({
