@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { getTocken } from '@/lib/utils';
 
-const mockApiList = ['/api/dms'];
+const mockApiList = ['/api/dms', '/api/auth'];
 
 const https = axios.create({
   withCredentials: true,
@@ -11,13 +11,11 @@ const https = axios.create({
 https.interceptors.request.use(
   config => {
     const isMockApi = mockApiList.some(item => config.url!.startsWith(item));
-
     if (isMockApi) {
       config.baseURL = '';
     } else {
       config.baseURL = import.meta.env.VITE_BASE_API_URL;
     }
-
     config.headers.Authorization = `Bearer ${getTocken()}`;
     return config;
   },
@@ -28,6 +26,12 @@ https.interceptors.request.use(
 
 https.interceptors.response.use(
   response => {
+    const accessToken = response.headers.authorization.split(' ')[1];
+    localStorage.setItem('access-token', accessToken);
+    localStorage.setItem(
+      'refresh-token',
+      '        eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlcklkIjoiMDNjNmIwODMtZThkNi00ODhjLWFhODMtMmEwMWIzZjM5ZDAwIiwiaWF0IjoxNTE2MjM5MDIyfQ.iVTdh4kkGh6f6gEZLf9MJPwkjusaXf58z_Tc4ncummw'
+    );
     return response;
   },
   error => {
