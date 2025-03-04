@@ -17,7 +17,7 @@ export const isValidKoreanEnglish = (text: string): boolean => {
 };
 
 export const getTocken = () => {
-  return 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlcklkIjoiMDNjNmIwODMtZThkNi00ODhjLWFhODMtMmEwMWIzZjM5ZDAwIiwiaWF0IjoxNTE2MjM5MDIyfQ.iVTdh4kkGh6f6gEZLf9MJPwkjusaXf58z_Tc4ncummw';
+  return localStorage.getItem('access-token');
 };
 
 export const getDummyOwnerId = () => {

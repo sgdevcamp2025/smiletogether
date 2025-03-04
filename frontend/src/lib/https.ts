@@ -1,6 +1,9 @@
 import axios from 'axios';
 import { getTocken } from '@/lib/utils';
+import { useNavigate } from 'react-router';
+// import { postRefreshToken } from '@/apis/user';
 
+// const navigate = useNavigate();
 const mockApiList = ['/api/dms', '/api/auth'];
 
 const https = axios.create({
@@ -26,18 +29,30 @@ https.interceptors.request.use(
 
 https.interceptors.response.use(
   response => {
-    const authorization = response.headers.Authorization;
-    if (authorization) {
-      const accessToken = response.headers.authorization.split(' ')[1];
-      localStorage.setItem('access-token', accessToken);
-      localStorage.setItem(
-        'refresh-token',
-        '        eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlcklkIjoiMDNjNmIwODMtZThkNi00ODhjLWFhODMtMmEwMWIzZjM5ZDAwIiwiaWF0IjoxNTE2MjM5MDIyfQ.iVTdh4kkGh6f6gEZLf9MJPwkjusaXf58z_Tc4ncummw'
-      );
-    }
     return response;
   },
-  error => {
+  async error => {
+    // 인터셉터를 통한 엑세스 토큰 재발급 및 리프레시 토큰 만료시 리다이렉트 로직
+    // const {
+    //   config,
+    //   response: { status },
+    // } = error;
+    // if (status === 401) {
+    //   if (error.response.data.message === 'Authorization header missing') {
+    //     const originRequest = config;
+    //     console.log('originRequest', originRequest);
+    //     const response = await postRefreshToken();
+    //     console.log('response', response);
+    //     if (response.status === 200) {
+    //       // 재 발급받은 렉세스 토큰 저장
+    //       const newAcceessTocken = response.~~~
+    //       axios.defaults.headers.common.Authorization = `Bearer ${newAcceessTocken}`;
+    //       return axios(originRequest)
+    //     } else if (response.data.message === "Refresh token not found"){
+    //       navigate('/')
+    //     }
+    //   }
+    // }
     return Promise.reject(error);
   }
 );
