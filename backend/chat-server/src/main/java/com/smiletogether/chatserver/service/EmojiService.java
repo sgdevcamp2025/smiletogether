@@ -1,6 +1,7 @@
 package com.smiletogether.chatserver.service;
 
-import com.smiletogether.chatserver.service.dto.ChannelMessageReaction;
+import com.smiletogether.chatserver.dto.ChannelMessageReactionDto;
+import com.smiletogether.chatserver.service.producer.EmojiProducer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class EmojiService {
     private final EmojiProducer emojiProducer;
-    public void sendEmoji(ChannelMessageReaction reaction) {
+    public void sendEmoji(ChannelMessageReactionDto reaction) {
         if (reaction.type().equals("CREATE")) {
             emojiProducer.createEmoji(reaction);
         }

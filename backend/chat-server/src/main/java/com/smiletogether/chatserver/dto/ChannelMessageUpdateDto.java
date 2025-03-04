@@ -1,8 +1,9 @@
-package com.smiletogether.chatserver.service.dto;
+package com.smiletogether.chatserver.dto;
 
+import com.smiletogether.chatserver.dto.request.ChannelMessageUpdateRequest;
 import java.time.LocalDateTime;
 
-public record ChannelMessageUpdateResponse(
+public record ChannelMessageUpdateDto(
         String type,
         String workspaceId,
         String channelId,
@@ -13,9 +14,9 @@ public record ChannelMessageUpdateResponse(
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
-    public static ChannelMessageUpdateResponse of(WorkspaceProfileDto user, String workspaceId, String channelId,
-                                                  ChannelMessageUpdateRequest channelMessageUpdateRequest) {
-        return new ChannelMessageUpdateResponse(
+    public static ChannelMessageUpdateDto of(WorkspaceProfileDto user, String workspaceId, String channelId,
+                                             ChannelMessageUpdateRequest channelMessageUpdateRequest, LocalDateTime updatedAt) {
+        return new ChannelMessageUpdateDto(
                 channelMessageUpdateRequest.type(),
                 workspaceId,
                 channelId,
@@ -23,8 +24,8 @@ public record ChannelMessageUpdateResponse(
                 user,
                 channelMessageUpdateRequest.content(),
                 true,
-                channelMessageUpdateRequest.updateAt(),
-                LocalDateTime.now()
+                channelMessageUpdateRequest.createdAt(),
+                updatedAt
         );
     }
 }

@@ -1,6 +1,6 @@
-package com.smiletogether.chatserver.service.dto;
+package com.smiletogether.chatserver.dto;
 
-public record ChannelMessageDeleteResponse(
+public record ChannelMessageDeleteDto(
         String type,
         String workspaceId,
         String channelId,

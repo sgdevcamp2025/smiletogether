@@ -1,10 +1,10 @@
-package com.smiletogether.chatserver.service.dto;
+package com.smiletogether.chatserver.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDateTime;
 
-public record ChannelChatDto(
+public record ChannelMessageDto(
         @JsonProperty("type") String type,
         @JsonProperty("messageId") String messageId,
         @JsonProperty("workspaceId") String workspaceId,
