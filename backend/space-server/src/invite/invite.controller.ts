@@ -1,4 +1,12 @@
-import { Body, Controller, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { InviteService } from './invite.service';
 import { UserId } from 'src/decorators/user-id.decorator';
 import { AuthGuard } from 'src/guards/auth.guard';
@@ -31,6 +39,21 @@ export class InviteController {
       inviteCode,
       userId,
       userName,
+    );
+    return result;
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('is-workspace-member/:inviteCode')
+  async isWorkspaceUser(
+    @UserId() userId: string,
+    @Param('inviteCode') inviteCode: string,
+    @Query('type') type: string,
+  ) {
+    const result = await this.inviteService.isWorkspaceUser(
+      inviteCode,
+      userId,
+      type,
     );
     return result;
   }
