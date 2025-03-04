@@ -1,9 +1,11 @@
 import axios from 'axios';
 import { getTocken } from '@/lib/utils';
-import { useNavigate } from 'react-router';
+// import { useNavigate } from 'react-router';
 // import { postRefreshToken } from '@/apis/user';
 
 // const navigate = useNavigate();
+
+// mocking을 위한 api들만 관리하는 배열입니다. 모킹 api를 넣읅시 baseURL이 달라지기에 백엔드와 연동시 지워주세요
 const mockApiList = ['/api/dms', '/api/auth'];
 
 const https = axios.create({
