@@ -28,7 +28,6 @@ const WorkspaceUserInviteModal = ({
   const { channelList, isChannelLoading, isChannelError } =
     useWorkspaceChannelListQuery(workspaceId!);
   const { mutate: inviteUserChannels } = useInviteChannelMutation();
-
   const [inviteUrl, setInviteUrl] = useState('');
   const { mutate: inviteWorkspaceUrl } = useWorkspaceInviteLinkUrlMutation();
 
@@ -43,7 +42,7 @@ const WorkspaceUserInviteModal = ({
           setInviteUrl(data.inviteLink);
         },
         onError: err => {
-          console.log(err);
+          alert(err);
         },
       }
     );
@@ -155,7 +154,7 @@ const WorkspaceUserInviteModal = ({
               );
             }}
           >
-            {!inviteUrl ? '초대 링크 로딩중' : '🔗 초대 링크 복사'}
+            {!inviteUrl ? '초대 링크 생성중' : '🔗 초대 링크 복사'}
           </Button>
           <Button
             className="text-gray-500 hover:text-gray-700 text-sm font-black bg-gray-100 shadow-none px-6 hover:bg-yellow-200"
