@@ -31,7 +31,6 @@ const WorkspaceUserInviteModal = ({
 
   const [inviteUrl, setInviteUrl] = useState('');
   const { mutate: inviteWorkspaceUrl } = useWorkspaceInviteLinkUrlMutation();
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     inviteWorkspaceUrl(
@@ -42,11 +41,9 @@ const WorkspaceUserInviteModal = ({
       {
         onSuccess: data => {
           setInviteUrl(data.inviteLink);
-          setIsLoading(true);
         },
         onError: err => {
           console.log(err);
-          setIsLoading(true);
         },
       }
     );
@@ -149,7 +146,7 @@ const WorkspaceUserInviteModal = ({
         <div className="mt-6 flex justify-between border-t pt-4">
           <Button
             className="text-blue-500 hover:bg-yellow-200 text-sm bg-transparent shadow-none"
-            disabled={isLoading}
+            disabled={!inviteUrl}
             onClick={() => {
               handleCopyClipBoard(
                 inviteUrl,
@@ -158,7 +155,7 @@ const WorkspaceUserInviteModal = ({
               );
             }}
           >
-            {isLoading ? '초대 링크 로딩중' : '🔗 초대 링크 복사'}
+            {!inviteUrl ? '초대 링크 로딩중' : '🔗 초대 링크 복사'}
           </Button>
           <Button
             className="text-gray-500 hover:text-gray-700 text-sm font-black bg-gray-100 shadow-none px-6 hover:bg-yellow-200"
