@@ -12,8 +12,6 @@ const ConfirmEmailPage = () => {
   };
   useEffect(() => {
     if (code.length === 6) {
-      //코드 확인
-      console.log(code);
       try {
         handleLogin();
         navigate('/workspaces');
