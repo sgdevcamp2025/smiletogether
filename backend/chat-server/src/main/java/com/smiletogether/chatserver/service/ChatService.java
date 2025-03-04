@@ -2,67 +2,64 @@ package com.smiletogether.chatserver.service;
 
 import com.fasterxml.uuid.Generators;
 import com.fasterxml.uuid.impl.TimeBasedGenerator;
-import com.smiletogether.chatserver.service.dto.ChannelChatDto;
-import com.smiletogether.chatserver.service.dto.ChannelMessageDeleteRequest;
-import com.smiletogether.chatserver.service.dto.ChannelMessageDeleteResponse;
-import com.smiletogether.chatserver.service.dto.ChannelMessageUpdateRequest;
-import com.smiletogether.chatserver.service.dto.ChannelMessageUpdateResponse;
-import com.smiletogether.chatserver.service.dto.MessageRequest;
-import com.smiletogether.chatserver.service.dto.WorkspaceProfileDto;
+import com.smiletogether.chatserver.dto.ChannelMessageDeleteDto;
+import com.smiletogether.chatserver.dto.ChannelMessageDto;
+import com.smiletogether.chatserver.dto.ChannelMessageUpdateDto;
+import com.smiletogether.chatserver.dto.WorkspaceProfileDto;
+import com.smiletogether.chatserver.dto.request.ChannelMessageDeleteRequest;
+import com.smiletogether.chatserver.dto.request.ChannelMessageRequest;
+import com.smiletogether.chatserver.dto.request.ChannelMessageUpdateRequest;
+import com.smiletogether.chatserver.service.producer.MessageProducer;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class ChatService {
-
-    private final SimpMessagingTemplate simpMessagingTemplate;
     private final MessageProducer messageProducer;
 
-    public void testMessage(MessageRequest message) {
-        simpMessagingTemplate.convertAndSend("/topic/greeting", message);
-    }
-
-    public void sendChannelMessage(String userId, String workspaceId, String channelId, MessageRequest message) {
+    public void sendChannelMessage(String userId, String workspaceId, String channelId, ChannelMessageRequest message) {
         WorkspaceProfileDto senderProfile = initProfile(userId);
-        ChannelChatDto channelChatDto = createChannelChat(workspaceId, channelId, senderProfile,
+        ChannelMessageDto channelMessageDto = createChannelChat(workspaceId, channelId, senderProfile,
                 message.content());
 
-        messageProducer.sendMessage(channelChatDto);
+        messageProducer.sendMessage(channelMessageDto);
     }
 
     private WorkspaceProfileDto initProfile(String userId) {
-        return new WorkspaceProfileDto(userId, "temp Name", "temp Url");
+        return new WorkspaceProfileDto(userId, "temp Name", "temp Url",
+                "tempPosition", true, "안녕하세요!");
     }
 
-    private ChannelChatDto createChannelChat(String workspaceId, String channelId,
-                                             WorkspaceProfileDto senderProfile, String content) {
+    private ChannelMessageDto createChannelChat(String workspaceId, String channelId,
+                                                WorkspaceProfileDto senderProfile, String content) {
         String messageId = uuidGenerator();
-        return new ChannelChatDto("SEND", messageId, workspaceId, channelId, senderProfile, content, LocalDateTime.now(),
+        return new ChannelMessageDto("SEND", messageId, workspaceId, channelId, senderProfile, content,
+                LocalDateTime.now(),
                 LocalDateTime.now(), false);
     }
 
     public void updateChannelMessage(String memberId, String workspaceId,
                                      String channelId, ChannelMessageUpdateRequest channelMessageUpdateRequest) {
         WorkspaceProfileDto senderProfile = initProfile(memberId);
-        log.info("서비스 코드 실행");
+        log.info("채팅 업데이트 코드 실행");
         messageProducer.updateMessage(channelMessageUpdateRequest,
-                ChannelMessageUpdateResponse.of(senderProfile, workspaceId, channelId, channelMessageUpdateRequest));
+                ChannelMessageUpdateDto.of(senderProfile, workspaceId, channelId, channelMessageUpdateRequest, LocalDateTime.now()));
     }
 
     public void deleteChannelMessage(String workspaceId, String channelId,
                                      ChannelMessageDeleteRequest channelMessageDeleteRequest) {
-        log.info("서비스 코드 실행");
-        ChannelMessageDeleteResponse channelMessageDeleteResponse = new ChannelMessageDeleteResponse(
+        log.info("채팅 삭제 코드 실행");
+
+        ChannelMessageDeleteDto channelMessageDeleteDto = new ChannelMessageDeleteDto(
                 channelMessageDeleteRequest.type(),
                 workspaceId, channelId, channelMessageDeleteRequest.messageId(),
                 "200", "메시지가 성공적으로 삭제되었습니다."
         );
-        messageProducer.deleteMessage(channelMessageDeleteRequest, channelMessageDeleteResponse);
+        messageProducer.deleteMessage(channelMessageDeleteRequest, channelMessageDeleteDto);
     }
 
     private String uuidGenerator() {

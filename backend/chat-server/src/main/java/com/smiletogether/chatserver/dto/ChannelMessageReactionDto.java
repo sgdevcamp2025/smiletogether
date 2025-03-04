@@ -1,6 +1,6 @@
-package com.smiletogether.chatserver.service.dto;
+package com.smiletogether.chatserver.dto;
 
-public record ChannelMessageReaction(
+public record ChannelMessageReactionDto(
         String type,
         String messageId,
         String memberId,
