@@ -105,7 +105,8 @@ export class InviteService {
   async isWorkspaceUser(inviteCode: string, userId: string, type: string) {
     let inviteKey: RedisKey;
     if (type == 'link') inviteKey = `invite_link:${inviteCode}`;
-    if (type == 'email') inviteKey = `invite_email:${inviteCode}`;
+    else if (type == 'email') inviteKey = `invite_email:${inviteCode}`;
+    else throw new BadRequestException('유효하지 않은 type 값입니다.');
 
     const workspaceId = await this.redis.get(inviteKey);
     if (!workspaceId) {
@@ -130,13 +131,13 @@ export class InviteService {
 
     if (existingMember) {
       return {
-        isWorkspaceUser: true,
+        isWorkspaceMember: true,
         message: '초대된 워크스페이스에 소속되어 있습니다.',
       };
     }
 
     return {
-      isWorkspaceUser: false,
+      isWorkspaceMember: false,
       message: '초대된 워크스페이스에 소속되어 있지 않습니다.',
     };
   }
