@@ -4,7 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Redis } from 'ioredis';
+import { Redis, RedisKey } from 'ioredis';
 import { PrismaService } from 'prisma/prisma.service';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -39,11 +39,11 @@ export class InviteService {
   }
 
   async acceptInviteLink(
-    inviteUuid: string,
+    inviteCode: string,
     userId: string,
     userName: string,
   ): Promise<{ workspaceId: string }> {
-    const inviteKey = `invite_link:${inviteUuid}`;
+    const inviteKey = `invite_link:${inviteCode}`;
 
     const workspaceId = await this.redis.get(inviteKey);
     if (!workspaceId) {
@@ -100,5 +100,44 @@ export class InviteService {
     }
 
     return { workspaceId };
+  }
+
+  async isWorkspaceUser(inviteCode: string, userId: string, type: string) {
+    let inviteKey: RedisKey;
+    if (type == 'link') inviteKey = `invite_link:${inviteCode}`;
+    if (type == 'email') inviteKey = `invite_email:${inviteCode}`;
+
+    const workspaceId = await this.redis.get(inviteKey);
+    if (!workspaceId) {
+      throw new NotFoundException(
+        '초대 링크가 만료되었거나 존재하지 않습니다.',
+      );
+    }
+
+    const workspace = await this.prismaService.workspace.findUnique({
+      where: {
+        workspace_id: workspaceId,
+      },
+    });
+
+    if (!workspace) {
+      throw new NotFoundException('해당 워크스페이스가 존재하지 않습니다.');
+    }
+
+    const existingMember = await this.prismaService.workspaceUser.findFirst({
+      where: { workspace_id: workspaceId, user_id: userId },
+    });
+
+    if (existingMember) {
+      return {
+        isWorkspaceUser: true,
+        message: '초대된 워크스페이스에 소속되어 있습니다.',
+      };
+    }
+
+    return {
+      isWorkspaceUser: false,
+      message: '초대된 워크스페이스에 소속되어 있지 않습니다.',
+    };
   }
 }
