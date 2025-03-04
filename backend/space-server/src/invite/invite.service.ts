@@ -26,7 +26,7 @@ export class InviteService {
   ): Promise<string> {
     const inviteCode = uuidv4();
     const inviteKey = `invite_link:${inviteCode}`;
-    const inviteUrl = `${domain}/invite/link/${inviteCode}`;
+    const inviteUrl = `${domain}/invite?type=link&code=${inviteCode}`;
 
     await this.redis.set(
       inviteKey,
