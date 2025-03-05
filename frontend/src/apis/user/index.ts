@@ -22,9 +22,7 @@ export const postRefreshToken = async () => {
   return response;
 };
 
-export const postValidateAccessToken = async (): Promise<{
-  userId: string;
-}> => {
+export const getValidateAccessToken = async () => {
   const { data } = await https.get('/api/auth/verifyAccessToken');
   return data;
 };
