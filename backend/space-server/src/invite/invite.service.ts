@@ -133,12 +133,15 @@ export class InviteService {
       return {
         isWorkspaceMember: true,
         message: '초대된 워크스페이스에 소속되어 있습니다.',
+        workspaceId: workspaceId,
       };
     }
 
     return {
       isWorkspaceMember: false,
       message: '초대된 워크스페이스에 소속되어 있지 않습니다.',
+      workspaceId: workspaceId,
+      workspaceName: workspace.name,
     };
   }
 }
