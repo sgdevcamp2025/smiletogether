@@ -33,7 +33,6 @@ const WorkspaceJoinPage = () => {
 
   useEffect(() => {
     if (data) {
-      console.log(`/workspace/${inviteCode}`);
       navigate(`/workspace/${inviteCode}`);
     }
   }, [data, isLoading, isError]);

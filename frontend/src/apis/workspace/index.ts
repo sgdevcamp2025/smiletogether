@@ -39,7 +39,6 @@ export const postWorkspaceInviteLinkUrl = async ({
   const { data } = await https.post(`/api/invite/link/${workspaceId}`, {
     domain,
   });
-  console.log('postWorkspaceInviteLinkUrl', data);
   return data;
 };
 
@@ -66,6 +65,5 @@ export const getIsMemberOfWorkspaceByInviteLink = async (
   const { data } = await https.get(
     `/api/invite/is-workspace-member/${inviteCode}?type=${type}`
   );
-  console.log('getIsMemberOfWorkspaceByInviteLink', data);
   return data.isWorkspaceMember;
 };
