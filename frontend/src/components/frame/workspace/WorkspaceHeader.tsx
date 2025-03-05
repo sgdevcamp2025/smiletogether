@@ -1,5 +1,5 @@
 const WorkspaceHeader = () => {
-  return <div className="p-6 bg-yellow-400 w-full h-12"></div>;
+  return <div className="p-5 bg-yellow-400 w-full "></div>;
 };
 
 export default WorkspaceHeader;

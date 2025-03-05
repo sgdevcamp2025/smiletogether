@@ -40,7 +40,7 @@ const WorkspaceChannelPanel = () => {
     return <p>에러가 발생했습니다!</p>;
 
   return (
-    <div className=" min-w-16 bg-yellow-200 text-white flex py-2 flex-col gap-2 text-wrap h-screen">
+    <div className=" min-w-16 bg-yellow-300 text-white flex py-2 flex-col gap-2 text-wrap h-screen">
       <WorkspaceMenu
         workspaceName={workspaceName}
         userRole={currentUserRole}

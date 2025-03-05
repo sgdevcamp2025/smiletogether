@@ -16,7 +16,7 @@ const WorkspaceDMs = ({ dmList, onAddColleauge }: WorkspaceDMsProps) => {
         <WorkspaceDirectMessageListItem dm={dm} key={index} />
       ))}
       <Button
-        className="flex justify-start w-full py-0 text-xs bg-transparent shadow-none hover:bg-gray-50"
+        className="flex justify-start w-full py-0 text-sm bg-transparent shadow-none hover:bg-gray-50"
         onClick={onAddColleauge}
       >
         {<MdOutlineAddBox className="text-2xl" />}
