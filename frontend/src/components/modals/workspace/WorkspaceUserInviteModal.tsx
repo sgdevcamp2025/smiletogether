@@ -39,6 +39,7 @@ const WorkspaceUserInviteModal = ({
       },
       {
         onSuccess: data => {
+          console.log(data);
           setInviteUrl(data.inviteLink);
         },
         onError: err => {
