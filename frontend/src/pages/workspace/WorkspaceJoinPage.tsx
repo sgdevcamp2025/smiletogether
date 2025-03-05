@@ -32,8 +32,8 @@ const WorkspaceJoinPage = () => {
   }, [isValidUser, navigate]);
 
   useEffect(() => {
-    if (data) {
-      navigate(`/workspace/${inviteCode}`);
+    if (data && data.isWorkspaceMember) {
+      navigate(`/workspace/${data.workspaceId}`);
     }
   }, [data, isLoading, isError]);
 
