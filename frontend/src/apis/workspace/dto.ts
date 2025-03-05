@@ -44,3 +44,23 @@ export interface PostWorkspaceInviteUrlRequestDto {
 export interface PostWorkspaceInviteUrlResponsetDto {
   inviteLink: string;
 }
+
+export interface getIsMemberOfWorkspaceByInviteLinkRequestDto {
+  inviteCode: string;
+  type: 'link' | 'email';
+}
+
+export interface getIsMemberOfWorkspaceByInviteLinkResponseDto {
+  isWorkspaceMember: boolean;
+  message: string;
+  workspaceId: string;
+  workspaceName?: string;
+}
+
+export interface postAcceptWorkspaceEmailInviteResponseDto {
+  is_success: boolean;
+  code: string;
+  message: string;
+  data: unknown;
+  workspaceId: string;
+}
