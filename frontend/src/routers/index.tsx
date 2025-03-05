@@ -30,7 +30,7 @@ export const router = createBrowserRouter([
     element: <WorkspaceCreationProcess />,
   },
   {
-    path: '/invite/link/:workspaceId',
+    path: '/invite',
     element: <WorkspaceJoinPage />,
   },
   {

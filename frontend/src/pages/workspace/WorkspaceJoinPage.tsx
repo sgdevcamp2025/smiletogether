@@ -1,16 +1,29 @@
 import useGetIsMemberOfWorkspaceByInviteLinkQuery from '@/hooks/workspace/useGetIsMemberOfWorkspaceByInviteLinkQuery';
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate, useSearchParams } from 'react-router';
 
 const WorkspaceJoinPage = () => {
   const isValidUser = localStorage.getItem('access-token');
   const navigate = useNavigate();
-  const inviteType = window.location.pathname.split('/')[2] as 'email' | 'link';
-  const inviteCode = window.location.pathname.split('/')[3];
-  const inviteWorkspaceId = window.location.pathname.split('/')[4];
+  const [searchParams] = useSearchParams();
+  const inviteType = searchParams.get('type');
+  const inviteCode = searchParams.get('code');
+
+  useEffect(() => {
+    if (
+      !inviteCode ||
+      !inviteType ||
+      (inviteType !== 'link' && inviteType !== 'email')
+    ) {
+      navigate('/');
+    }
+  }, [inviteCode, inviteType]);
 
   const { data, isLoading, isError } =
-    useGetIsMemberOfWorkspaceByInviteLinkQuery(inviteCode, inviteType);
+    useGetIsMemberOfWorkspaceByInviteLinkQuery(
+      inviteCode!,
+      inviteType as 'email' | 'link'
+    );
 
   useEffect(() => {
     if (!isValidUser) {
@@ -19,14 +32,9 @@ const WorkspaceJoinPage = () => {
   }, [isValidUser, navigate]);
 
   useEffect(() => {
-    if (!inviteCode || !inviteType || inviteWorkspaceId) {
-      navigate('/');
-    }
-  }, []);
-
-  useEffect(() => {
     if (data) {
-      navigate(`/workspace/${data}`);
+      console.log(`/workspace/${inviteCode}`);
+      navigate(`/workspace/${inviteCode}`);
     }
   }, [data, isLoading, isError]);
 
