@@ -12,7 +12,7 @@ const ChannelCreateModal = () => {
   const [emails, setEmails] = useState<string[]>([]);
   const { workspaceId } = useParams();
   const { createChannel } = useCreateChannelMutation(workspaceId!);
-  const closeModla = useModalStore(state => state.closeModal);
+  const closeModal = useModalStore(state => state.closeModal);
   const naviagate = useNavigate();
 
   const handleNewChannelSubmit = () => {
@@ -27,7 +27,7 @@ const ChannelCreateModal = () => {
       isPrivate: channelVisibility,
       emails,
     });
-    closeModla();
+    closeModal();
   };
 
   const render = () => {
@@ -39,6 +39,7 @@ const ChannelCreateModal = () => {
             setStep={setStep}
             setChannelName={setChannelName}
             setChannelVisibility={setChannelVisibility}
+            closeModal={closeModal}
           />
         );
 
