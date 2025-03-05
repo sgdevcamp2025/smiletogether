@@ -1,11 +1,11 @@
-package com.smiletogether.chatserver.service;
+package com.smiletogether.chatserver.service.producer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smiletogether.chatserver.service.dto.ChannelChatDto;
-import com.smiletogether.chatserver.service.dto.ChannelMessageDeleteRequest;
-import com.smiletogether.chatserver.service.dto.ChannelMessageDeleteResponse;
-import com.smiletogether.chatserver.service.dto.ChannelMessageUpdateRequest;
-import com.smiletogether.chatserver.service.dto.ChannelMessageUpdateResponse;
+import com.smiletogether.chatserver.dto.ChannelMessageDeleteDto;
+import com.smiletogether.chatserver.dto.ChannelMessageDto;
+import com.smiletogether.chatserver.dto.ChannelMessageUpdateDto;
+import com.smiletogether.chatserver.dto.request.ChannelMessageDeleteRequest;
+import com.smiletogether.chatserver.dto.request.ChannelMessageUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -21,9 +21,9 @@ public class MessageProducer {
     private static final String CHAT_TOPIC = "channel-topic";
     private static final String HISTORY_TOPIC = "history-topic";
 
-    public void sendMessage(ChannelChatDto channelChatDto) {
+    public void sendMessage(ChannelMessageDto channelMessageDto) {
         try {
-            String jsonMessage = objectMapper.writeValueAsString(channelChatDto); // 객체 -> JSON 변환
+            String jsonMessage = objectMapper.writeValueAsString(channelMessageDto); // 객체 -> JSON 변환
             log.info("Sending message to Kafka as JSON: {}", jsonMessage);
             kafkaTemplate.send(CHAT_TOPIC, jsonMessage); // JSON 문자열로 Kafka에 전송
             kafkaTemplate.send(HISTORY_TOPIC, jsonMessage);
@@ -34,9 +34,9 @@ public class MessageProducer {
     }
 
     public void updateMessage(ChannelMessageUpdateRequest channelMessageUpdateRequest,
-                              ChannelMessageUpdateResponse channelMessageUpdateResponse) {
+                              ChannelMessageUpdateDto channelMessageUpdateDto) {
         try {
-            String jsonMessage = objectMapper.writeValueAsString(channelMessageUpdateResponse); // 객체 -> JSON 변환
+            String jsonMessage = objectMapper.writeValueAsString(channelMessageUpdateDto); // 객체 -> JSON 변환
             log.info("Sending message to Kafka as JSON: {}", jsonMessage);
             kafkaTemplate.send(CHAT_TOPIC, jsonMessage);
 
@@ -48,9 +48,9 @@ public class MessageProducer {
     }
 
     public void deleteMessage(ChannelMessageDeleteRequest channelMessageDeleteRequest,
-                              ChannelMessageDeleteResponse channelMessageDeleteResponse) {
+                              ChannelMessageDeleteDto channelMessageDeleteDto) {
         try {
-            String jsonMessage = objectMapper.writeValueAsString(channelMessageDeleteResponse); // 객체 -> JSON 변환
+            String jsonMessage = objectMapper.writeValueAsString(channelMessageDeleteDto); // 객체 -> JSON 변환
             log.info("Sending message to Kafka as JSON: {}", jsonMessage);
             kafkaTemplate.send(CHAT_TOPIC, jsonMessage);
 

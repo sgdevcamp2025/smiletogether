@@ -1,4 +1,4 @@
-package com.smiletogether.chatserver.service.dto;
+package com.smiletogether.chatserver.dto.request;
 
 public record ChannelMessageDeleteRequest(
         String type,
