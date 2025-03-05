@@ -49,10 +49,7 @@ export const postInviteWorkspace = async (
   workspaceId: string,
   emails: string[]
 ) => {
-  const { data } = await https.post(
-    `/api/workspaces/${workspaceId}/invite`,
-    emails
-  );
+  const { data } = await https.post(`/api/invite/email/${workspaceId}`, emails);
   return data;
 };
 
