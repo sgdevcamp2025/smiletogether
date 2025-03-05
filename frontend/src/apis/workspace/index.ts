@@ -57,3 +57,13 @@ export const postLeaveWorkspace = async (workspaceId: string) => {
   const { data } = await https.delete(`/api/workspaces/${workspaceId}/leave`);
   return data;
 };
+
+export const getIsMemberOfWorkspaceByInviteLink = async (
+  inviteCode: string,
+  type: 'link' | 'email'
+): Promise<{ isWorkspaceMember: boolean }> => {
+  const { data } = await https.get(
+    `/api/invite/is-workspace-member/${inviteCode}?type=${type}`
+  );
+  return data.isWorkspaceMember;
+};
