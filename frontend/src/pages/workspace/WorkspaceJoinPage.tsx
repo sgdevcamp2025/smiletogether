@@ -58,7 +58,7 @@ const WorkspaceJoinPage = () => {
     setUserName(e.target.value);
   };
 
-  const neterKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleInputEnterSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       if (!username) {
         alert('사용하실 이름을 작성해주세요');
@@ -103,7 +103,7 @@ const WorkspaceJoinPage = () => {
         placeholder="워크스페이스에서 사용할 이름을 작성해주세요"
         value={username}
         onChange={handleInputChange}
-        onKeyDown={neterKey}
+        onKeyDown={handleInputEnterSubmit}
       />
     </div>
   );
