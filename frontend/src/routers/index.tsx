@@ -11,7 +11,6 @@ import WorkspaceChannelPanel from '@/components/workspace/WorkspaceChannelPanel'
 import SplitPaneLayout from '@/components/common/SplitPaneLayout';
 import NotFoundPage from '@/pages/NotFoundPage';
 import WorkspaceJoinPage from '@/pages/workspace/WorkspaceJoinPage';
-import { UserGuard } from '@/hooks/user/useCheckUserValid';
 
 export const router = createBrowserRouter([
   {
@@ -32,11 +31,7 @@ export const router = createBrowserRouter([
   },
   {
     path: '/invite/link/:workspaceId',
-    element: (
-      <UserGuard>
-        <WorkspaceJoinPage />
-      </UserGuard>
-    ),
+    element: <WorkspaceJoinPage />,
   },
   {
     path: '/workspace/:workspaceId',
