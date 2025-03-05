@@ -56,3 +56,11 @@ export interface getIsMemberOfWorkspaceByInviteLinkResponseDto {
   workspaceId: string;
   workspaceName?: string;
 }
+
+export interface postAcceptWorkspaceEmailInviteResponseDto {
+  is_success: boolean;
+  code: string;
+  message: string;
+  data: unknown;
+  workspaceId: string;
+}

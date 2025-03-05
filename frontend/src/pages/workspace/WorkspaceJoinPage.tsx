@@ -3,6 +3,8 @@ import useGetIsMemberOfWorkspaceByInviteLinkQuery from '@/hooks/workspace/useGet
 import { useEffect, useState, ChangeEvent } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
 import React from 'react';
+import useAcceptWorkspaceEmailInviteMutation from '@/hooks/workspace/useAcceptWorkspaceEmailInviteMutation';
+import useAcceptWorkspaceLinkInviteMutation from '@/hooks/workspace/useAcceptWorkspaceLinkInviteMutation';
 
 const WorkspaceJoinPage = () => {
   const isValidUser = localStorage.getItem('access-token');
@@ -11,6 +13,10 @@ const WorkspaceJoinPage = () => {
   const inviteType = searchParams.get('type');
   const inviteCode = searchParams.get('code');
   const [username, setUserName] = useState('');
+  const { acceptEmailInvite, acceptEmailInviteError } =
+    useAcceptWorkspaceEmailInviteMutation();
+  const { acceptLinkInvite, acceptLinkInviteError } =
+    useAcceptWorkspaceLinkInviteMutation();
 
   useEffect(() => {
     if (
@@ -37,7 +43,7 @@ const WorkspaceJoinPage = () => {
   useEffect(() => {
     if (!data) return;
     if (data.isWorkspaceMember) {
-      // navigate(`/workspace/${data.workspaceId}`);
+      navigate(`/workspace/${data.workspaceId}`);
     }
   }, [data, isLoading, isError]);
 
@@ -58,7 +64,26 @@ const WorkspaceJoinPage = () => {
         alert('사용하실 이름을 작성해주세요');
         return;
       }
-      console.log(username);
+      if (inviteType === 'email')
+        acceptEmailInvite(inviteCode!, {
+          onSuccess: data => {
+            navigate(`/workspace/${data.workspaceId}`);
+          },
+          onError: () => {
+            alert('일시적인 오류가 발생했습니다.');
+            navigate('/');
+          },
+        });
+      else
+        acceptLinkInvite(inviteCode!, {
+          onSuccess: data => {
+            navigate(`/workspace/${data.workspaceId}`);
+          },
+          onError: () => {
+            alert('일시적인 오류가 발생했습니다.');
+            navigate('/');
+          },
+        });
     }
   };
 
