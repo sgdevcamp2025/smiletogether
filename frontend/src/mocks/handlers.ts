@@ -14,6 +14,43 @@ interface InvitedUser {
 }
 
 export const handlers = [
+  http.post(`/api/auth/login`, () => {
+    return new HttpResponse(null, {
+      status: 200,
+      headers: {
+        Authorization:
+          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlcklkIjoiMDNjNmIwODMtZThkNi00ODhjLWFhODMtMmEwMWIzZjM5ZDAwIiwiaWF0IjoxNTE2MjM5MDIyfQ.iVTdh4kkGh6f6gEZLf9MJPwkjusaXf58z_Tc4ncummw',
+        'Set-Cookie':
+          'refresh-token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlcklkIjoiMDNjNmIwODMtZThkNi00ODhjLWFhODMtMmEwMWIzZjM5ZDAwIiwiaWF0IjoxNTE2MjM5MDIyfQ.iVTdh4kkGh6f6gEZLf9MJPwkjusaXf58z_Tc4ncummw; HttpOnly; Secure; Path=/; SameSite=Strict',
+      },
+    });
+    // // accessToken 만료시 상황을 연습하기 위한 코드입니다.
+    // return HttpResponse.json(
+    //   {
+    //     message: 'Authorization header missing',
+    //     error: 'Unauthorized',
+    //     statusCode: 401,
+    //   },
+    //   {
+    //     status: 401,
+    //   }
+    // );
+  }),
+  http.post(`/api/auth/refresh`, () => {
+    return HttpResponse.json({
+      status: 200,
+    });
+    // return HttpResponse.json(
+    //   {
+    //     statusCode: 401,
+    //     message: 'Refresh token not found.',
+    //     error: 'Unauthorized',
+    //   },
+    //   {
+    //     status: 401,
+    //   }
+    // );
+  }),
   http.get('/api/users', () => {
     return HttpResponse.json(dummy.userProfiles);
   }),

@@ -36,3 +36,11 @@ export interface PostNewWorkspaceResponseDto {
   };
   createdAt: string;
 }
+
+export interface PostWorkspaceInviteUrlRequestDto {
+  workspaceId: string;
+  domain: string;
+}
+export interface PostWorkspaceInviteUrlResponsetDto {
+  inviteLink: string;
+}
