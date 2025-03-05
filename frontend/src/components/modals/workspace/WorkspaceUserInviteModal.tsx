@@ -35,7 +35,7 @@ const WorkspaceUserInviteModal = ({
     inviteWorkspaceUrl(
       {
         workspaceId: workspaceId!,
-        domain: 'http://localhost:5173',
+        domain: import.meta.env.VITE_BASE_CLIENT_API_URL,
       },
       {
         onSuccess: data => {
