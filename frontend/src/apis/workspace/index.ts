@@ -4,6 +4,8 @@ import {
   PostNewWorkspaceRequestDto,
   PostWorkspaceInviteUrlResponsetDto,
   PostWorkspaceInviteUrlRequestDto,
+  getIsMemberOfWorkspaceByInviteLinkRequestDto,
+  getIsMemberOfWorkspaceByInviteLinkResponseDto,
 } from '@/apis/workspace/dto';
 import https from '@/lib/https';
 
@@ -58,10 +60,10 @@ export const postLeaveWorkspace = async (workspaceId: string) => {
   return data;
 };
 
-export const getIsMemberOfWorkspaceByInviteLink = async (
-  inviteCode: string,
-  type: 'link' | 'email'
-) => {
+export const getIsMemberOfWorkspaceByInviteLink = async ({
+  inviteCode,
+  type,
+}: getIsMemberOfWorkspaceByInviteLinkRequestDto): Promise<getIsMemberOfWorkspaceByInviteLinkResponseDto> => {
   const { data } = await https.get(
     `/api/invite/is-workspace-member/${inviteCode}?type=${type}`
   );
