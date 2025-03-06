@@ -1,22 +1,11 @@
-interface WorkspaceMember {
-  user_id: string;
-  profile_image: string;
-  role?: 'member' | 'admin';
-}
-
-interface Workspace {
-  workspace_id: string;
-  name: string;
-  profile_image: string;
-  member_count: number;
-  workspace_members: WorkspaceMember[];
-}
+import { WorkspaceMember } from '@/types/user';
+import { Workspace } from '@/types/workspace';
 
 export interface GetUserWorkspaceResponse {
-  workspace_id: string;
+  workspaceId: string;
   name: string;
-  owner_id: string;
-  profile_image: string;
+  ownerId: string;
+  profileImage: string;
   users: WorkspaceMember[];
   created_at: string;
   updated_at: string;
@@ -28,11 +17,11 @@ export interface GetUserWorkspaceListeResponse {
 }
 
 export interface PostNewWorkspaceRequestDto {
-  workspace_name: string;
-  owner_id: string;
-  user_name: string;
-  profile_image: string;
-  invite_user_list: string[];
+  workspaceName: string;
+  ownerId: string;
+  userName: string;
+  profileImage: string;
+  inviteUserList: string[];
 }
 
 export interface PostNewWorkspaceResponseDto {
@@ -46,4 +35,32 @@ export interface PostNewWorkspaceResponseDto {
     failed: string[] | null;
   };
   createdAt: string;
+}
+
+export interface PostWorkspaceInviteUrlRequestDto {
+  workspaceId: string;
+  domain: string;
+}
+export interface PostWorkspaceInviteUrlResponsetDto {
+  inviteLink: string;
+}
+
+export interface getIsMemberOfWorkspaceByInviteLinkRequestDto {
+  inviteCode: string;
+  type: 'link' | 'email';
+}
+
+export interface getIsMemberOfWorkspaceByInviteLinkResponseDto {
+  isWorkspaceMember: boolean;
+  message: string;
+  workspaceId: string;
+  workspaceName?: string;
+}
+
+export interface postAcceptWorkspaceEmailInviteResponseDto {
+  is_success: boolean;
+  code: string;
+  message: string;
+  data: unknown;
+  workspaceId: string;
 }

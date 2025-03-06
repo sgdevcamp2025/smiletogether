@@ -1,16 +1,19 @@
 import Avatar from '@/components/common/Avatar';
-import { MemberProps } from '@/components/workspace/WorkspaceListItem';
+import { WorkspaceMember } from '@/types/user';
 
 interface WorkspaceAvatarListProps {
-  members: MemberProps[];
+  members: WorkspaceMember[];
 }
 
 const WorkspaceAvatarList = ({ members }: WorkspaceAvatarListProps) => {
   return (
     <div className="flex -space-x-1">
-      {members.slice(0, 5).map(item => (
-        <Avatar src={item.profile_image} alt="user_profile_image" />
-      ))}
+      {members &&
+        members
+          .slice(0, 5)
+          .map(item => (
+            <Avatar src={item.profileImage} alt="user_profile_image" />
+          ))}
     </div>
   );
 };
