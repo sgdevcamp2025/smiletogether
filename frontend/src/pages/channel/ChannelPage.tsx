@@ -28,23 +28,35 @@ const ChannelPage = () => {
   });
 
   const scrollRef = useRef<HTMLDivElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // ✅ 새로운 메시지가 올 때 맨 아래로 스크롤
   const scrollToBottom = () => {
-    if (scrollRef.current) {
-      setTimeout(() => {
-        scrollRef.current!.scrollTop = scrollRef.current!.scrollHeight;
-      }, 0);
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'auto' });
     }
   };
 
+  // 초기 메시지 설정
   useEffect(() => {
     setMessages(initailMessages);
   }, [initailMessages]);
 
+  // 메시지가 변경될 때마다 항상 스크롤 하단으로 이동
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // 컴포넌트 마운트 시 스크롤 하단으로 이동
+  useEffect(() => {
+    // 초기 로딩 시 스크롤 하단으로
+    scrollToBottom();
+
+    // 채널 데이터가 로드된 후에도 스크롤 하단으로
+    if (channelData) {
+      setTimeout(scrollToBottom, 300);
+    }
+  }, [channelData]);
 
   const handleDeleteMessage = (messageId: string) => {
     deleteMessage(messageId, () => {
@@ -93,6 +105,9 @@ const ChannelPage = () => {
             onDeleteMessage={handleDeleteMessage}
           />
         )}
+
+        <div className="flex-grow"></div>
+
         {messages &&
           messages.map(msg => (
             <Message
@@ -107,6 +122,8 @@ const ChannelPage = () => {
               onDeleteMessage={handleDeleteMessage}
             />
           ))}
+
+        <div ref={messagesEndRef} />
       </div>
 
       {channelData && client && (
