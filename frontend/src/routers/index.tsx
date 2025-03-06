@@ -9,6 +9,8 @@ import ChannelPage from '@/pages/channel/ChannelPage';
 import ActivityPage from '@/pages/activity/ActivityPage';
 import WorkspaceChannelPanel from '@/components/workspace/WorkspaceChannelPanel';
 import SplitPaneLayout from '@/components/common/SplitPaneLayout';
+import NotFoundPage from '@/pages/NotFoundPage';
+import WorkspaceJoinPage from '@/pages/workspace/WorkspaceJoinPage';
 
 export const router = createBrowserRouter([
   {
@@ -26,6 +28,10 @@ export const router = createBrowserRouter([
   {
     path: '/workspace/create',
     element: <WorkspaceCreationProcess />,
+  },
+  {
+    path: '/invite',
+    element: <WorkspaceJoinPage />,
   },
   {
     path: '/workspace/:workspaceId',
@@ -62,5 +68,9 @@ export const router = createBrowserRouter([
         ),
       },
     ],
+  },
+  {
+    path: '/*',
+    element: <NotFoundPage />,
   },
 ]);

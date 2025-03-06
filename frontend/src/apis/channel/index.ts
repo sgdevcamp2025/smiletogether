@@ -11,14 +11,14 @@ import { MessageType } from '@/types/chat';
 export const getChannel = async (
   channelId: string
 ): Promise<GetChannelResponse> => {
-  const response = await https.get(`/api/channel?channelId=${channelId}`);
+  const response = await https.get(`api/channel?channelId=${channelId}`);
   return response.data;
 };
 
 export const getMessages = async (
   channelId: string
 ): Promise<GetMessagesResponse> => {
-  const response = await https.get(`/api/chatMessage?channelId=${channelId}`);
+  const response = await https.get(`/chatMessage?channelId=${channelId}`);
   return response.data;
 };
 
@@ -33,15 +33,17 @@ export const getUserJoinedWorkspaceChannels = async (
   workspaceId: string
 ): Promise<getWorkspaceChannelsResponseDto[]> => {
   const { data } = await https.get(`/api/channels/workspaces/${workspaceId}`);
-  return data;
+  return data.channels;
 };
 
 export const postNewWorkspaceChannels = async ({
+  workspaceId,
   name,
   isPrivate,
   emails,
 }: postWorkspaceChannelsRequestDto): Promise<postWorkspaceChannelsResponseDto> => {
   const { data } = await https.post(`/api/channels`, {
+    workspaceId,
     name,
     isPrivate,
     emails,

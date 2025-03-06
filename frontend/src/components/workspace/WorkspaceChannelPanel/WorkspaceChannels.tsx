@@ -16,9 +16,10 @@ const WorkspaceChannels = ({
 }: WorkspaceAccordionSectionProps) => {
   return (
     <WorkspaceAccordionSection sectionTitle="채널">
-      {channelList?.map((channel, index) => (
-        <WorkspaceChannelListItem channel={channel} key={index} />
-      ))}
+      {channelList &&
+        channelList?.map((channel, index) => (
+          <WorkspaceChannelListItem channel={channel} key={index} />
+        ))}
       <ChannelMenu
         onCreateChannel={onCreateChannel}
         onExploreChannels={onExploreChannels}

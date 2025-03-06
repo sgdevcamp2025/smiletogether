@@ -12,11 +12,13 @@ const ChannelCreateModal = ({
   setStep,
   setChannelName,
   setChannelVisibility,
+  closeModal,
 }: {
   channelName: string;
   setStep: (step: number) => void;
   setChannelName: (name: string) => void;
   setChannelVisibility: (channelVisibility: boolean) => void;
+  closeModal: () => void;
 }) => {
   return (
     <ModalPortal>
@@ -26,6 +28,7 @@ const ChannelCreateModal = ({
           setStep={setStep}
           setChannelName={setChannelName}
           setChannelVisibility={setChannelVisibility}
+          closeModal={closeModal}
         />
         <ChannelCreateModalRightPannel />
       </div>
@@ -40,11 +43,13 @@ const ChannelCreateModalLeftPannel = ({
   setStep,
   setChannelName,
   setChannelVisibility,
+  closeModal,
 }: {
   channelName: string;
   setStep: (step: number) => void;
   setChannelName: (name: string) => void;
   setChannelVisibility: (channelVisibility: boolean) => void;
+  closeModal: () => void;
 }) => {
   const handleChennelVisibility = (e: React.ChangeEvent<HTMLInputElement>) => {
     setChannelVisibility(e.target.value === 'public');
@@ -64,7 +69,10 @@ const ChannelCreateModalLeftPannel = ({
 
   return (
     <div className="w-2/5 px-6 py-8  flex flex-col">
-      <Button className="bg-transparent text-black p-0 left-auto flex justify-start">
+      <Button
+        className="bg-transparent text-black p-0 left-auto flex justify-start"
+        onClick={closeModal}
+      >
         <ArrorIcon className="rotate-180 " />
         <span>뒤로</span>
       </Button>

@@ -39,7 +39,7 @@ const WorkspaceCreationProcess = () => {
           })}
         </div>
 
-        <div className="w-80 bg-yellow-200 "></div>
+        <div className="w-80 bg-yellow-300 "></div>
         <div className="mx-20 mt-20">
           <span className="text-gray-400">{step}/3 단계</span>
           <h1 className="mt-2 text-3xl font-extrabold tracking-tight text-gray-800 lg:text-5xl">
