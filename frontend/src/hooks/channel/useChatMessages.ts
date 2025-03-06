@@ -3,7 +3,7 @@ import { MessageType } from '@/types/chat';
 import { useInfiniteQuery } from '@tanstack/react-query';
 
 interface ChatMessagesResponse {
-  groupedMessages: Record<string, MessageType[]>; // 날짜별로 그룹화된 메시지
+  groupedMessages: Record<string, MessageType[]>;
 }
 
 export const useChatMessages = (workspaceId: string, channelId: string) => {
@@ -13,14 +13,14 @@ export const useChatMessages = (workspaceId: string, channelId: string) => {
       getChatMessages(workspaceId, channelId, pageParam as string),
 
     getNextPageParam: lastPage => {
-      const dates = Object.keys(lastPage.groupedMessages);
+      const dates = Object.keys(lastPage.groupedMessages).sort();
       if (dates.length === 0) return undefined;
 
-      const oldestDate = dates[dates.length - 1];
+      const oldestDate = dates[0];
       const oldestMessages = lastPage.groupedMessages[oldestDate];
-      if (!oldestMessages.length) return undefined;
+      if (!oldestMessages || oldestMessages.length === 0) return undefined;
 
-      return oldestMessages[oldestMessages.length - 1].createdAt;
+      return oldestMessages[0].createdAt;
     },
 
     initialPageParam: new Date().toISOString().replace('Z', ''),
