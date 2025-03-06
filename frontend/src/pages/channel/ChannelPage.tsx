@@ -1,38 +1,64 @@
-import ChannelInfo from '@/components/channel/ChannelInfo';
+import { useEffect, useRef, useState } from 'react';
+import { useParams } from 'react-router';
 import ChatHeader from '@/components/common/ChatHeader';
 import { useGetChannel } from '@/hooks/channel/useGetChannel';
-import { useParams } from 'react-router';
+import ChannelInfo from '@/components/channel/ChannelInfo';
+import HistoryMessages from '@/components/channel/HistoryMessages';
 import MessageBox from '@/components/common/MessageBox';
 import { useWebSocket } from '@/hooks/channel/useWebSocket';
-import { useEffect, useRef } from 'react';
-import HistoryMessages from '../../components/channel/HistoryMessages';
 import Message from '@/components/common/Message';
+import { useDeleteMessage } from '@/hooks/channel/useDeleteMessage';
 
 const ChannelPage = () => {
   const { workspaceId, channelId } = useParams();
+
   const { channelData, isChannelLoading, isChannelError } =
     useGetChannel(channelId);
-  const { client, messages } = useWebSocket({
+  const { client, messages: initailMessages } = useWebSocket({
     workspaceId,
     channelId,
   });
+
+  const [messages, setMessages] = useState(initailMessages);
+
+  const { deleteMessage } = useDeleteMessage({
+    workspaceId: workspaceId ?? '',
+    channelId: channelId ?? '',
+    client: client!,
+  });
+
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  // ✅ 새로운 메시지가 올 때 맨 아래로 스크롤
   const scrollToBottom = () => {
     if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+      setTimeout(() => {
+        scrollRef.current!.scrollTop = scrollRef.current!.scrollHeight;
+      }, 0);
     }
   };
+
+  useEffect(() => {
+    setMessages(initailMessages);
+  }, [initailMessages]);
 
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
 
+  const handleDeleteMessage = (messageId: string) => {
+    deleteMessage(messageId, () => {
+      setMessages(prevMessages =>
+        prevMessages.filter(msg => msg.messageId !== messageId)
+      );
+    });
+  };
+
   if (isChannelLoading) return <p>로딩중입니다.</p>;
   if (isChannelError) return <p>에러입니다.</p>;
 
   return (
-    <div className="w-full">
+    <div className="w-full h-full">
       {channelData && (
         <>
           <ChatHeader
@@ -44,8 +70,10 @@ const ChannelPage = () => {
           />
         </>
       )}
-
-      <div ref={scrollRef} className="h-[400px] overflow-auto scrollbar-hide">
+      <div
+        ref={scrollRef}
+        className="flex-col h-[calc(100vh-293px)] overflow-auto scrollbar-hide flex"
+      >
         {channelData && (
           <ChannelInfo
             userId={channelData.createdBy.userId}
@@ -59,21 +87,26 @@ const ChannelPage = () => {
 
         {workspaceId && channelId && (
           <HistoryMessages
+            client={client!}
             workspaceId={workspaceId}
             channelId={channelId}
-            scrollRef={scrollRef}
+            onDeleteMessage={handleDeleteMessage}
           />
         )}
-
-        {/* 웹 소켓에서 전송받은 메시지 */}
-        {messages.map((msg, index) => (
-          <Message
-            key={index} // 이 부분은 나중에 백 구조가 바뀌면 messageId를 넣을 예정입니다!
-            user={msg.user}
-            content={msg.content}
-            createdAt={msg.createdAt}
-          />
-        ))}
+        {messages &&
+          messages.map(msg => (
+            <Message
+              messageId={msg.messageId}
+              client={client!}
+              key={msg.messageId}
+              user={msg.user}
+              content={msg.content}
+              createdAt={msg.createdAt}
+              workspaceId={workspaceId!}
+              channelId={channelId!}
+              onDeleteMessage={handleDeleteMessage}
+            />
+          ))}
       </div>
 
       {channelData && client && (
