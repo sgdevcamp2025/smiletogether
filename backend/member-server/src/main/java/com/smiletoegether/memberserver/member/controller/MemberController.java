@@ -4,11 +4,13 @@ import com.smiletoegether.memberserver.common.dto.CommonCodeResponse;
 import com.smiletoegether.memberserver.email.service.InviteEmailService;
 import com.smiletoegether.memberserver.member.service.MemberService;
 import com.smiletoegether.memberserver.member.service.dto.CertificationEmailRequest;
+import com.smiletoegether.memberserver.member.service.dto.SignInRequest;
 import com.smiletoegether.memberserver.member.service.dto.SignInResponse;
 import com.smiletoegether.memberserver.member.service.dto.SignUpRequest;
 import com.smiletoegether.memberserver.member.service.dto.SignUpResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
+@Slf4j
 public class MemberController {
 
     private final MemberService memberService;
@@ -79,9 +82,10 @@ public class MemberController {
 
     @PostMapping("/sign-in")
     public ResponseEntity<SignInResponse> signIn(
-            String email,
+            @RequestBody SignInRequest signInRequest,
             HttpServletResponse response
     ) {
-        return memberService.signIn(email, response);
+        log.info("email:" ,signInRequest.email());
+        return memberService.signIn(signInRequest.email(), response);
     }
 }
