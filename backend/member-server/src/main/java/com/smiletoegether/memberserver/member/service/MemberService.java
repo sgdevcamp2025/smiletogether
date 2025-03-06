@@ -6,9 +6,9 @@ import com.smiletoegether.memberserver.member.infrastructure.ExternalAuthApiServ
 import com.smiletoegether.memberserver.member.repository.MemberRepository;
 import com.smiletoegether.memberserver.member.service.dto.CertificationEmailRequest;
 import com.smiletoegether.memberserver.common.dto.CommonCodeResponse;
-import com.smiletoegether.memberserver.member.service.dto.SignInResponse;
+import com.smiletoegether.memberserver.member.service.dto.response.SignInResponse;
 import com.smiletoegether.memberserver.member.service.dto.SignUpRequest;
-import com.smiletoegether.memberserver.member.service.dto.SignUpResponse;
+import com.smiletoegether.memberserver.member.service.dto.response.SignUpResponse;
 import com.smiletoegether.memberserver.member.service.dto.TokenResponse;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -32,6 +32,18 @@ public class MemberService {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 이메일입니다."));
         return member.getId();
+    }
+
+    private String findEmailById(String userId) {
+        Member member = memberRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 유저입니다."));
+        return member.getEmail();
+    }
+
+    private String findUserNameById(String userId) {
+        Member member = memberRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 유저입니다."));
+        return member.getUsername();
     }
 
     // 이메일 중복 확인
@@ -109,5 +121,15 @@ public class MemberService {
         refreshTokenCookie.setMaxAge(604800);  // 7일 동안 유지 (604800초)
 
         response.addCookie(refreshTokenCookie); // ✅ 쿠키를 응답에 추가
+    }
+
+    public String identifyEmail(String userId) {
+        String email = findEmailById(userId);
+        return email;
+    }
+
+    public String identifyUserName(String userId) {
+        String userName = findUserNameById(userId);
+        return userName;
     }
 }
