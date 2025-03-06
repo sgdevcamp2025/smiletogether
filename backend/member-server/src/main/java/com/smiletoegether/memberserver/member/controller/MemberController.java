@@ -4,10 +4,14 @@ import com.smiletoegether.memberserver.common.dto.CommonCodeResponse;
 import com.smiletoegether.memberserver.email.service.InviteEmailService;
 import com.smiletoegether.memberserver.member.service.MemberService;
 import com.smiletoegether.memberserver.member.service.dto.CertificationEmailRequest;
+import com.smiletoegether.memberserver.member.service.dto.response.CheckMemberIdResponse;
+import com.smiletoegether.memberserver.member.service.dto.response.IdentifyEmailResponse;
+import com.smiletoegether.memberserver.member.service.dto.response.IdentifyUserNameResponse;
 import com.smiletoegether.memberserver.member.service.dto.SignInRequest;
-import com.smiletoegether.memberserver.member.service.dto.SignInResponse;
+import com.smiletoegether.memberserver.member.service.dto.response.SignInResponse;
 import com.smiletoegether.memberserver.member.service.dto.SignUpRequest;
-import com.smiletoegether.memberserver.member.service.dto.SignUpResponse;
+import com.smiletoegether.memberserver.member.service.dto.response.SignUpResponse;
+import com.smiletoegether.memberserver.member.service.dto.response.InviteUrlEmailResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -64,20 +68,36 @@ public class MemberController {
     }
 
     @GetMapping("/check-memberId")
-    public ResponseEntity<String> checkMemberId(
+    public ResponseEntity<CheckMemberIdResponse> checkMemberId(
             @RequestParam String email
     ) {
         String response = memberService.checkMemberId(email);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(new CheckMemberIdResponse(response));
     }
 
     @GetMapping("/send-inviteUrl")
-    public ResponseEntity<CommonCodeResponse> sendInviteUrl(
+    public ResponseEntity<InviteUrlEmailResponse> sendInviteUrl(
             @RequestParam String email,
             @RequestParam String inviteUrl
     ) {
         inviteEmailService.sendInviteUrl(email, inviteUrl);
-        return ResponseEntity.ok(new CommonCodeResponse("200", inviteUrl));
+        return ResponseEntity.ok(new InviteUrlEmailResponse("200", "메일 발송 성공", inviteUrl));
+    }
+
+    @GetMapping("/identify-email")
+    public ResponseEntity<IdentifyEmailResponse> identifyEmail(
+            @RequestParam String userId
+    ) {
+        String response = memberService.identifyEmail(userId);
+        return ResponseEntity.ok(new IdentifyEmailResponse(response));
+    }
+
+    @GetMapping("/identify-user-name")
+    public ResponseEntity<IdentifyUserNameResponse> identifyUserName(
+            @RequestParam String userId
+    ) {
+        String response = memberService.identifyUserName(userId);
+        return ResponseEntity.ok(new IdentifyUserNameResponse(response));
     }
 
     @PostMapping("/sign-in")
