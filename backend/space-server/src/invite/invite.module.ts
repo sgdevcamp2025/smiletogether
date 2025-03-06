@@ -13,8 +13,8 @@ import { JwtModule } from '@nestjs/jwt';
     }),
     RedisModule.forRoot({
       config: {
-        host: 'localhost',
-        port: 6381,
+        host: process.env.REDIS_HOST || 'localhost',
+        port: parseInt(process.env.REDIS_PORT) || 6381,
       },
     }),
   ],

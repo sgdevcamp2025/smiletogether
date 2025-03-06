@@ -4,7 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Redis } from 'ioredis';
+import { Redis, RedisKey } from 'ioredis';
 import { PrismaService } from 'prisma/prisma.service';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -26,7 +26,7 @@ export class InviteService {
   ): Promise<string> {
     const inviteCode = uuidv4();
     const inviteKey = `invite_link:${inviteCode}`;
-    const inviteUrl = `${domain}/invite/link/${inviteCode}`;
+    const inviteUrl = `${domain}/invite?type=link&code=${inviteCode}`;
 
     await this.redis.set(
       inviteKey,
@@ -39,11 +39,11 @@ export class InviteService {
   }
 
   async acceptInviteLink(
-    inviteUuid: string,
+    inviteCode: string,
     userId: string,
     userName: string,
   ): Promise<{ workspaceId: string }> {
-    const inviteKey = `invite_link:${inviteUuid}`;
+    const inviteKey = `invite_link:${inviteCode}`;
 
     const workspaceId = await this.redis.get(inviteKey);
     if (!workspaceId) {
@@ -100,5 +100,48 @@ export class InviteService {
     }
 
     return { workspaceId };
+  }
+
+  async isWorkspaceUser(inviteCode: string, userId: string, type: string) {
+    let inviteKey: RedisKey;
+    if (type == 'link') inviteKey = `invite_link:${inviteCode}`;
+    else if (type == 'email') inviteKey = `invite_email:${inviteCode}`;
+    else throw new BadRequestException('유효하지 않은 type 값입니다.');
+
+    const workspaceId = await this.redis.get(inviteKey);
+    if (!workspaceId) {
+      throw new NotFoundException(
+        '초대 링크가 만료되었거나 존재하지 않습니다.',
+      );
+    }
+
+    const workspace = await this.prismaService.workspace.findUnique({
+      where: {
+        workspace_id: workspaceId,
+      },
+    });
+
+    if (!workspace) {
+      throw new NotFoundException('해당 워크스페이스가 존재하지 않습니다.');
+    }
+
+    const existingMember = await this.prismaService.workspaceUser.findFirst({
+      where: { workspace_id: workspaceId, user_id: userId },
+    });
+
+    if (existingMember) {
+      return {
+        isWorkspaceMember: true,
+        message: '초대된 워크스페이스에 소속되어 있습니다.',
+        workspaceId: workspaceId,
+      };
+    }
+
+    return {
+      isWorkspaceMember: false,
+      message: '초대된 워크스페이스에 소속되어 있지 않습니다.',
+      workspaceId: workspaceId,
+      workspaceName: workspace.name,
+    };
   }
 }
