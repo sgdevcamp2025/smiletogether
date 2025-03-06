@@ -4,6 +4,7 @@ import com.smiletoegether.memberserver.member.service.dto.TokenResponse;
 import java.net.URI;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -18,9 +19,13 @@ public class ExternalAuthApiServer {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Value("${external.auth-server}")
+    private String authServerUrl;
+
+
     public TokenResponse getToken(String userId) {
         URI uri = UriComponentsBuilder
-                .fromUriString("http://localhost:8091/api/auth/login")
+                .fromUriString(authServerUrl)
                 .build()
                 .toUri();
 
