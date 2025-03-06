@@ -22,7 +22,7 @@ const WorkSpaceListPage = () => {
         <h1 className="text-4xl">smiletogether</h1>
         {workspacesInfo && workspacesInfo?.workspaces.length === 0 && (
           <div className="py-10 text-2xl">
-            가입되어 있는 워크스페이가 없습니다.
+            가입되어 있는 워크스페이스가 없습니다.
           </div>
         )}
         <Button

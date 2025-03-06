@@ -28,7 +28,6 @@ const ConfirmEmailPage = () => {
 
     if (confirmResponse.data.code === '200') {
       const loginResponse = await postLogin(email);
-      console.log(loginResponse.data);
 
       if (loginResponse.data.isMember) {
         navigate('/workspaces');
@@ -46,7 +45,7 @@ const ConfirmEmailPage = () => {
     try {
       const registerResponse = await postRegister(name, email);
       console.log('회원가입 성공', registerResponse);
-      navigate('/workspace');
+      navigate('/workspaces');
     } catch (error) {
       console.error('회원가입 실패', error);
       alert('회원가입에 실패했습니다.');
