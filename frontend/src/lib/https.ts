@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getTocken } from '@/lib/utils';
+import { getToken } from '@/lib/utils';
 
 // mocking을 위한 api들만 관리하는 배열입니다. 모킹 api를 넣읅시 baseURL이 달라지기에 백엔드와 연동시 지워주세요
 const mockApiList = ['/api/dms'];
@@ -17,7 +17,7 @@ https.interceptors.request.use(
     } else {
       config.baseURL = import.meta.env.VITE_BASE_SERVER_API_URL;
     }
-    config.headers.Authorization = `Bearer ${getTocken()}`;
+    config.headers.Authorization = `Bearer ${getToken()}`;
     return config;
   },
   error => {
