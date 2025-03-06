@@ -1,20 +1,39 @@
-import { postLogin } from '@/apis/user';
+import { postConfirmEmail, postLogin } from '@/apis/user';
 import { InputCodeForm } from '@/components/login/InputCodeForm';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 
 const ConfirmEmailPage = () => {
-  const [code, setCode] = useState<string>('');
   const navigate = useNavigate();
+  const location = useLocation();
+  const [code, setCode] = useState<string>('');
+
+  const email = location.state?.email;
 
   const handleLogin = async () => {
-    const response = await postLogin('4a7ea43d-beb7-4e7b-994a-9e9f56220532');
+    if (email) {
+      const response = await postConfirmEmail(email, code);
+
+      if (response.data.code === '400') {
+        alert(response.data.message);
+        return;
+      }
+
+      if (response.data.code === '200') {
+        const response = await postLogin(email);
+        console.log(response.data);
+        return;
+      }
+    } else {
+      alert('이메일을 다시 전송해주세요.');
+      navigate('/');
+    }
   };
   useEffect(() => {
     if (code.length === 6) {
       try {
         handleLogin();
-        navigate('/workspaces');
+        //navigate('/workspaces');
       } catch (e) {
         alert('로그인 실패');
       }
