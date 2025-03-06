@@ -1,0 +1,51 @@
+services:
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=rootuser
+      - MONGO_INITDB_ROOT_PASSWORD=rootpass
+    networks:
+      - history_network
+
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    restart: always
+    ports:
+      - 20000:20000   # 기본 포트 8081로 수정
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=rootuser
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=rootpass
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+    depends_on:
+      - mongodb
+    networks:
+      - history_network
+
+  history-server:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: history-server
+    restart: always
+    ports:
+      - "8083:8083"
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://rootuser:rootpass@mongodb:27017/history-db?authSource=admin
+    depends_on:
+      - mongodb
+    networks:
+      - history_network
+
+volumes:
+  data:
+
+networks:
+  history_network:
+    driver: bridge

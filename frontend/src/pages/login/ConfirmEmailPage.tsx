@@ -8,7 +8,7 @@ const ConfirmEmailPage = () => {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    const response = await postLogin('test3');
+    const response = await postLogin('4a7ea43d-beb7-4e7b-994a-9e9f56220532');
   };
   useEffect(() => {
     if (code.length === 6) {

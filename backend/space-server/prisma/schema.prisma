@@ -28,7 +28,9 @@ model WorkspaceUser {
   role           String   @default("member")
   joined_at      DateTime @default(now())
   profile_image  String   @default("default.jpg")
-  profile_name   String
+  profile_name   String?
+  position       String?
+  status_message String?
 
   workspace Workspace @relation(fields: [workspace_id], references: [workspace_id], onDelete: Cascade)
 
@@ -57,6 +59,7 @@ model ChannelUser {
   channel_id    String   @db.Uuid   
   joined_at     DateTime @default(now())
   channel_role  String   @default("member")
+  
   channel Channel @relation(fields: [channel_id], references: [channel_id], onDelete: Cascade)
 
   @@unique([user_id, channel_id])

@@ -1,0 +1,183 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=rootuser
+      - MONGO_INITDB_ROOT_PASSWORD=rootpass
+    networks:
+      - history_network
+
+  mongo-express:
+    image: mongo-express:latest
+    container_name: mongo-express
+    restart: always
+    ports:
+      - 20000:8081  # 프론트에서 사용 가능하도록 포트 수정
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=rootuser
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=rootpass
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+    depends_on:
+      - mongodb
+    networks:
+      - history_network
+
+  history-server:
+    image: imjanghyeok/smiletogether-history-server:latest  # Docker Hub에서 가져오기
+    container_name: history-server
+    restart: always
+    ports:
+      - "8083:8083"
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://rootuser:rootpass@mongodb:27017/history-db?authSource=admin
+    depends_on:
+      - mongodb
+    networks:
+      - history_network
+
+  chat-server:
+    image: imjanghyeok/smiletogether-chat-server:latest  # Docker Hub에서 가져오기
+    container_name: chat-server
+    restart: always
+    ports:
+      - "8081:8081"
+    networks:
+      - chat_network
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    ports:
+      - "5001:5001"
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=LocalKafka
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka_01:9092,kafka_02:9092,kafka_03:9092
+      - DYNAMIC_CONFIG_ENABLED=true
+    depends_on:
+      - kafka_01
+    networks:
+      - kafka-network
+
+    # ✅ 컨트롤러 1개 (테스트 환경)
+  kafka_00:
+    image: bitnami/kafka:3.7.0
+    container_name: kafka_00
+    restart: unless-stopped
+    ports:
+      - '9093:9093'
+      - '19000:19000'
+    environment:
+      - KAFKA_CFG_NODE_ID=0
+      - KAFKA_KRAFT_MODE=true
+      - KAFKA_CFG_PROCESS_ROLES=controller
+      - KAFKA_KRAFT_CLUSTER_ID=hPThGFTUS4u1FxH9KPznxg==
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka_00:9093
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT
+      - KAFKA_LISTENERS=CONTROLLER://0.0.0.0:9093
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
+    networks:
+      - kafka-network
+    volumes:
+      - kafka_00:/bitnami/kafka
+
+  # ✅ 브로커 3개 (KRaft 모드 적용)
+  kafka_01:
+    image: bitnami/kafka:3.7.0
+    container_name: kafka_01
+    restart: unless-stopped
+    ports:
+      - '9094:9092'
+      - '19001:19001'
+    environment:
+      - KAFKA_CFG_NODE_ID=1
+      - KAFKA_KRAFT_MODE=true
+      - KAFKA_CFG_PROCESS_ROLES=broker
+      - KAFKA_KRAFT_CLUSTER_ID=hPThGFTUS4u1FxH9KPznxg==
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka_00:9093
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_LISTENERS=INTERNAL://0.0.0.0:9092,EXTERNAL://kafka_01:19001
+      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka_01:9092,EXTERNAL://host.docker.internal:19001
+      - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
+    networks:
+      - kafka-network
+    volumes:
+      - kafka_01:/bitnami/kafka
+
+  kafka_02:
+    image: bitnami/kafka:3.7.0
+    container_name: kafka_02
+    restart: unless-stopped
+    ports:
+      - '9095:9092'
+      - '19002:19002'
+    environment:
+      - KAFKA_CFG_NODE_ID=2
+      - KAFKA_KRAFT_MODE=true
+      - KAFKA_CFG_PROCESS_ROLES=broker
+      - KAFKA_KRAFT_CLUSTER_ID=hPThGFTUS4u1FxH9KPznxg==
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka_00:9093
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_LISTENERS=INTERNAL://0.0.0.0:9092,EXTERNAL://kafka_02:19002
+      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka_02:9092,EXTERNAL://host.docker.internal:19002
+      - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
+    networks:
+      - kafka-network
+    volumes:
+      - kafka_02:/bitnami/kafka
+
+  kafka_03:
+    image: bitnami/kafka:3.7.0
+    container_name: kafka_03
+    restart: unless-stopped
+    ports:
+      - '9096:9092'
+      - '19003:19003'
+    environment:
+      - KAFKA_CFG_NODE_ID=3
+      - KAFKA_KRAFT_MODE=true
+      - KAFKA_CFG_PROCESS_ROLES=broker
+      - KAFKA_KRAFT_CLUSTER_ID=hPThGFTUS4u1FxH9KPznxg==
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka_00:9093
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_LISTENERS=INTERNAL://0.0.0.0:9092,EXTERNAL://kafka_03:19003
+      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka_03:9092,EXTERNAL://host.docker.internal:19003
+      - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
+    networks:
+      - kafka-network
+    volumes:
+      - kafka_03:/bitnami/kafka
+
+
+networks:
+  history_network:
+    driver: bridge
+  chat_network:
+    driver: bridge
+  kafka-network:
+    driver: bridge
+
+volumes:
+  data:
+  kafka_00:
+    driver: local
+  kafka_01:
+    driver: local
+  kafka_02:
+    driver: local
+  kafka_03:
+    driver: local

@@ -1,50 +1,120 @@
-version: "3.9"
-
 services:
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
     container_name: kafka-ui
     ports:
-      - "50000:8080"  # 웹 UI에 접근할 포트 (MSA 환경이라 8080 대신 50000 사용)
+      - "5001:5001"
     environment:
-      - KAFKA_CLUSTERS_0_NAME=LocalKafka  # 클러스터 이름 (웹 UI에서 보일 이름)
-      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka-single-broker:9092  # Kafka 클러스터의 브로커 주소 (✅ 수정됨)
-      - DYNAMIC_CONFIG_ENABLED=true  # 동적 설정 활성화
+      - KAFKA_CLUSTERS_0_NAME=LocalKafka
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka_01:9092,kafka_02:9092,kafka_03:9092
+      - DYNAMIC_CONFIG_ENABLED=true
     depends_on:
-      - kafka
+      - kafka_01
     networks:
       - kafka-network
 
-
-  kafka:
-    image: bitnami/kafka:3.6.1-debian-11-r0
-    container_name: kafka-single-broker
+  # ✅ 컨트롤러 1개 (테스트 환경)
+  kafka_00:
+    image: bitnami/kafka:3.7.0
+    container_name: kafka_00
     restart: unless-stopped
     ports:
-      - "9092:9092"
-      - "9094:9094"
+      - '9093:9093'
+      - '19000:19000'
     environment:
-      # Kafka 노드 ID 및 클러스터 설정
-      - KAFKA_NODE_ID=0
-      - KAFKA_PROCESS_ROLES=broker,controller  # 브로커 + 컨트롤러 역할 수행
-      - KAFKA_KRAFT_CLUSTER_ID=hPThGFTUS4u1FxH9KPznxg==  # 클러스터 ID (Base64 인코딩된 UUID)
+      - KAFKA_CFG_NODE_ID=0
+      - KAFKA_KRAFT_MODE=true
+      - KAFKA_CFG_PROCESS_ROLES=controller
+      - KAFKA_KRAFT_CLUSTER_ID=hPThGFTUS4u1FxH9KPznxg==
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka_00:9093
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT
+      - KAFKA_LISTENERS=CONTROLLER://0.0.0.0:9093
+    networks:
+      - kafka-network
+    volumes:
+      - kafka_00:/bitnami/kafka
 
-      # KRaft 모드 필수 환경 변수 추가
-      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka-single-broker:9093  # 컨트롤러 노드 정보
-      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER  # 컨트롤러 리스너 설정
-
-      # 리스너 및 보안 설정
+  # ✅ 브로커 3개 (KRaft 모드 적용)
+  kafka_01:
+    image: bitnami/kafka:3.7.0
+    container_name: kafka_01
+    restart: unless-stopped
+    ports:
+      - '9094:9092'
+      - '19001:19001'
+    environment:
+      - KAFKA_CFG_NODE_ID=1
+      - KAFKA_KRAFT_MODE=true
+      - KAFKA_CFG_PROCESS_ROLES=broker
+      - KAFKA_KRAFT_CLUSTER_ID=hPThGFTUS4u1FxH9KPznxg==
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka_00:9093
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
-      - KAFKA_LISTENERS=INTERNAL://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093,EXTERNAL://0.0.0.0:9094
-      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka-single-broker:9092,EXTERNAL://localhost:9094
+      - KAFKA_LISTENERS=INTERNAL://0.0.0.0:9092,EXTERNAL://kafka_01:19001
+      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka_01:9092,EXTERNAL://host.docker.internal:19001
       - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
     networks:
       - kafka-network
+    volumes:
+      - kafka_01:/bitnami/kafka
+
+  kafka_02:
+    image: bitnami/kafka:3.7.0
+    container_name: kafka_02
+    restart: unless-stopped
+    ports:
+      - '9095:9092'
+      - '19002:19002'
+    environment:
+      - KAFKA_CFG_NODE_ID=2
+      - KAFKA_KRAFT_MODE=true
+      - KAFKA_CFG_PROCESS_ROLES=broker
+      - KAFKA_KRAFT_CLUSTER_ID=hPThGFTUS4u1FxH9KPznxg==
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka_00:9093
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_LISTENERS=INTERNAL://0.0.0.0:9092,EXTERNAL://kafka_02:19002
+      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka_02:9092,EXTERNAL://host.docker.internal:19002
+      - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
+    networks:
+      - kafka-network
+    volumes:
+      - kafka_02:/bitnami/kafka
+
+  kafka_03:
+    image: bitnami/kafka:3.7.0
+    container_name: kafka_03
+    restart: unless-stopped
+    ports:
+      - '9096:9092'
+      - '19003:19003'
+    environment:
+      - KAFKA_CFG_NODE_ID=3
+      - KAFKA_KRAFT_MODE=true
+      - KAFKA_CFG_PROCESS_ROLES=broker
+      - KAFKA_KRAFT_CLUSTER_ID=hPThGFTUS4u1FxH9KPznxg==
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka_00:9093
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_LISTENERS=INTERNAL://0.0.0.0:9092,EXTERNAL://kafka_03:19003
+      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka_03:9092,EXTERNAL://host.docker.internal:19003
+      - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
+    networks:
+      - kafka-network
+    volumes:
+      - kafka_03:/bitnami/kafka
 
 networks:
   kafka-network:
     driver: bridge
 
 volumes:
-  kafka_data:
+  kafka_00:
+    driver: local
+  kafka_01:
+    driver: local
+  kafka_02:
+    driver: local
+  kafka_03:
     driver: local

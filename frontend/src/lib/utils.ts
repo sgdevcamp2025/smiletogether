@@ -16,7 +16,8 @@ export const isValidKoreanEnglish = (text: string): boolean => {
   return koreanEnglishRegex.test(text);
 };
 
-export const getTocken = () => {
+export const getToken = () => {
+  //return 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI0YTdlYTQzZC1iZWI3LTRlN2ItOTk0YS05ZTlmNTYyMjA1MzIiLCJpYXQiOjE3NDEwOTYxMTYsImV4cCI6MTc0MTA5OTcxNn0.jhugfwnVay9-o0oIQCxkQRBT8jLuYBljMitgqeYw984';
   return localStorage.getItem('access-token');
 };
 

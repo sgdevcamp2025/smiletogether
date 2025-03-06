@@ -1,19 +1,22 @@
-import { IsString, IsOptional, IsArray, IsInt } from 'class-validator';
+import { IsString, IsOptional, IsArray, IsNotEmpty } from 'class-validator';
 
 export class CreateWorkspaceDto {
   @IsString()
-  workspace_name: string;
+  @IsNotEmpty()
+  workspaceName: string;
 
   @IsString()
-  owner_id: string;
+  @IsNotEmpty()
+  ownerId: string;
 
   @IsString()
-  user_name: string;
+  @IsNotEmpty()
+  userName: string;
 
   @IsOptional()
-  profile_image?: string;
+  profileImage?: string;
 
   @IsArray()
-  @IsInt({ each: true })
-  invite_user_list: string[];
+  @IsString()
+  inviteUserList: string[];
 }
