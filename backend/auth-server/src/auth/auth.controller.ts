@@ -18,8 +18,6 @@ export class AuthController {
   async login(@Body('userId') userId: string, @Res() res: Response) {
     const { accessToken, refreshToken } = await this.authService.login(userId);
 
-    res.setHeader('Authorization', `Bearer ${accessToken}`);
-
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: true,
@@ -27,7 +25,7 @@ export class AuthController {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    return res.json({ message: 'Login successful' });
+    return res.json({ message: 'Login successful', accessToken: accessToken });
   }
 
   @Post('logout')
@@ -72,8 +70,10 @@ export class AuthController {
       userId: payload.userId,
     });
 
-    res.setHeader('Authorization', `Bearer ${newAccessToken}`);
-    return res.json({ message: 'issue AccessToken successful' });
+    return res.json({
+      message: 'issue AccessToken successful',
+      accessToken: newAccessToken,
+    });
   }
 
   @Get('verifyAccessToken')
