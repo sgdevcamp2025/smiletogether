@@ -1,10 +1,10 @@
-package com.smiletoegether.memberserver.member.service.dto;
+package com.smiletoegether.memberserver.member.service.dto.response;
 
 import com.smiletoegether.memberserver.member.domain.Member;
 
 public record SignUpResponse(
         String code,
         String message,
-        Member data
+        Member member
 ) {
 }
