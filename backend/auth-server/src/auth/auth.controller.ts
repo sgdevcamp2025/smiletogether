@@ -18,14 +18,6 @@ export class AuthController {
   async login(@Body('userId') userId: string, @Res() res: Response) {
     const { accessToken, refreshToken } = await this.authService.login(userId);
 
-    res.setHeader('Authorization', `Bearer ${accessToken}`);
-    res.cookie('accesstoken', accessToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'strict',
-      maxAge: 15 * 60 * 1000,
-    });
-
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: true,
@@ -78,8 +70,10 @@ export class AuthController {
       userId: payload.userId,
     });
 
-    res.setHeader('Authorization', `Bearer ${newAccessToken}`);
-    return res.json({ message: 'issue AccessToken successful' });
+    return res.json({
+      message: 'issue AccessToken successful',
+      accessToken: newAccessToken,
+    });
   }
 
   @Get('verifyAccessToken')
