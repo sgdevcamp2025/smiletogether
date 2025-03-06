@@ -6,9 +6,9 @@ import com.smiletoegether.memberserver.member.infrastructure.ExternalAuthApiServ
 import com.smiletoegether.memberserver.member.repository.MemberRepository;
 import com.smiletoegether.memberserver.member.service.dto.CertificationEmailRequest;
 import com.smiletoegether.memberserver.common.dto.CommonCodeResponse;
-import com.smiletoegether.memberserver.member.service.dto.SignInResponse;
+import com.smiletoegether.memberserver.member.service.dto.response.SignInResponse;
 import com.smiletoegether.memberserver.member.service.dto.SignUpRequest;
-import com.smiletoegether.memberserver.member.service.dto.SignUpResponse;
+import com.smiletoegether.memberserver.member.service.dto.response.SignUpResponse;
 import com.smiletoegether.memberserver.member.service.dto.TokenResponse;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -32,6 +32,23 @@ public class MemberService {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 이메일입니다."));
         return member.getId();
+    }
+
+    private Member findMemberByEmail(String email) {
+        return memberRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 유저입니다."));
+    }
+
+    private String findEmailById(String userId) {
+        Member member = memberRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 유저입니다."));
+        return member.getEmail();
+    }
+
+    private String findUserNameById(String userId) {
+        Member member = memberRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 유저입니다."));
+        return member.getUsername();
     }
 
     // 이메일 중복 확인
@@ -88,16 +105,29 @@ public class MemberService {
     }
 
     public ResponseEntity<SignInResponse> signIn(String email, HttpServletResponse response) {
-        String userId = findIdByEmail(email);
-        TokenResponse tokenResponse = externalAuthApiServer.getToken(userId);
 
-        setRefreshToken(response, tokenResponse.refreshToken());
+        try {
+            Member member = findMemberByEmail(email);
+            TokenResponse tokenResponse = externalAuthApiServer.getToken(member.getId());
 
-        // 응답 바디 생성
-        SignInResponse signInResponse = new SignInResponse(tokenResponse.accessToken(), new CommonCodeResponse("200", "로그인 성공"));
+            setRefreshToken(response, tokenResponse.refreshToken());
 
-        return ResponseEntity.ok()
-                .body(signInResponse);
+            SignInResponse signInResponse = new SignInResponse(
+                    tokenResponse.accessToken(),
+                    new CommonCodeResponse("200", "로그인 성공"),
+                    true,
+                    member
+            );
+            return ResponseEntity.ok().body(signInResponse);
+        } catch (RuntimeException e) {
+            SignInResponse signInResponse = new SignInResponse(
+                    "null",
+                    new CommonCodeResponse("401", "로그인 실패. 가입된 회원이 아닙니다."),
+                    false,
+                    null
+            );
+            return ResponseEntity.ok().body(signInResponse);
+        }
     }
 
     private void setRefreshToken(HttpServletResponse response, String refreshToken) {
@@ -109,5 +139,15 @@ public class MemberService {
         refreshTokenCookie.setMaxAge(604800);  // 7일 동안 유지 (604800초)
 
         response.addCookie(refreshTokenCookie); // ✅ 쿠키를 응답에 추가
+    }
+
+    public String identifyEmail(String userId) {
+        String email = findEmailById(userId);
+        return email;
+    }
+
+    public String identifyUserName(String userId) {
+        String userName = findUserNameById(userId);
+        return userName;
     }
 }
