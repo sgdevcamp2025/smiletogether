@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class EmailService {
+public class EmailCodeService {
     private static final String ERROR_MESSAGE = "인증코드 생성 실패";
     private static final String EMAIL_TITLE_OF_VERIFICATION = "[ Smile Together ] 본인 인증을 위한 코드가 도착했어요! \uD83D\uDE0E";
     private static final String EMAIL_SUCCESS_OF_VERIFICATION = "이메일로 인증코드를 전송했습니다.";
