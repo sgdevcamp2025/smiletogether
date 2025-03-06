@@ -1,51 +1,92 @@
-import ChannelInfo from '@/components/channel/ChannelInfo';
-import ChatHeader from '@/components/common/ChatHeader';
-import DateBadge from '@/components/common/DateBadge';
-import Message from '@/components/common/Message';
-import { useGetChannel } from '@/hooks/channel/useGetChannel';
-import { useGetMessages } from '@/hooks/channel/useGetMessage';
+import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router';
+import ChatHeader from '@/components/common/ChatHeader';
+import { useGetChannel } from '@/hooks/channel/useGetChannel';
+import ChannelInfo from '@/components/channel/ChannelInfo';
+import HistoryMessages from '@/components/channel/HistoryMessages';
 import MessageBox from '@/components/common/MessageBox';
 import { useWebSocket } from '@/hooks/channel/useWebSocket';
-import { useEffect, useRef } from 'react';
+import Message from '@/components/common/Message';
+import { useDeleteMessage } from '@/hooks/channel/useDeleteMessage';
 
 const ChannelPage = () => {
   const { workspaceId, channelId } = useParams();
+
   const { channelData, isChannelLoading, isChannelError } =
     useGetChannel(channelId);
-  const { messageData, isMessageLoading, isMessageError } =
-    useGetMessages(channelId);
-  const { client, messages } = useWebSocket({
+  const { client, messages: initailMessages } = useWebSocket({
     workspaceId,
     channelId,
   });
+
+  const [messages, setMessages] = useState(initailMessages);
+
+  const { deleteMessage } = useDeleteMessage({
+    workspaceId: workspaceId ?? '',
+    channelId: channelId ?? '',
+    client: client!,
+  });
+
   const scrollRef = useRef<HTMLDivElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+  // ✅ 새로운 메시지가 올 때 맨 아래로 스크롤
+  const scrollToBottom = () => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'auto' });
     }
-  }, [messages, messageData]);
+  };
 
-  if (isMessageLoading || isChannelLoading) return <p>로딩중입니다.</p>;
-  if (isMessageError || isChannelError) return <p>에러입니다.</p>;
+  // 초기 메시지 설정
+  useEffect(() => {
+    setMessages(initailMessages);
+  }, [initailMessages]);
+
+  // 메시지가 변경될 때마다 항상 스크롤 하단으로 이동
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  // 컴포넌트 마운트 시 스크롤 하단으로 이동
+  useEffect(() => {
+    // 초기 로딩 시 스크롤 하단으로
+    scrollToBottom();
+
+    // 채널 데이터가 로드된 후에도 스크롤 하단으로
+    if (channelData) {
+      setTimeout(scrollToBottom, 300);
+    }
+  }, [channelData]);
+
+  const handleDeleteMessage = (messageId: string) => {
+    deleteMessage(messageId, () => {
+      setMessages(prevMessages =>
+        prevMessages.filter(msg => msg.messageId !== messageId)
+      );
+    });
+  };
+
+  if (isChannelLoading) return <p>로딩중입니다.</p>;
+  if (isChannelError) return <p>에러입니다.</p>;
 
   return (
-    <div className="w-full">
-      {channelData && (
+    <div className="w-full h-full">
+      {channelData && channelData.createdBy && (
         <>
           <ChatHeader
-            name={channelData.name}
-            isPrivate={channelData.isPrivate}
-            totalMembers={channelData.totalMembers}
-            members={channelData.members}
+            name={channelData?.name}
+            isPrivate={channelData?.isPrivate}
+            totalMembers={channelData?.totalMembers}
+            members={channelData?.members}
             manager={channelData.createdBy.username}
           />
         </>
       )}
-
-      <div ref={scrollRef} className="h-[400px] overflow-auto scrollbar-hide">
-        {channelData && (
+      <div
+        ref={scrollRef}
+        className="flex-col h-[calc(100vh-293px)] overflow-auto scrollbar-hide flex"
+      >
+        {channelData && channelData.createdBy && (
           <ChannelInfo
             userId={channelData.createdBy.userId}
             channelName={channelData.name}
@@ -56,34 +97,33 @@ const ChannelPage = () => {
           />
         )}
 
-        {/* 이전 메시지 */}
-        {messageData?.messages ? (
-          Object.entries(messageData.messages).map(([date, messages]) => (
-            <div key={date}>
-              <DateBadge date={date} />
-              {messages.map(msg => (
-                <Message
-                  key={msg.messageId}
-                  user={msg.user}
-                  content={msg.content}
-                  createdAt={msg.createdAt}
-                />
-              ))}
-            </div>
-          ))
-        ) : (
-          <p>메시지 없음</p>
+        {workspaceId && channelId && (
+          <HistoryMessages
+            client={client!}
+            workspaceId={workspaceId}
+            channelId={channelId}
+            onDeleteMessage={handleDeleteMessage}
+          />
         )}
 
-        {/* 웹 소켓에서 전송받은 메시지 */}
-        {messages.map((msg, index) => (
-          <Message
-            key={index} // 이 부분은 나중에 백 구조가 바뀌면 messageId를 넣을 예정입니다!
-            user={msg.user}
-            content={msg.content}
-            createdAt={msg.createdAt}
-          />
-        ))}
+        <div className="flex-grow"></div>
+
+        {messages &&
+          messages.map(msg => (
+            <Message
+              messageId={msg.messageId}
+              client={client!}
+              key={msg.messageId}
+              user={msg.user}
+              content={msg.content}
+              createdAt={msg.createdAt}
+              workspaceId={workspaceId!}
+              channelId={channelId!}
+              onDeleteMessage={handleDeleteMessage}
+            />
+          ))}
+
+        <div ref={messagesEndRef} />
       </div>
 
       {channelData && client && (
@@ -97,5 +137,4 @@ const ChannelPage = () => {
     </div>
   );
 };
-
 export default ChannelPage;

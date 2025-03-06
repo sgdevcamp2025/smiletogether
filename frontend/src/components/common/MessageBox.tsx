@@ -51,15 +51,15 @@ const MessageBox = ({
   });
 
   return (
-    <div className="p-5 w-full">
-      <div className="flex flex-col gap-3 bg-white border px-3 py-2 rounded-lg shadow-sm">
+    <div className="w-full p-5">
+      <div className="flex flex-col gap-3 px-3 py-2 bg-white border rounded-lg shadow-sm">
         <Textarea
-          className="flex-grow h-auto resize-none border-none shadow-none focus-visible:ring-0 px-0"
+          className="flex-grow h-auto px-0 border-none shadow-none resize-none focus-visible:ring-0"
           placeholder={`${channelName}에 메시지 보내기`}
           onChange={handleChange}
           value={message}
         />
-        <div className="flex justify-between items-center">
+        <div className="flex items-center justify-between">
           <div className="flex gap-2">
             {icons.map((icon, index) => (
               <button
