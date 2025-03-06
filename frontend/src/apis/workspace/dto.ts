@@ -19,9 +19,9 @@ export interface GetUserWorkspaceListeResponse {
 export interface PostNewWorkspaceRequestDto {
   workspaceName: string;
   ownerId: string;
-  username: string;
+  userName: string;
   profileImage: string;
-  inviteResults: string[];
+  inviteUserList: string[];
 }
 
 export interface PostNewWorkspaceResponseDto {
@@ -35,4 +35,32 @@ export interface PostNewWorkspaceResponseDto {
     failed: string[] | null;
   };
   createdAt: string;
+}
+
+export interface PostWorkspaceInviteUrlRequestDto {
+  workspaceId: string;
+  domain: string;
+}
+export interface PostWorkspaceInviteUrlResponsetDto {
+  inviteLink: string;
+}
+
+export interface getIsMemberOfWorkspaceByInviteLinkRequestDto {
+  inviteCode: string;
+  type: 'link' | 'email';
+}
+
+export interface getIsMemberOfWorkspaceByInviteLinkResponseDto {
+  isWorkspaceMember: boolean;
+  message: string;
+  workspaceId: string;
+  workspaceName?: string;
+}
+
+export interface postAcceptWorkspaceEmailInviteResponseDto {
+  is_success: boolean;
+  code: string;
+  message: string;
+  data: unknown;
+  workspaceId: string;
 }

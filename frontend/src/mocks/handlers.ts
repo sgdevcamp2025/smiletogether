@@ -14,6 +14,43 @@ interface InvitedUser {
 }
 
 export const handlers = [
+  http.post(`/api/auth/login`, () => {
+    return new HttpResponse(null, {
+      status: 200,
+      headers: {
+        Authorization:
+          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlcklkIjoiMDNjNmIwODMtZThkNi00ODhjLWFhODMtMmEwMWIzZjM5ZDAwIiwiaWF0IjoxNTE2MjM5MDIyfQ.iVTdh4kkGh6f6gEZLf9MJPwkjusaXf58z_Tc4ncummw',
+        'Set-Cookie':
+          'refresh-token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlcklkIjoiMDNjNmIwODMtZThkNi00ODhjLWFhODMtMmEwMWIzZjM5ZDAwIiwiaWF0IjoxNTE2MjM5MDIyfQ.iVTdh4kkGh6f6gEZLf9MJPwkjusaXf58z_Tc4ncummw; HttpOnly; Secure; Path=/; SameSite=Strict',
+      },
+    });
+    // // accessToken 만료시 상황을 연습하기 위한 코드입니다.
+    // return HttpResponse.json(
+    //   {
+    //     message: 'Authorization header missing',
+    //     error: 'Unauthorized',
+    //     statusCode: 401,
+    //   },
+    //   {
+    //     status: 401,
+    //   }
+    // );
+  }),
+  http.post(`/api/auth/refresh`, () => {
+    return HttpResponse.json({
+      status: 200,
+    });
+    // return HttpResponse.json(
+    //   {
+    //     statusCode: 401,
+    //     message: 'Refresh token not found.',
+    //     error: 'Unauthorized',
+    //   },
+    //   {
+    //     status: 401,
+    //   }
+    // );
+  }),
   http.get('/api/users', () => {
     return HttpResponse.json(dummy.userProfiles);
   }),
@@ -29,7 +66,7 @@ export const handlers = [
           { status: 400 }
         );
       }
-      if (!newPost.username) {
+      if (!newPost.userName) {
         return HttpResponse.json(
           { error: 'username is required' },
           { status: 400 }
@@ -38,7 +75,7 @@ export const handlers = [
 
       const workspaceId = nanoid(8);
       const userList = [];
-      for (let i = 0; i < newPost.inviteResults.length; i++) {
+      for (let i = 0; i < newPost.inviteUserList.length; i++) {
         const dummyUser = {
           userId: 'user_12345',
           profileImage: 'https://example.com/user_12345.png',
@@ -56,7 +93,7 @@ export const handlers = [
         workspaceId: workspaceId,
         name: newPost.workspaceName,
         profileImage: newPost.profileImage,
-        memberCount: newPost.inviteResults.length,
+        memberCount: newPost.inviteUserList.length,
         users: userList,
       };
       const responseData: PostNewWorkspaceResponseDto = {
@@ -67,7 +104,7 @@ export const handlers = [
         profileImage: newPost.profileImage,
         inviteResults: {
           success: [],
-          failed: newPost.inviteResults,
+          failed: newPost.inviteUserList,
         },
         createdAt: new Date().toISOString(),
       };

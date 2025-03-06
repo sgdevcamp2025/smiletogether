@@ -30,7 +30,9 @@ const WorkspaceSideBar = () => {
                 className={`bg-gray-400 rounded-xl" ${item.workspaceId === workspaceId ? 'bg-gray-300' : null}`}
                 onClick={() => navigateToWorkspace(item.workspaceId)}
               >
-                {item.name ? item.name.slice(0, 2) : 'W'}
+                <span className="text-xl">
+                  {item.name ? item.name.slice(0, 2) : 'W'}
+                </span>
               </WorkspaceIconButton>
             );
           })}

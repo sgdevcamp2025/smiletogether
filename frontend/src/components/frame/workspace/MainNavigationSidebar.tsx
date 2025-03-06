@@ -10,12 +10,12 @@ const MainNavigationSidebar = () => {
   const { channelList } = useWorkspaceChannelListQuery(workspaceId!);
 
   return (
-    <div className="flex flex-col items-center py-3 text-white bg-yellow-200 border-r-2  min-w-16">
+    <div className="flex flex-col items-center py-3 text-white bg-yellow-300 border-r-2  min-w-16">
       {icons.map((item, index) => {
         return (
           <WorkspaceIconButton
             key={index}
-            className="bg-transparent"
+            className="bg-transparent text-sm"
             onClick={() => {
               if (item.type === 'Home') {
                 if (channelList && channelList.length > 0) {
@@ -32,7 +32,7 @@ const MainNavigationSidebar = () => {
               if (item.type === 'ETC') console.log('더보기 클릭');
             }}
           >
-            {item.icon}
+            <p>{item.icon}</p>
             <span>{item.label}</span>
           </WorkspaceIconButton>
         );

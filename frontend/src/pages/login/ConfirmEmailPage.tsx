@@ -1,13 +1,23 @@
+import { postLogin } from '@/apis/user';
 import { InputCodeForm } from '@/components/login/InputCodeForm';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
 
 const ConfirmEmailPage = () => {
   const [code, setCode] = useState<string>('');
+  const navigate = useNavigate();
 
+  const handleLogin = async () => {
+    const response = await postLogin('test3');
+  };
   useEffect(() => {
     if (code.length === 6) {
-      //코드 확인
-      console.log(code);
+      try {
+        handleLogin();
+        navigate('/workspaces');
+      } catch (e) {
+        alert('로그인 실패');
+      }
     }
   }, [code]);
 

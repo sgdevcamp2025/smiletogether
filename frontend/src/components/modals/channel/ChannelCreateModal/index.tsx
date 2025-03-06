@@ -3,32 +3,31 @@ import ChannelCreateSecondStepModal from '@/components/modals/channel/ChannelCre
 import useCreateChannelMutation from '@/hooks/channel/useCreateChannelMutation';
 import { useModalStore } from '@/stores/modalStore';
 import { useState } from 'react';
+import { useNavigate, useParams } from 'react-router';
 
 const ChannelCreateModal = () => {
   const [step, setStep] = useState(1);
   const [channelName, setChannelName] = useState('');
   const [channelVisibility, setChannelVisibility] = useState(true);
   const [emails, setEmails] = useState<string[]>([]);
-  const { createChannel } = useCreateChannelMutation();
-  const closeModla = useModalStore(state => state.closeModal);
+  const { workspaceId } = useParams();
+  const { createChannel } = useCreateChannelMutation(workspaceId!);
+  const closeModal = useModalStore(state => state.closeModal);
+  const naviagate = useNavigate();
 
   const handleNewChannelSubmit = () => {
-    createChannel(
-      {
-        name: channelName,
-        isPrivate: channelVisibility,
-        emails,
-      },
-      {
-        onSuccess: () => {
-          alert(`${channelName} 채널 생성에 하셨습니다.`);
-        },
-        onError: () => {
-          alert(`${channelName} 채널 생성에 실패하였습니다. `);
-        },
-      }
-    );
-    closeModla();
+    if (!workspaceId) {
+      alert('워크스페이스 접근 오류');
+      naviagate('/workspaces');
+      return;
+    }
+    createChannel({
+      workspaceId,
+      name: channelName,
+      isPrivate: channelVisibility,
+      emails,
+    });
+    closeModal();
   };
 
   const render = () => {
@@ -40,6 +39,7 @@ const ChannelCreateModal = () => {
             setStep={setStep}
             setChannelName={setChannelName}
             setChannelVisibility={setChannelVisibility}
+            closeModal={closeModal}
           />
         );
 
