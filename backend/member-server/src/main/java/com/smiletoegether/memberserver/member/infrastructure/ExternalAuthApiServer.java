@@ -3,6 +3,7 @@ package com.smiletoegether.memberserver.member.infrastructure;
 import com.smiletoegether.memberserver.member.service.dto.TokenResponse;
 import java.net.URI;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -14,6 +15,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @Component
 public class ExternalAuthApiServer {
+    @Autowired
     private RestTemplate restTemplate;
 
     public TokenResponse getToken(String userId) {
@@ -41,7 +43,7 @@ public class ExternalAuthApiServer {
 
         if (cookies != null) {
             for (String cookie : cookies) {
-                if (cookie.startsWith("refresh_token=")) {  // 🔥 `refresh_token` 쿠키 찾기
+                if (cookie.startsWith("refreshToken=")) {  // 🔥 `refresh_token` 쿠키 찾기
                     refreshToken = cookie.split(";")[0].split("=")[1];  // `refresh_token=value` 형태에서 값 추출
                     break;
                 }
