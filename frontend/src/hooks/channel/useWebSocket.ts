@@ -23,7 +23,20 @@ export const useWebSocket = ({ workspaceId, channelId }: UseWebSocketProps) => {
       const subscriptionPath = `/sub/workspaces/${workspaceId}/channels/${channelId}`;
       stompClient.subscribe(subscriptionPath, message => {
         const receivedMessage: MessageType = JSON.parse(message.body);
-        setMessages(prev => [...prev, receivedMessage]);
+
+        if (receivedMessage.type === 'UPDATE') {
+          console.log('🔄 메시지 업데이트 수신:', receivedMessage);
+
+          setMessages(prev =>
+            prev.map(msg =>
+              msg.messageId === receivedMessage.messageId
+                ? { ...msg, content: receivedMessage.content, isUpdated: true }
+                : msg
+            )
+          );
+        } else {
+          setMessages(prev => [...prev, receivedMessage]);
+        }
       });
     };
 
