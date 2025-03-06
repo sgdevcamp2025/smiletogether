@@ -71,13 +71,13 @@ const ChannelPage = () => {
 
   return (
     <div className="w-full h-full">
-      {channelData && (
+      {channelData && channelData.createdBy && (
         <>
           <ChatHeader
-            name={channelData.name}
-            isPrivate={channelData.isPrivate}
-            totalMembers={channelData.totalMembers}
-            members={channelData.members}
+            name={channelData?.name}
+            isPrivate={channelData?.isPrivate}
+            totalMembers={channelData?.totalMembers}
+            members={channelData?.members}
             manager={channelData.createdBy.username}
           />
         </>
@@ -86,7 +86,7 @@ const ChannelPage = () => {
         ref={scrollRef}
         className="flex-col h-[calc(100vh-293px)] overflow-auto scrollbar-hide flex"
       >
-        {channelData && (
+        {channelData && channelData.createdBy && (
           <ChannelInfo
             userId={channelData.createdBy.userId}
             channelName={channelData.name}

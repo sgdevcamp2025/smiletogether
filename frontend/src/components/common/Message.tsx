@@ -80,7 +80,7 @@ const Message = ({
           src={user.profileImage ?? 'https://github.com/shadcn.png'}
           alt="유저의 프로필이미지"
         />
-        <AvatarFallback>{user.username}</AvatarFallback>
+        <AvatarFallback>{user.username ?? ''}</AvatarFallback>
       </Avatar>
 
       {isEditing ? (

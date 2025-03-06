@@ -7,12 +7,7 @@ const WorkspaceHeader = () => {
   const currenPath = window.location.pathname;
   const isCreateWorkspace = currenPath.includes('workspace/create');
   return (
-    <div
-      className={cn(
-        'bg-yellow-400 w-full fixed h-12',
-        !isCreateWorkspace && 'p-5'
-      )}
-    >
+    <div className={cn('bg-yellow-400 w-full', !isCreateWorkspace && 'p-5')}>
       {isCreateWorkspace && (
         <Button
           className="ml-auto bg-transparent"
