@@ -8,6 +8,7 @@ const useGetIsMemberOfWorkspaceByInviteLinkQuery = (
   return useQuery({
     queryKey: ['checkUserIsWorkspaceMember', inviteCode, type],
     queryFn: () => getIsMemberOfWorkspaceByInviteLink({ inviteCode, type }),
+    enabled: !!inviteCode || !!type,
   });
 };
 

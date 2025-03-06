@@ -19,7 +19,7 @@ const WorkspaceUserInviteModal = ({
   title,
   closeModal,
 }: WorkspaceUserInviteModalProps) => {
-  const { workspaceId } = useParams();
+  const { workspaceId = '' } = useParams();
   const [emails, setEmails] = useState<string[]>([]);
   const [inviteChannel, setInviteChannel] = useState<string[]>([]);
   const [isValid, setIsValid] = useState(false);
@@ -35,7 +35,7 @@ const WorkspaceUserInviteModal = ({
     inviteWorkspaceUrl(
       {
         workspaceId: workspaceId!,
-        domain: 'http://localhost:5173',
+        domain: import.meta.env.VITE_BASE_CLIENT_API_URL,
       },
       {
         onSuccess: data => {
@@ -46,10 +46,37 @@ const WorkspaceUserInviteModal = ({
         },
       }
     );
-  }, []);
+  }, [workspaceId]);
 
   const onCustomUserIviteMode = () => {
     setCustomUserIviteMode(true);
+  };
+
+  const submitWorkspaceInvite = () => {
+    inviteWorkspace(
+      { workspaceId, emails },
+      {
+        onSuccess: () => {
+          alert('완료되었습니다.!');
+          closeModal();
+        },
+      }
+    );
+  };
+
+  const submitChannelInvite = () => {
+    inviteUserChannels(
+      {
+        emails,
+        channels: inviteChannel,
+      },
+      {
+        onSuccess: () => {
+          alert('완료되었습니다.');
+          closeModal();
+        },
+      }
+    );
   };
 
   const handleSubmit = () => {
@@ -63,34 +90,11 @@ const WorkspaceUserInviteModal = ({
       return;
     }
 
-    if (!customUserIviteMode) {
-      inviteWorkspace(
-        { workspaceId: workspaceId, emails },
-        {
-          onSuccess: () => {
-            alert('완료되었습니다.!');
-            closeModal();
-          },
-        }
-      );
-    } else {
-      if (inviteChannel.length === 0) {
-        alert('초대할 채널을 입력해주세요');
-        return;
-      }
-      inviteUserChannels(
-        {
-          emails: emails,
-          channels: inviteChannel,
-        },
-        {
-          onSuccess: () => {
-            alert('완료되었습니다.');
-            closeModal();
-          },
-        }
-      );
+    if (customUserIviteMode && inviteChannel.length > 0) {
+      return alert('초대할 채널을 입력해주세요');
     }
+    if (customUserIviteMode) submitChannelInvite();
+    else submitWorkspaceInvite();
   };
 
   if (!workspaceId) return <p>워크스페이스 ID가 없습니다.</p>;

@@ -15,7 +15,7 @@ https.interceptors.request.use(
     if (isMockApi) {
       config.baseURL = '';
     } else {
-      config.baseURL = import.meta.env.VITE_BASE_API_URL;
+      config.baseURL = import.meta.env.VITE_BASE_SERVER_API_URL;
     }
     config.headers.Authorization = `Bearer ${getTocken()}`;
     return config;

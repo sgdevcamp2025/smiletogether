@@ -16,7 +16,7 @@ const WorkspaceChannelListItem = ({
   channel,
 }: WorkspaceChannelListItemProps) => {
   return (
-    <Button className="w-full bg-transparent shadow-none hover:bg-gray-50 flex justify-start text-xs  py-0">
+    <Button className="w-full bg-transparent shadow-none hover:bg-gray-50 flex justify-start text-sm  py-0">
       {channel.isPrivate ? <FaHashtag /> : <FiLock />}
       {channel.name}
     </Button>
