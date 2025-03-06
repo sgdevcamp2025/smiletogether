@@ -2,7 +2,7 @@ export interface User {
   userId: string;
   username?: string;
   displayName: string;
-  profileImage: string;
+  profileImage: string | undefined;
   position?: string;
   statusMessage?: string;
   isActive?: boolean;

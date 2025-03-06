@@ -69,7 +69,7 @@ export const getChatMessages = async (
   workspaceId: string,
   channelId: string,
   lastTimeStamp: string
-): Promise<{ messages: MessageType[] }> => {
+): Promise<{ groupedMessages: Record<string, MessageType[]> }> => {
   try {
     const response = await axios.get(
       `http://localhost:8083/api/workspaces/${workspaceId}/channels/${channelId}/messages`,
@@ -79,16 +79,11 @@ export const getChatMessages = async (
     );
 
     if (response.data) {
-      const groupedMessages = response.data.groupedMessages || {};
-      const messages: MessageType[] = Object.values(
-        groupedMessages
-      ).flat() as MessageType[];
-
-      return { messages };
+      return { groupedMessages: response.data.groupedMessages || {} };
     }
   } catch (error) {
     console.error(error);
   }
 
-  return { messages: [] };
+  return { groupedMessages: {} };
 };

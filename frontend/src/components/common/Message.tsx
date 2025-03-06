@@ -76,7 +76,10 @@ const Message = ({
       onMouseLeave={() => setIsHovered(false)}
     >
       <Avatar className="w-12 h-12 rounded-lg">
-        <AvatarImage src={user.profileImage} alt="유저의 프로필이미지" />
+        <AvatarImage
+          src={user.profileImage ?? 'https://github.com/shadcn.png'}
+          alt="유저의 프로필이미지"
+        />
         <AvatarFallback>{user.username}</AvatarFallback>
       </Avatar>
 
