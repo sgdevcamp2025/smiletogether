@@ -9,7 +9,7 @@ import { GetChannelResponse, GetMessagesResponse } from './dto';
 export const getChannel = async (
   channelId: string
 ): Promise<GetChannelResponse> => {
-  const response = await https.get(`api/channel?channelId=${channelId}`);
+  const response = await https.get(`api/channels/${channelId}`);
   return response.data;
 };
 
