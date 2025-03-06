@@ -1,12 +1,24 @@
 import https from '@/lib/https';
+import axios from 'axios';
 
 export const postLogin = async (email: string) => {
-  const response = await https.post(`http://localhost:8091/api/auth/sign-in`, {
+  const response = await https.post(`http://localhost:8080/api/auth/sign-in`, {
     email,
   });
   if (response.data.accessToken)
     localStorage.setItem('access-token', response.data.accessToken);
-  //else: 회원가입 페이지로 라우팅
+
+  return response;
+};
+
+export const postRegister = async (username: string, email: string) => {
+  const response = await https.post(`http://localhost:8080/api/auth/sign-up`, {
+    username,
+    email,
+  });
+  if (response.data.accessToken)
+    localStorage.setItem('access-token', response.data.accessToken);
+
   return response;
 };
 
