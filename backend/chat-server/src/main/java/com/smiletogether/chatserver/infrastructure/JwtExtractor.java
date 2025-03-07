@@ -1,4 +1,4 @@
-package com.smiletogether.chatserver.service;
+package com.smiletogether.chatserver.infrastructure;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
