@@ -21,9 +21,12 @@ export class ChannelService {
   getEmailByUserId = async (userId: string): Promise<string> => {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/auth/identify-email?userId=${userId}`,
+        `http://localhost:8080/api/auth/identify-email?userId=${encodeURIComponent(userId)}`,
       );
-      if (!response.ok) return '해당 userId의 email이 존재하지 않습니다.';
+      if (!response.ok) {
+        console.log(response);
+        return '해당 userId의 email이 존재하지 않습니다.';
+      }
       const data = await response.json();
       return data.email || '해당 userId의 email이 존재하지 않습니다.';
     } catch (error) {
@@ -45,6 +48,40 @@ export class ChannelService {
       return '해당 email의 userId가 존재하지 않습니다.';
     }
   };
+
+  async inviteChannels(
+    emails: string[],
+    channelIdList: string[],
+  ): Promise<{
+    success: { email: string; channelId: string }[];
+    failed: { email: string; channelId?: string; message: string }[];
+  }> {
+    const inviteResults = {
+      success: [],
+      failed: [],
+    };
+
+    for (const email of emails) {
+      const userId = await this.getUserIdByEmail(email);
+      if (!userId || userId === '해당 email의 userId가 존재하지 않습니다.') {
+        inviteResults.failed.push({ email, message: 'User ID not found.' });
+        continue;
+      }
+      for (const channelId of channelIdList) {
+        try {
+          await this.joinChannel(userId, channelId);
+          inviteResults.success.push({ email, channelId });
+        } catch (error) {
+          inviteResults.failed.push({
+            email,
+            channelId,
+            message: error.message,
+          });
+        }
+      }
+    }
+    return inviteResults;
+  }
 
   async createChannel(
     userId: string,
@@ -179,11 +216,14 @@ export class ChannelService {
     const members = await this.prismaService.workspaceUser.findMany({
       where: {
         user_id: { in: userIds },
+        workspace_id: channel.workspace_id,
       },
       select: {
         user_id: true,
         profile_name: true,
         profile_image: true,
+        role: true,
+        status_message: true,
       },
     });
 
@@ -195,21 +235,21 @@ export class ChannelService {
     const mappedAdminUser = {
       userId: adminUser.user_id,
       nickname: adminUser.profile_name,
-      displayName: '',
+      displayName: adminUser.profile_name,
       profileImage: adminUser.profile_image,
-      position: '',
+      position: 'admin',
       isActive: true,
-      statusMessage: '',
+      statusMessage: adminUser.status_message,
     };
 
     const mappedMembers = members.map((member) => ({
       userId: member.user_id,
       nickname: member.profile_name,
-      displayName: '',
+      displayName: member.profile_name,
       profileImage: member.profile_image,
-      position: '',
+      position: member.role,
       isActive: true,
-      statusMessage: '',
+      statusMessage: member.status_message,
     }));
 
     return {

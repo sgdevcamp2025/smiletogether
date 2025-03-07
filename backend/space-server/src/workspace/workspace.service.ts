@@ -26,10 +26,14 @@ export class WorkspaceService {
   getEmailByUserId = async (userId: string): Promise<string> => {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/auth/identify-email?userId=${userId}`,
+        `http://localhost:8080/api/auth/identify-email?userId=${encodeURIComponent(userId)}`,
       );
-      if (!response.ok) return '해당 userId의 email이 존재하지 않습니다.';
+      if (!response.ok) {
+        console.log(response);
+        return '해당 userId의 email이 존재하지 않습니다.';
+      }
       const data = await response.json();
+      console.log(data);
       return data.email || '해당 userId의 email이 존재하지 않습니다.';
     } catch (error) {
       console.error(error);
@@ -44,6 +48,7 @@ export class WorkspaceService {
       );
       if (!response.ok) return '해당 email의 userId가 존재하지 않습니다.';
       const data = await response.json();
+      console.log(data);
       return data.userId || '해당 email의 userId가 존재하지 않습니다.';
     } catch (error) {
       console.error(error);
@@ -58,6 +63,7 @@ export class WorkspaceService {
       );
       if (!response.ok) return '해당 userId의 userName이 존재하지 않습니다.';
       const data = await response.json();
+      console.log(data);
       return data.userName || '해당 userId의 userName이 존재하지 않습니다.';
     } catch (error) {
       console.error(error);
