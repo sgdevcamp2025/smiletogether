@@ -12,16 +12,31 @@ import {
   WorkspaceChannelDto,
 } from './dto/workspace-channel.dto';
 import { ChannelDetailsDto } from './dto/channel-detail.dto';
+import { validate as isUUID } from 'uuid';
 
 @Injectable()
 export class ChannelService {
   constructor(private readonly prismaService: PrismaService) {}
 
+  getEmailByUserId = async (userId: string): Promise<string> => {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/auth/identify-email?userId=${userId}`,
+      );
+      if (!response.ok) return '해당 userId의 email이 존재하지 않습니다.';
+      const data = await response.json();
+      return data.email || '해당 userId의 email이 존재하지 않습니다.';
+    } catch (error) {
+      console.error(error);
+      return '해당 userId의 email이 존재하지 않습니다.';
+    }
+  };
+
   async createChannel(
     userId: string,
     createChannelDto: CreateChannelDto,
   ): Promise<ChannelResponseDto> {
-    const { workspaceId, name, description, isPrivate } = createChannelDto;
+    const { workspaceId, name, isPrivate, emails } = createChannelDto;
 
     const workspaceUser = await this.prismaService.workspaceUser.findUnique({
       where: {
@@ -40,7 +55,7 @@ export class ChannelService {
       data: {
         workspace_id: workspaceId,
         name: name,
-        description: description,
+        description: `${name} 채널입니다.`,
         is_private: isPrivate,
       },
     });
@@ -52,6 +67,20 @@ export class ChannelService {
         channel_role: 'admin',
       },
     });
+
+    for (const email of emails) {
+      const newUserId = await this.getEmailByUserId(email);
+      if (isUUID(newUserId))
+        await this.joinChannel(newUserId, newChannel.channel_id);
+      else
+        console.log(
+          '해당 이메일로 조회된 userId가 올바르지 않습니다.',
+          '조회 한 userEmail: ',
+          email,
+          '조회 된 userId: ',
+          newUserId,
+        );
+    }
 
     const channelResponse: ChannelResponseDto = {
       channelId: newChannel.channel_id,
