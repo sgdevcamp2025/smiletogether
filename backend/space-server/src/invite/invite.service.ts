@@ -177,12 +177,21 @@ export class InviteService {
         await this.redis.sadd(pendingInvitesKey, email);
 
         inviteUrls.push({ email, url: inviteUrl });
+
+        await fetch(
+          `http://localhost:8080/api/auth/send-inviteUrl?email=${encodeURIComponent(email)}&inviteUrl=${encodeURIComponent(inviteUrl)}`,
+          {
+            method: 'GET',
+          },
+        );
+
         inviteResults.success.push(email);
       } catch (error) {
         console.error(error);
         inviteResults.failed.push(email);
       }
     }
+    console.log(inviteUrls, inviteResults);
 
     return { inviteUrls, inviteResults };
   }
