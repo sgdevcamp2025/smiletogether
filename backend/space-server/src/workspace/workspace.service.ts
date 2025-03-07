@@ -5,6 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
+import { InviteService } from 'src/invite/invite.service';
 import { CreateWorkspaceDto } from './dto/create-workspace.dto';
 import { WorkspaceResponseDto } from './dto/workspcae-response.dto';
 import { WorkspaceSearchResponseDto } from './dto/search-workspace.dto';
@@ -15,7 +16,10 @@ import { ProfileResponseDto } from 'src/common/dto/profile-response.dto';
 
 @Injectable()
 export class WorkspaceService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly inviteService: InviteService,
+  ) {}
   private readonly logger = new Logger(WorkspaceService.name);
 
   async getUserWorkspaces(userId: string): Promise<any> {
@@ -301,17 +305,27 @@ export class WorkspaceService {
       throw new NotFoundException(`Workspace with ID ${workspaceId} not found`);
     }
 
+    const pendingInvites =
+      await this.inviteService.getPendingInvites(workspaceId);
+
     return {
       workspaceId: workspace.workspace_id,
       name: workspace.name,
       ownerId: workspace.WorkspaceUser.find((user) => user.role === 'admin')
         ?.user_id,
       profileImage: workspace.workspace_image,
-      users: workspace.WorkspaceUser.map((user) => ({
-        userId: user.user_id,
-        nickname: user.profile_name,
-        role: user.role,
-      })),
+      users: [
+        ...workspace.WorkspaceUser.map((user) => ({
+          userId: user.user_id,
+          nickname: user.profile_name,
+          role: user.role,
+        })),
+        ...pendingInvites.emails.map((email) => ({
+          email: email,
+          nickname: email.split('@')[0],
+          role: 'pending_member',
+        })),
+      ],
       createdAt: workspace.created_at,
       updatedAt: workspace.updated_at,
     };
