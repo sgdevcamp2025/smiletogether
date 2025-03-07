@@ -31,6 +31,7 @@ const WorkspaceChannelPanel = () => {
   const user = useUserStore(state => state.user);
   const currentUserRole =
     workspaceInfo?.ownerId === user.userId ? 'admin' : 'member';
+
   const naviagte = useNavigate();
 
   if (!workspaceId) return <p>워크스페이스 정보를 불러오는 중...</p>;
