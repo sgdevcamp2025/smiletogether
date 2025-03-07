@@ -14,11 +14,15 @@ https.interceptors.request.use(
     const isMockApi = mockApiList.some(item => config.url!.startsWith(item));
     if (isMockApi) {
       config.baseURL = '';
-    } else if (config.url!.startsWith('/api/auth')) {
-      config.baseURL = 'http://localhost:8091';
-    } else if (config.url!.startsWith('/api/member')) {
-      config.baseURL = 'http://localhost:8080';
-    } else config.baseURL = import.meta.env.VITE_BASE_SERVER_API_URL;
+    } else if (
+      config.url!.startsWith('/api/workspaces') ||
+      config.url!.startsWith('/api/invite') ||
+      config.url!.startsWith('/api/channels')
+    ) {
+      config.baseURL = import.meta.env.VITE_BASE_SERVER_API_URL;
+    } else {
+      config.baseURL = config.url;
+    }
     config.headers.Authorization = `Bearer ${getToken()}`;
     return config;
   },
