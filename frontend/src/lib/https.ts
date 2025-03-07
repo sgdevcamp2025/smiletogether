@@ -2,7 +2,6 @@ import axios from 'axios';
 import { getToken } from '@/lib/utils';
 import { postRefreshToken } from '@/apis/user';
 
-// mocking을 위한 api들만 관리하는 배열입니다. 모킹 api를 넣읅시 baseURL이 달라지기에 백엔드와 연동시 지워주세요
 const mockApiList = ['/api/dms'];
 
 const https = axios.create({
@@ -39,14 +38,20 @@ https.interceptors.response.use(
     } = error;
     if (status === 401) {
       try {
+        const originConfig = config;
         const refreshResponse = await postRefreshToken();
-        const newAccessToken = refreshResponse.data.accessToken;
-        localStorage.setItem('access-token', newAccessToken);
-        config.headers.Authorization = `Bearer ${newAccessToken}`;
-        return axios(config);
+        if (refreshResponse.status === 200) {
+          const newAccessToken = refreshResponse.data.accessToken;
+          localStorage.setItem('access-token', newAccessToken);
+          originConfig.headers.Authorization = `Bearer ${newAccessToken}`;
+          return axios(originConfig);
+        } else if (refreshResponse.status === 401) {
+          alert('로그인 시간이 만료되었습니다.');
+          window.location.href = import.meta.env.VITE_BASE_CLIENT_API_URL;
+        }
       } catch (error) {
-        console.error('Unable to refresh access token', error);
-        window.location.href = `${import.meta.env.VITE_BASE_CLIENT_API_URL}`;
+        alert(`Unable to refresh access token ${error}`);
+        window.location.href = import.meta.env.VITE_BASE_CLIENT_API_URL;
       }
     }
     return Promise.reject(error);

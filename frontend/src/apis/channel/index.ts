@@ -22,13 +22,6 @@ export const getMessages = async (
   return response.data;
 };
 
-// export const getWorkspaceChannels = async (
-//   workspaceId: string
-// ): Promise<getWorkspaceChannelsResponseDto[]> => {
-//   const { data } = await https.get(`/api/workspaces/${workspaceId}/channels`);
-//   return data;
-// };
-
 export const getUserJoinedWorkspaceChannels = async (
   workspaceId: string
 ): Promise<getWorkspaceChannelsResponseDto[]> => {
@@ -84,7 +77,7 @@ export const getChatMessages = async (
       return { groupedMessages: response.data.groupedMessages || {} };
     }
   } catch (error) {
-    console.error(error);
+    alert(error);
   }
 
   return { groupedMessages: {} };

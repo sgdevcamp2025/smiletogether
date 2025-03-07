@@ -7,7 +7,7 @@ const WorkspaceFrame = () => {
   return (
     <div className="flex flex-col w-full max-h-screen">
       <WorkspaceHeader />
-      <div className="flex h-[calc(100vh-48px)] mt-12">
+      <div className="flex h-[calc(100vh-48px)]">
         <WorkspaceSideBar />
         <MainNavigationSidebar />
         <Outlet />
