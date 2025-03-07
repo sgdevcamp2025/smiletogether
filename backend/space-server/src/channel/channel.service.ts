@@ -216,6 +216,7 @@ export class ChannelService {
     const members = await this.prismaService.workspaceUser.findMany({
       where: {
         user_id: { in: userIds },
+        workspace_id: channel.workspace_id,
       },
       select: {
         user_id: true,
@@ -234,11 +235,11 @@ export class ChannelService {
     const mappedAdminUser = {
       userId: adminUser.user_id,
       nickname: adminUser.profile_name,
-      displayName: '',
+      displayName: adminUser.profile_name,
       profileImage: adminUser.profile_image,
       position: 'admin',
       isActive: true,
-      statusMessage: '',
+      statusMessage: adminUser.status_message,
     };
 
     const mappedMembers = members.map((member) => ({
