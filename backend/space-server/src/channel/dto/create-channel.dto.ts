@@ -9,9 +9,7 @@ export class CreateChannelDto {
   @IsNotEmpty()
   name: string;
 
-  @IsString()
-  @IsNotEmpty()
-  description: string;
+  emails: string[];
 
   @IsNotEmpty()
   isPrivate: boolean;
