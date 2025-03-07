@@ -280,6 +280,20 @@ export class WorkspaceService {
     });
   }
 
+  getEmailByUserId = async (userId: string): Promise<string> => {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/auth/identify-email?userId=${userId}`,
+      );
+      if (!response.ok) return '해당 userId의 email이 존재하지 않습니다.';
+      const data = await response.json();
+      return data.email || '해당 userId의 email이 존재하지 않습니다.';
+    } catch (error) {
+      console.error(error);
+      return '해당 userId의 email이 존재하지 않습니다.';
+    }
+  };
+
   async getWorkspaceById(
     workspaceId: string,
   ): Promise<WorkspaceDetailResponseDto> {
@@ -309,6 +323,16 @@ export class WorkspaceService {
     const pendingInvites =
       await this.inviteService.getPendingInvites(workspaceId);
 
+    const usersWithEmail = await Promise.all(
+      workspace.WorkspaceUser.map(async (user) => ({
+        userId: user.user_id,
+        userEmail: await this.getEmailByUserId(user.user_id),
+        nickName: user.profile_name,
+        profileImage: user.profile_image || '',
+        role: user.role,
+      })),
+    );
+
     return {
       workspaceId: workspace.workspace_id,
       name: workspace.name,
@@ -316,13 +340,7 @@ export class WorkspaceService {
         ?.user_id,
       profileImage: workspace.workspace_image,
       users: [
-        ...workspace.WorkspaceUser.map((user) => ({
-          userId: user.user_id,
-          userEmail: 'temp@email.com',
-          nickName: user.profile_name,
-          profileImage: user.profile_image,
-          role: user.role,
-        })),
+        ...usersWithEmail,
         ...pendingInvites.emails.map((email) => ({
           userId: '',
           userEmail: email,
