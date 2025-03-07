@@ -50,6 +50,14 @@ export class ChannelController {
     return this.channelService.getChannelById(channelId);
   }
 
+  @Post('invite')
+  async inviteChannel(
+    @Body('emails') emails: string[],
+    @Body('channelIdList') channelIdList: string[],
+  ): Promise<any> {
+    return this.channelService.inviteChannels(emails, channelIdList);
+  }
+
   @Post(':channelId/join')
   async joinChannel(
     @UserId() userId: string,
