@@ -22,6 +22,20 @@ export class WorkspaceService {
   ) {}
   private readonly logger = new Logger(WorkspaceService.name);
 
+  getEmailByUserId = async (userId: string): Promise<string> => {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/auth/identify-email?userId=${userId}`,
+      );
+      if (!response.ok) return '해당 userId의 email이 존재하지 않습니다.';
+      const data = await response.json();
+      return data.email || '해당 userId의 email이 존재하지 않습니다.';
+    } catch (error) {
+      console.error(error);
+      return '해당 userId의 email이 존재하지 않습니다.';
+    }
+  };
+
   async getUserWorkspaces(userId: string): Promise<any> {
     const workspaces = await this.prismaService.workspace.findMany({
       where: {
@@ -51,7 +65,7 @@ export class WorkspaceService {
 
     return {
       userWorkspaces: {
-        email: 'temp@email.com',
+        email: await this.getEmailByUserId(userId),
         workspaces: workspaces.map((workspace) => ({
           workspaceId: workspace.workspace_id,
           name: workspace.name,
@@ -279,20 +293,6 @@ export class WorkspaceService {
       };
     });
   }
-
-  getEmailByUserId = async (userId: string): Promise<string> => {
-    try {
-      const response = await fetch(
-        `http://localhost:8080/api/auth/identify-email?userId=${userId}`,
-      );
-      if (!response.ok) return '해당 userId의 email이 존재하지 않습니다.';
-      const data = await response.json();
-      return data.email || '해당 userId의 email이 존재하지 않습니다.';
-    } catch (error) {
-      console.error(error);
-      return '해당 userId의 email이 존재하지 않습니다.';
-    }
-  };
 
   async getWorkspaceById(
     workspaceId: string,
