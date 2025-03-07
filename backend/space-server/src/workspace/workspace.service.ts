@@ -37,6 +37,20 @@ export class WorkspaceService {
     }
   };
 
+  getUserIdByEmail = async (email: string): Promise<string> => {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/auth/check-memberId?email=${encodeURIComponent(email)}`,
+      );
+      if (!response.ok) return '해당 email의 userId가 존재하지 않습니다.';
+      const data = await response.json();
+      return data.userId || '해당 email의 userId가 존재하지 않습니다.';
+    } catch (error) {
+      console.error(error);
+      return '해당 email의 userId가 존재하지 않습니다.';
+    }
+  };
+
   getNameByUserId = async (userId: string): Promise<string> => {
     try {
       const response = await fetch(
@@ -149,8 +163,10 @@ export class WorkspaceService {
 
       // 초대된 사용자들 처리
       for (const email of inviteEmailList) {
-        const newUserId = await this.getEmailByUserId(email);
+        console.log('초대할 email: ', email);
+        const newUserId = await this.getUserIdByEmail(email);
         const newUserNickName = await this.getNameByUserId(newUserId);
+        console.log(newUserId, newUserNickName);
         if (isUUID(newUserId)) {
           try {
             // 워크스페이스 멤버로 추가
@@ -181,8 +197,13 @@ export class WorkspaceService {
             inviteResults.failed.push(email);
           }
         } else {
-          //이메일에 초대링크 전송
-          console.log('해당 email로 조회된 userId가 없습니다.');
+          console.log(
+            '해당 이메일로 조회된 userId가 올바르지 않습니다.',
+            '조회 한 userEmail: ',
+            email,
+            '조회 된 userId: ',
+            newUserId,
+          );
           inviteResults.failed.push(email);
         }
       }

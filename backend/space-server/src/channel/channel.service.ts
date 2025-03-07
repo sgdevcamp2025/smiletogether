@@ -32,6 +32,20 @@ export class ChannelService {
     }
   };
 
+  getUserIdByEmail = async (email: string): Promise<string> => {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/auth/check-memberId?email=${encodeURIComponent(email)}`,
+      );
+      if (!response.ok) return '해당 email의 userId가 존재하지 않습니다.';
+      const data = await response.json();
+      return data.userId || '해당 email의 userId가 존재하지 않습니다.';
+    } catch (error) {
+      console.error(error);
+      return '해당 email의 userId가 존재하지 않습니다.';
+    }
+  };
+
   async createChannel(
     userId: string,
     createChannelDto: CreateChannelDto,
@@ -69,7 +83,7 @@ export class ChannelService {
     });
 
     for (const email of emails) {
-      const newUserId = await this.getEmailByUserId(email);
+      const newUserId = await this.getUserIdByEmail(email);
       if (isUUID(newUserId))
         await this.joinChannel(newUserId, newChannel.channel_id);
       else
