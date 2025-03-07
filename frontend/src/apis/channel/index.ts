@@ -5,6 +5,8 @@ import {
   postWorkspaceChannelsResponseDto,
 } from '@/apis/channel/dto';
 import { GetChannelResponse, GetMessagesResponse } from './dto';
+import axios from 'axios';
+import { MessageType } from '@/types/chat';
 
 export const getChannel = async (
   channelId: string
@@ -63,4 +65,27 @@ export const postInviteWorkspaceChannels = async (
 export const leaveWorkspaceChannel = async (channelId: string) => {
   const { data } = await https.delete(`/api/channels/${channelId}/leave`);
   return data;
+};
+
+export const getChatMessages = async (
+  workspaceId: string,
+  channelId: string,
+  lastTimeStamp: string
+): Promise<{ groupedMessages: Record<string, MessageType[]> }> => {
+  try {
+    const response = await axios.get(
+      `http://localhost:8083/api/workspaces/${workspaceId}/channels/${channelId}/messages`,
+      {
+        params: { lastTimeStamp },
+      }
+    );
+
+    if (response.data) {
+      return { groupedMessages: response.data.groupedMessages || {} };
+    }
+  } catch (error) {
+    console.error(error);
+  }
+
+  return { groupedMessages: {} };
 };

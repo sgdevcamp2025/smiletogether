@@ -8,7 +8,7 @@ interface UserState {
 
 export const useUserStore = create<UserState>(set => ({
   user: {
-    userId: '2',
+    userId: '03c6b083-e8d6-488c-aa83-2a01b3f39d00',
     username: 'Subin Kim',
     displayName: '',
     profileImage: 'https://example.com/profile/subin.jpg',

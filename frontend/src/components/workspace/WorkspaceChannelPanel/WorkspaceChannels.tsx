@@ -12,7 +12,7 @@ interface WorkspaceAccordionSectionProps {
 const WorkspaceChannels = ({
   onCreateChannel,
   onExploreChannels,
-  channelList,
+  channelList = [],
 }: WorkspaceAccordionSectionProps) => {
   return (
     <WorkspaceAccordionSection sectionTitle="채널">

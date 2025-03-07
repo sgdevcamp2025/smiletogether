@@ -10,7 +10,7 @@ const WorkspaceHeader = () => {
     <div className={cn('bg-yellow-400 w-full', !isCreateWorkspace && 'p-5')}>
       {isCreateWorkspace && (
         <Button
-          className="bg-transparent ml-auto"
+          className="ml-auto bg-transparent"
           onClick={() => {
             navigate(-1);
           }}
