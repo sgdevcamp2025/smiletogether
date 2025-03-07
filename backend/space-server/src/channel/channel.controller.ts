@@ -35,6 +35,12 @@ export class ChannelController {
     return this.channelService.createChannel(userId, createChannelDto);
   }
 
+  @Get('getEmailByUserId')
+  async getEmailByUserId(@UserId() userId: string): Promise<any> {
+    console.log(userId);
+    return this.channelService.getEmailByUserId(userId);
+  }
+
   @Get('workspaces/:workspaceId')
   async getChannelsByUser(
     @UserId() userId: string,

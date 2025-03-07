@@ -221,6 +221,8 @@ export class ChannelService {
         user_id: true,
         profile_name: true,
         profile_image: true,
+        role: true,
+        status_message: true,
       },
     });
 
@@ -234,7 +236,7 @@ export class ChannelService {
       nickname: adminUser.profile_name,
       displayName: '',
       profileImage: adminUser.profile_image,
-      position: '',
+      position: 'admin',
       isActive: true,
       statusMessage: '',
     };
@@ -242,11 +244,11 @@ export class ChannelService {
     const mappedMembers = members.map((member) => ({
       userId: member.user_id,
       nickname: member.profile_name,
-      displayName: '',
+      displayName: member.profile_name,
       profileImage: member.profile_image,
-      position: '',
+      position: member.role,
       isActive: true,
-      statusMessage: '',
+      statusMessage: member.status_message,
     }));
 
     return {
