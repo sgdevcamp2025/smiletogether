@@ -291,6 +291,7 @@ export class WorkspaceService {
         WorkspaceUser: {
           select: {
             user_id: true,
+            profile_image: true,
             profile_name: true,
             role: true,
           },
@@ -317,12 +318,16 @@ export class WorkspaceService {
       users: [
         ...workspace.WorkspaceUser.map((user) => ({
           userId: user.user_id,
-          nickname: user.profile_name,
+          userEmail: 'temp@email.com',
+          nickName: user.profile_name,
+          profileImage: user.profile_image,
           role: user.role,
         })),
         ...pendingInvites.emails.map((email) => ({
-          email: email,
-          nickname: email.split('@')[0],
+          userId: '',
+          userEmail: email,
+          nickName: email.split('@')[0],
+          profileImage: '',
           role: 'pending_member',
         })),
       ],

@@ -1,7 +1,8 @@
 export class WorkspaceUserDto {
-  userId?: string;
-  email?: string;
-  nickname: string;
+  userId?: string | '';
+  userEmail?: string | '';
+  nickName: string;
+  profileImage: string | '';
   role: string;
 }
 
