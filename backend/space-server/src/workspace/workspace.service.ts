@@ -5,6 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
+import { InviteService } from 'src/invite/invite.service';
 import { CreateWorkspaceDto } from './dto/create-workspace.dto';
 import { WorkspaceResponseDto } from './dto/workspcae-response.dto';
 import { WorkspaceSearchResponseDto } from './dto/search-workspace.dto';
@@ -12,11 +13,63 @@ import { WorkspaceDetailResponseDto } from './dto/workspace-detail.dto';
 import { WorkspaceDeleteResponseDto } from './dto/delete-workspace.dto';
 import { InviteWorkspaceDto } from './dto/invite-workspace.dto';
 import { ProfileResponseDto } from 'src/common/dto/profile-response.dto';
+import { isUUID } from 'class-validator';
 
 @Injectable()
 export class WorkspaceService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly inviteService: InviteService,
+  ) {}
   private readonly logger = new Logger(WorkspaceService.name);
+
+  getEmailByUserId = async (userId: string): Promise<string> => {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/auth/identify-email?userId=${encodeURIComponent(userId)}`,
+      );
+      if (!response.ok) {
+        console.log(response);
+        return '해당 userId의 email이 존재하지 않습니다.';
+      }
+      const data = await response.json();
+      console.log(data);
+      return data.email || '해당 userId의 email이 존재하지 않습니다.';
+    } catch (error) {
+      console.error(error);
+      return '해당 userId의 email이 존재하지 않습니다.';
+    }
+  };
+
+  getUserIdByEmail = async (email: string): Promise<string> => {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/auth/check-memberId?email=${encodeURIComponent(email)}`,
+      );
+      if (!response.ok) return '해당 email의 userId가 존재하지 않습니다.';
+      const data = await response.json();
+      console.log(data);
+      return data.userId || '해당 email의 userId가 존재하지 않습니다.';
+    } catch (error) {
+      console.error(error);
+      return '해당 email의 userId가 존재하지 않습니다.';
+    }
+  };
+
+  getNameByUserId = async (userId: string): Promise<string> => {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/auth/identify-user-name?userId=${userId}`,
+      );
+      if (!response.ok) return '해당 userId의 userName이 존재하지 않습니다.';
+      const data = await response.json();
+      console.log(data);
+      return data.userName || '해당 userId의 userName이 존재하지 않습니다.';
+    } catch (error) {
+      console.error(error);
+      return '해당 userId의 userName이 존재하지 않습니다.';
+    }
+  };
 
   async getUserWorkspaces(userId: string): Promise<any> {
     const workspaces = await this.prismaService.workspace.findMany({
@@ -47,7 +100,7 @@ export class WorkspaceService {
 
     return {
       userWorkspaces: {
-        email: 'temp@email.com',
+        email: await this.getEmailByUserId(userId),
         workspaces: workspaces.map((workspace) => ({
           workspaceId: workspace.workspace_id,
           name: workspace.name,
@@ -65,7 +118,7 @@ export class WorkspaceService {
   async createWorkspace(
     createWorkspaceDto: CreateWorkspaceDto,
   ): Promise<WorkspaceResponseDto> {
-    const { workspaceName, ownerId, userName, profileImage, inviteUserList } =
+    const { workspaceName, ownerId, userName, profileImage, inviteEmailList } =
       createWorkspaceDto;
 
     const inviteResults = {
@@ -115,34 +168,49 @@ export class WorkspaceService {
       });
 
       // 초대된 사용자들 처리
-      for (const userId of inviteUserList) {
-        try {
-          // 워크스페이스 멤버로 추가
-          await prisma.workspaceUser.create({
-            data: {
-              workspace_id: workspace.workspace_id,
-              user_id: userId,
-              role: 'member',
-              profile_name: `${userId}번 유저`, // 추후 사용자 DB에서 이름 가져오기
-              profile_image: 'default.jpg',
-              position: '',
-              status_message: '',
-            },
-          });
+      for (const email of inviteEmailList) {
+        console.log('초대할 email: ', email);
+        const newUserId = await this.getUserIdByEmail(email);
+        const newUserNickName = await this.getNameByUserId(newUserId);
+        console.log(newUserId, newUserNickName);
+        if (isUUID(newUserId)) {
+          try {
+            // 워크스페이스 멤버로 추가
+            await prisma.workspaceUser.create({
+              data: {
+                workspace_id: workspace.workspace_id,
+                user_id: newUserId,
+                role: 'member',
+                profile_name: newUserNickName,
+                profile_image: 'default.jpg',
+                position: '',
+                status_message: '',
+              },
+            });
 
-          // 기본 채널에 추가
-          await prisma.channelUser.create({
-            data: {
-              channel_id: defaultChannel.channel_id,
-              user_id: userId,
-              channel_role: 'member',
-            },
-          });
+            // 기본 채널에 추가
+            await prisma.channelUser.create({
+              data: {
+                channel_id: defaultChannel.channel_id,
+                user_id: newUserId,
+                channel_role: 'member',
+              },
+            });
 
-          inviteResults.success.push(userId);
-        } catch (error) {
-          this.logger.error(`Failed to invite user ${userId}:`, error);
-          inviteResults.failed.push(userId);
+            inviteResults.success.push(email);
+          } catch (error) {
+            console.log(`Failed to invite user ${email}:`, error);
+            inviteResults.failed.push(email);
+          }
+        } else {
+          console.log(
+            '해당 이메일로 조회된 userId가 올바르지 않습니다.',
+            '조회 한 userEmail: ',
+            email,
+            '조회 된 userId: ',
+            newUserId,
+          );
+          inviteResults.failed.push(email);
         }
       }
 
@@ -287,6 +355,7 @@ export class WorkspaceService {
         WorkspaceUser: {
           select: {
             user_id: true,
+            profile_image: true,
             profile_name: true,
             role: true,
           },
@@ -301,17 +370,35 @@ export class WorkspaceService {
       throw new NotFoundException(`Workspace with ID ${workspaceId} not found`);
     }
 
+    const pendingInvites =
+      await this.inviteService.getPendingInvites(workspaceId);
+
+    const usersWithEmail = await Promise.all(
+      workspace.WorkspaceUser.map(async (user) => ({
+        userId: user.user_id,
+        userEmail: await this.getEmailByUserId(user.user_id),
+        nickName: user.profile_name,
+        profileImage: user.profile_image || '',
+        role: user.role,
+      })),
+    );
+
     return {
       workspaceId: workspace.workspace_id,
       name: workspace.name,
       ownerId: workspace.WorkspaceUser.find((user) => user.role === 'admin')
         ?.user_id,
       profileImage: workspace.workspace_image,
-      users: workspace.WorkspaceUser.map((user) => ({
-        userId: user.user_id,
-        nickname: user.profile_name,
-        role: user.role,
-      })),
+      users: [
+        ...usersWithEmail,
+        ...pendingInvites.emails.map((email) => ({
+          userId: '',
+          userEmail: email,
+          nickName: email.split('@')[0],
+          profileImage: '',
+          role: 'pending_member',
+        })),
+      ],
       createdAt: workspace.created_at,
       updatedAt: workspace.updated_at,
     };
