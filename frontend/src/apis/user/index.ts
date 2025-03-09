@@ -7,9 +7,10 @@ export const postLogin = async (email: string) => {
       email,
     }
   );
+
   const { isMember, member } = signInResponse.data;
 
-  if (!isMember) return signInResponse;
+  if (!isMember) return { signInResponse };
 
   const issueTokenResponse = await https.post(
     `http://localhost:8091/api/auth/login`,
@@ -20,7 +21,7 @@ export const postLogin = async (email: string) => {
   if (issueTokenResponse.data.accessToken)
     localStorage.setItem('access-token', issueTokenResponse.data.accessToken);
 
-  return issueTokenResponse;
+  return { signInResponse, issueTokenResponse };
 };
 
 export const postRegister = async (username: string, email: string) => {
@@ -55,5 +56,6 @@ export const postConfirmEmail = async (email: string, code: string) => {
       code,
     }
   );
+  console.log(response, response.data);
   return response;
 };

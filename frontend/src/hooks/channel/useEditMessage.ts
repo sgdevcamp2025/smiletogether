@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import { Client } from '@stomp/stompjs';
+import { getToken } from '@/lib/utils';
 
 interface UseEditMessageProps {
   workspaceId: string;
@@ -34,7 +35,7 @@ export const useEditMessage = ({
         client.publish({
           destination: updatePath,
           headers: {
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlcklkIjoiMDNjNmIwODMtZThkNi00ODhjLWFhODMtMmEwMWIzZjM5ZDAwIiwiaWF0IjoxNTE2MjM5MDIyfQ.iVTdh4kkGh6f6gEZLf9MJPwkjusaXf58z_Tc4ncummw`,
+            Authorization: `Bearer ${getToken()}`,
           },
           body: JSON.stringify(messageData),
         });

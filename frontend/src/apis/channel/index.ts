@@ -11,7 +11,7 @@ import { MessageType } from '@/types/chat';
 export const getChannel = async (
   channelId: string
 ): Promise<GetChannelResponse> => {
-  const response = await https.get(`api/channels/${channelId}`);
+  const response = await https.get(`/api/channels/${channelId}`);
   return response.data;
 };
 
@@ -72,7 +72,7 @@ export const getChatMessages = async (
         params: { lastTimeStamp },
       }
     );
-
+    console.log('getChatMessages', response);
     if (response.data) {
       return { groupedMessages: response.data.groupedMessages || {} };
     }

@@ -3,11 +3,14 @@ import { Button } from '@/components/ui/button';
 import useUserWorkspacesQuery from '@/hooks/workspace/useUserWorkspacesQuery';
 import WorkspaceListItem from '@/components/workspace/WorkspaceListItem';
 import { useNavigate } from 'react-router';
+import { userOriginStore } from '@/stores/userOriginStore';
 
 const WorkSpaceListPage = () => {
   const navigate = useNavigate();
   const { workspacesInfo, isWorkspacesError, isWorkspacesLoading } =
     useUserWorkspacesQuery();
+  const { user } = userOriginStore();
+  console.log('user', user);
 
   if (isWorkspacesLoading) return <div>로딩중...</div>;
   if (isWorkspacesError) return <div>에러 발생</div>;
@@ -38,7 +41,7 @@ const WorkSpaceListPage = () => {
             </span>
             <Card className="w-full flex-col overflow-auto">
               <div className="flex items-center px-6 py-4 border  shadow hover:bg-gray-50">
-                <h1 className="text-lg font-semibold">test user </h1>
+                <h1 className="text-lg font-semibold">{user.username} </h1>
                 <div className="text-gray-600">님의 워크스페이스 관리 </div>
               </div>
               {workspacesInfo &&

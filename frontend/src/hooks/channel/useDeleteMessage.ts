@@ -1,3 +1,4 @@
+import { getToken } from '@/lib/utils';
 import { Client } from '@stomp/stompjs';
 
 interface UseDeleteMessageProps {
@@ -27,7 +28,7 @@ export const useDeleteMessage = ({
           messageId,
         }),
         headers: {
-          Authorization: `Bearer YOUR_ACCESS_TOKEN`,
+          Authorization: `Bearer ${getToken()}`,
           'Content-Type': 'application/json',
         },
       });
