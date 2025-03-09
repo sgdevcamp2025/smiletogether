@@ -7,7 +7,6 @@ export const postLogin = async (email: string) => {
       email,
     }
   );
-
   const { isMember, member } = signInResponse.data;
 
   if (!isMember) return signInResponse;
@@ -56,6 +55,5 @@ export const postConfirmEmail = async (email: string, code: string) => {
       code,
     }
   );
-  console.log(response, response.data);
   return response;
 };

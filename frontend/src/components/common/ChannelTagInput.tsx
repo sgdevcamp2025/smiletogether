@@ -69,7 +69,6 @@ const ChannelTagInput = ({
             setHighlightedIndex(0);
           }
           const selectedChannel = filteredChannels[highlightedIndex].name;
-          console.log('selectedChannel', selectedChannel);
           if (selectedChannels.includes(selectedChannel)) {
             alert('이미 선택하신 채널입니다.');
             return;

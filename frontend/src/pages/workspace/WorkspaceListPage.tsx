@@ -38,9 +38,7 @@ const WorkSpaceListPage = () => {
             </span>
             <Card className="w-full flex-col overflow-auto">
               <div className="flex items-center px-6 py-4 border  shadow hover:bg-gray-50">
-                <h1 className="text-lg font-semibold">
-                  {workspacesInfo && workspacesInfo.email}
-                </h1>
+                <h1 className="text-lg font-semibold">test user </h1>
                 <div className="text-gray-600">님의 워크스페이스 관리 </div>
               </div>
               {workspacesInfo &&
