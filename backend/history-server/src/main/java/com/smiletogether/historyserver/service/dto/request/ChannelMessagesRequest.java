@@ -1,4 +1,4 @@
-package com.smiletogether.historyserver.service.dto;
+package com.smiletogether.historyserver.service.dto.request;
 
 import java.time.LocalDateTime;
 
