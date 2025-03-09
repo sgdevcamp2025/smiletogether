@@ -1,7 +1,9 @@
-package com.smiletogether.historyserver.service.dto;
+package com.smiletogether.historyserver.service.dto.response;
 
 import com.smiletogether.historyserver.domain.document.ChannelMessageDocument;
 import com.smiletogether.historyserver.domain.model.Reactions;
+import com.smiletogether.historyserver.infrastructure.ExternalProfileResponse;
+import com.smiletogether.historyserver.service.dto.WorkspaceProfileDto;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -16,10 +18,11 @@ public record ChannelMessageResponse(
         boolean hasThread,
         int threadCount
 ) {
-    public static ChannelMessageResponse of(ChannelMessageDocument channelMessageDocument) {
+    public static ChannelMessageResponse of(ChannelMessageDocument channelMessageDocument,
+                                            WorkspaceProfileDto workspaceProfileDto) {
         return new ChannelMessageResponse(
                 channelMessageDocument.getId(),
-                WorkspaceProfileDto.of(channelMessageDocument.getSenderId()),
+                workspaceProfileDto,
                 channelMessageDocument.getContent(),
                 channelMessageDocument.isUpdated(),
                 channelMessageDocument.getCreatedAt(),

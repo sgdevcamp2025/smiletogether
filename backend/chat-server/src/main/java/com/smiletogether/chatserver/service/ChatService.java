@@ -8,7 +8,9 @@ import com.smiletogether.chatserver.dto.ChannelMessageUpdateDto;
 import com.smiletogether.chatserver.dto.WorkspaceProfileDto;
 import com.smiletogether.chatserver.dto.request.ChannelMessageDeleteRequest;
 import com.smiletogether.chatserver.dto.request.ChannelMessageRequest;
+import com.smiletogether.chatserver.dto.request.ChannelMessageUpdateKafkaRequest;
 import com.smiletogether.chatserver.dto.request.ChannelMessageUpdateRequest;
+import com.smiletogether.chatserver.infrastructure.ExternalProfileApiClient;
 import com.smiletogether.chatserver.service.producer.MessageProducer;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
@@ -20,18 +22,20 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ChatService {
     private final MessageProducer messageProducer;
+    private final ExternalProfileApiClient externalProfileApiClient;
 
-    public void sendChannelMessage(String userId, String workspaceId, String channelId, ChannelMessageRequest message) {
-        WorkspaceProfileDto senderProfile = initProfile(userId);
+    public void sendChannelMessage(String token, String userId, String workspaceId, String channelId,
+                                   ChannelMessageRequest message) {
+        log.info("---------------------------------------------------------------");
+        WorkspaceProfileDto senderProfile = initProfile(token, workspaceId, userId);
         ChannelMessageDto channelMessageDto = createChannelChat(workspaceId, channelId, senderProfile,
                 message.content());
-
         messageProducer.sendMessage(channelMessageDto);
     }
 
-    private WorkspaceProfileDto initProfile(String userId) {
-        return new WorkspaceProfileDto(userId, "temp Name", "temp Url",
-                "tempPosition", true, "안녕하세요!");
+    private WorkspaceProfileDto initProfile(String token, String workspaceId, String userId) {
+        log.info("Initializing workspace profile");
+        return externalProfileApiClient.getWorkspaceProfile(token, workspaceId, userId);
     }
 
     private ChannelMessageDto createChannelChat(String workspaceId, String channelId,
@@ -42,12 +46,14 @@ public class ChatService {
                 LocalDateTime.now(), false);
     }
 
-    public void updateChannelMessage(String memberId, String workspaceId,
+    public void updateChannelMessage(String token, String memberId, String workspaceId,
                                      String channelId, ChannelMessageUpdateRequest channelMessageUpdateRequest) {
-        WorkspaceProfileDto senderProfile = initProfile(memberId);
+        WorkspaceProfileDto senderProfile = initProfile(token, workspaceId, memberId);
+        LocalDateTime currentTime = LocalDateTime.now();
         log.info("채팅 업데이트 코드 실행");
-        messageProducer.updateMessage(channelMessageUpdateRequest,
-                ChannelMessageUpdateDto.of(senderProfile, workspaceId, channelId, channelMessageUpdateRequest, LocalDateTime.now()));
+        messageProducer.updateMessage(ChannelMessageUpdateKafkaRequest.of(channelMessageUpdateRequest, currentTime),
+                ChannelMessageUpdateDto.of(senderProfile, workspaceId, channelId, channelMessageUpdateRequest,
+                        currentTime));
     }
 
     public void deleteChannelMessage(String workspaceId, String channelId,

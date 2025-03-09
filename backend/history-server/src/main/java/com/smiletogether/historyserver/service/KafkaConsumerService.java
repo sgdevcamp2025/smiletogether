@@ -2,10 +2,10 @@ package com.smiletogether.historyserver.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smiletogether.historyserver.service.dto.ChannelMessageDeleteRequest;
+import com.smiletogether.historyserver.service.dto.request.ChannelMessageDeleteRequest;
 import com.smiletogether.historyserver.service.dto.ChannelMessageReaction;
-import com.smiletogether.historyserver.service.dto.ChannelMessageSaveRequest;
-import com.smiletogether.historyserver.service.dto.ChannelMessageUpdateRequest;
+import com.smiletogether.historyserver.service.dto.request.ChannelMessageSaveRequest;
+import com.smiletogether.historyserver.service.dto.request.ChannelMessageUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;

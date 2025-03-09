@@ -5,6 +5,7 @@ import com.smiletogether.chatserver.dto.ChannelMessageDeleteDto;
 import com.smiletogether.chatserver.dto.ChannelMessageDto;
 import com.smiletogether.chatserver.dto.ChannelMessageUpdateDto;
 import com.smiletogether.chatserver.dto.request.ChannelMessageDeleteRequest;
+import com.smiletogether.chatserver.dto.request.ChannelMessageUpdateKafkaRequest;
 import com.smiletogether.chatserver.dto.request.ChannelMessageUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +34,7 @@ public class MessageProducer {
         }
     }
 
-    public void updateMessage(ChannelMessageUpdateRequest channelMessageUpdateRequest,
+    public void updateMessage(ChannelMessageUpdateKafkaRequest channelMessageUpdateRequest,
                               ChannelMessageUpdateDto channelMessageUpdateDto) {
         try {
             String jsonMessage = objectMapper.writeValueAsString(channelMessageUpdateDto); // 객체 -> JSON 변환
