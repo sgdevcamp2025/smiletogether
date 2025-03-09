@@ -32,16 +32,16 @@ const ConfirmEmailPage = () => {
 
     if (confirmResponse.data.code === '200') {
       const { signInResponse } = await postLogin(email);
-      const userInfo = signInResponse.data.member;
-      console.log('userInfo', userInfo);
-      setOriginUser(userInfo);
-      setUser({
-        userId: userInfo.id,
-      });
-      alert('성공');
       if (signInResponse.data.isMember === false) {
         setIsRegistering(true);
       } else {
+        const userInfo = signInResponse.data.member;
+        console.log('userInfo', userInfo);
+        setOriginUser(userInfo);
+        setUser({
+          userId: userInfo.id,
+        });
+        alert('성공');
         navigate('/workspaces');
       }
     }
