@@ -1,21 +1,23 @@
 package com.smiletogether.historyserver.service.dto;
 
+import com.smiletogether.historyserver.infrastructure.ExternalProfileResponse;
+
 public record WorkspaceProfileDto(
         String userId,
         String displayName,
         String profileImage,
         String position,
-        String statusMessage,
-        boolean isActive
+        boolean isActive,
+        String statusMessage
 ) {
-    public static WorkspaceProfileDto of(String memberId) {
+    public static WorkspaceProfileDto of(ExternalProfileResponse externalProfileResponse) {
         return new WorkspaceProfileDto(
-                memberId,
-                "John Doe",
-                "https://example.com/default-profile.png",
-                "Software Engineer",
-                "Available",
-                true
+                externalProfileResponse.userId(),
+                externalProfileResponse.displayName(),
+                externalProfileResponse.profileImage(),
+                externalProfileResponse.position(),
+                externalProfileResponse.isActive(),
+                externalProfileResponse.statusMessage()
         );
     }
 }
