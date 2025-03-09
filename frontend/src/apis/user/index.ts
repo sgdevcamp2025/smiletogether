@@ -56,6 +56,16 @@ export const postConfirmEmail = async (email: string, code: string) => {
       code,
     }
   );
-  console.log(response, response.data);
   return response;
+};
+
+export const getMyWorkspaceInfo = async (
+  workspaceId: string,
+  userId: string
+) => {
+  const { data } = await https.get(
+    `http://localhost:8090/api/workspaces/${workspaceId}/users/${userId}`
+  );
+
+  return data;
 };

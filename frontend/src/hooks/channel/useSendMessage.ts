@@ -30,7 +30,6 @@ export const useSendMessage = ({
     if (!message.trim()) return;
 
     const messageData = { type: 'SEND', content: message };
-
     const publishPath = `/pub/workspaces/${workspaceId}/channels/${channelId}`;
     client.publish({
       destination: publishPath,

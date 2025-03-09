@@ -1,10 +1,10 @@
 import { http, HttpResponse } from 'msw';
 import dummy from '@/mocks/dummy.json';
-import { nanoid } from 'nanoid';
-import {
-  PostNewWorkspaceRequestDto,
-  PostNewWorkspaceResponseDto,
-} from '@/apis/workspace/dto';
+// import { nanoid } from 'nanoid';
+// import {
+//   PostNewWorkspaceRequestDto,
+//   PostNewWorkspaceResponseDto,
+// } from '@/apis/workspace/dto';
 
 let db = JSON.parse(JSON.stringify(dummy));
 
@@ -55,69 +55,69 @@ export const handlers = [
     return HttpResponse.json(dummy.userProfiles);
   }),
   // 워크스페이스 생성
-  http.post('/api/workspaces', async ({ request }) => {
-    try {
-      const newPost: PostNewWorkspaceRequestDto =
-        (await request.json()) as PostNewWorkspaceRequestDto;
+  // http.post('/api/workspaces', async ({ request }) => {
+  //   try {
+  //     const newPost: PostNewWorkspaceRequestDto =
+  //       (await request.json()) as PostNewWorkspaceRequestDto;
 
-      if (!newPost.workspaceName) {
-        return HttpResponse.json(
-          { error: 'workspace name is required' },
-          { status: 400 }
-        );
-      }
-      if (!newPost.userName) {
-        return HttpResponse.json(
-          { error: 'username is required' },
-          { status: 400 }
-        );
-      }
+  //     if (!newPost.workspaceName) {
+  //       return HttpResponse.json(
+  //         { error: 'workspace name is required' },
+  //         { status: 400 }
+  //       );
+  //     }
+  //     if (!newPost.userName) {
+  //       return HttpResponse.json(
+  //         { error: 'username is required' },
+  //         { status: 400 }
+  //       );
+  //     }
 
-      const workspaceId = nanoid(8);
-      const userList = [];
-      for (let i = 0; i < newPost.inviteUserList.length; i++) {
-        const dummyUser = {
-          userId: 'user_12345',
-          profileImage: 'https://example.com/user_12345.png',
-          role: 'member',
-        };
-        userList.push(dummyUser);
-      }
-      userList.push({
-        userId: 'user_123457',
-        profileImage: 'https://example.com/user_12345.png',
-        role: 'admin',
-      });
+  //     const workspaceId = nanoid(8);
+  //     const userList = [];
+  //     for (let i = 0; i < newPost.inviteUserList.length; i++) {
+  //       const dummyUser = {
+  //         userId: 'user_12345',
+  //         profileImage: 'https://example.com/user_12345.png',
+  //         role: 'member',
+  //       };
+  //       userList.push(dummyUser);
+  //     }
+  //     userList.push({
+  //       userId: 'user_123457',
+  //       profileImage: 'https://example.com/user_12345.png',
+  //       role: 'admin',
+  //     });
 
-      const workspaceData = {
-        workspaceId: workspaceId,
-        name: newPost.workspaceName,
-        profileImage: newPost.profileImage,
-        memberCount: newPost.inviteUserList.length,
-        users: userList,
-      };
-      const responseData: PostNewWorkspaceResponseDto = {
-        workspaceId,
-        name: String(newPost.workspaceName),
-        creator: newPost.ownerId,
-        defaultChannel: 'general',
-        profileImage: newPost.profileImage,
-        inviteResults: {
-          success: [],
-          failed: newPost.inviteUserList,
-        },
-        createdAt: new Date().toISOString(),
-      };
-      db.userWorkspaces.workspaces.push(workspaceData);
-      return HttpResponse.json(responseData, { status: 201 });
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (e: unknown) {
-      return HttpResponse.json(
-        { error: 'internal server error' },
-        { status: 500 }
-      );
-    }
-  }),
+  //     const workspaceData = {
+  //       workspaceId: workspaceId,
+  //       name: newPost.workspaceName,
+  //       profileImage: newPost.profileImage,
+  //       memberCount: newPost.inviteUserList.length,
+  //       users: userList,
+  //     };
+  //     const responseData: PostNewWorkspaceResponseDto = {
+  //       workspaceId,
+  //       name: String(newPost.workspaceName),
+  //       creator: newPost.ownerId,
+  //       defaultChannel: 'general',
+  //       profileImage: newPost.profileImage,
+  //       inviteResults: {
+  //         success: [],
+  //         failed: newPost.inviteUserList,
+  //       },
+  //       createdAt: new Date().toISOString(),
+  //     };
+  //     db.userWorkspaces.workspaces.push(workspaceData);
+  //     return HttpResponse.json(responseData, { status: 201 });
+  //     // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  //   } catch (e: unknown) {
+  //     return HttpResponse.json(
+  //       { error: 'internal server error' },
+  //       { status: 500 }
+  //     );
+  //   }
+  // }),
   // 워크스페이스 상세 조회
   http.get(`/api/workspaces/:workspaceId`, ({ params }) => {
     const { workspaceId } = params;

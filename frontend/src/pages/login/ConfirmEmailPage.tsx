@@ -2,6 +2,7 @@ import { postConfirmEmail, postLogin, postRegister } from '@/apis/user';
 import { InputCodeForm } from '@/components/login/InputCodeForm';
 import { InputNicknameForm } from '@/components/login/InputNicknameForm';
 import { userOriginStore } from '@/stores/userOriginStore';
+import { useUserStore } from '@/stores/userStore';
 import { FormEvent, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 
@@ -10,7 +11,8 @@ const ConfirmEmailPage = () => {
   const location = useLocation();
   const [code, setCode] = useState('');
   const [isRegistering, setIsRegistering] = useState(false);
-  const { setUser } = userOriginStore();
+  const { setUser: setOriginUser } = userOriginStore();
+  const { setUser } = useUserStore();
 
   const email = location.state?.email;
 
@@ -31,7 +33,11 @@ const ConfirmEmailPage = () => {
     if (confirmResponse.data.code === '200') {
       const { signInResponse } = await postLogin(email);
       const userInfo = signInResponse.data.member;
-      setUser(userInfo);
+      console.log('userInfo', userInfo);
+      setOriginUser(userInfo);
+      setUser({
+        userId: userInfo.id,
+      });
       alert('성공');
       if (signInResponse.data.isMember === false) {
         setIsRegistering(true);
@@ -49,7 +55,10 @@ const ConfirmEmailPage = () => {
       const registerResponse = await postRegister(name, email);
       const { signInResponse } = await postLogin(email);
       const userInfo = signInResponse.data.member;
-      setUser(userInfo);
+      setOriginUser(userInfo);
+      setUser({
+        userId: userInfo.id,
+      });
       navigate('/workspaces');
     } catch (error) {
       console.error('회원가입 실패', error);
