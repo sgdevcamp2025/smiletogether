@@ -13,6 +13,7 @@ services:
       - "5433:5432"
     volumes:
       - space_postgres_data:/var/lib/postgresql/data
+      - ../script/space_server_init.sql:/app/script/space_server_init.sql
     networks:
       - space_network
 
@@ -30,7 +31,7 @@ services:
   space-server:
     build:
       context: ../backend/space-server
-    container_name: space_server
+    container_name: space-server
     restart: always
     environment:
       DATABASE_URL: postgresql://myuser:mypassword@space_db_postgres:5432/mydatabase
