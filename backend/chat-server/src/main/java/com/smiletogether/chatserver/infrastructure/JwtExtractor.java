@@ -43,4 +43,11 @@ public class JwtExtractor {
             throw new RuntimeException("Failed to extract memberId from token");
         }
     }
+
+    public String getToken(StompHeaderAccessor headerAccessor) {
+        String authorizationHeader = headerAccessor.getFirstNativeHeader("Authorization");
+        log.info("Authorization header: {}", authorizationHeader);
+
+        return authorizationHeader;
+    }
 }

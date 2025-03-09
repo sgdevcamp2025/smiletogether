@@ -30,7 +30,8 @@ public class ChannelChatController {
             ChannelMessageRequest message) {
         JwtExtractor jwtExtractor = new JwtExtractor();
         String userId = jwtExtractor.extractMemberId(headerAccessor);
-        chatService.sendChannelMessage(userId, workspaceId, channelId, message);
+        String token = jwtExtractor.getToken(headerAccessor);
+        chatService.sendChannelMessage(token, userId, workspaceId, channelId, message);
     }
 
     @MessageMapping("/workspaces/{workspaceId}/channels/{channelId}/update")
@@ -41,8 +42,9 @@ public class ChannelChatController {
             ChannelMessageUpdateRequest channelMessageUpdateRequest) {
         JwtExtractor jwtExtractor = new JwtExtractor();
         String memberId = jwtExtractor.extractMemberId(headerAccessor);
+        String token = jwtExtractor.getToken(headerAccessor);
         log.info("update controller 실행");
-        chatService.updateChannelMessage(memberId, workspaceId, channelId, channelMessageUpdateRequest);
+        chatService.updateChannelMessage(token, memberId, workspaceId, channelId, channelMessageUpdateRequest);
     }
 
     @MessageMapping("/workspaces/{workspaceId}/channels/{channelId}/delete")

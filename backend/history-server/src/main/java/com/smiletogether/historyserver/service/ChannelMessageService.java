@@ -3,16 +3,17 @@ package com.smiletogether.historyserver.service;
 import com.smiletogether.historyserver.domain.document.ChannelMessageDocument;
 import com.smiletogether.historyserver.domain.document.ReactionDocument;
 import com.smiletogether.historyserver.domain.model.Reactions;
+import com.smiletogether.historyserver.infrastructure.ExternalProfileApiClient;
 import com.smiletogether.historyserver.repository.ChannelMessageRepository;
 import com.smiletogether.historyserver.repository.ReactionRepository;
-import com.smiletogether.historyserver.service.dto.ChannelMessageDeleteRequest;
-import com.smiletogether.historyserver.service.dto.ChannelMessageDeleteResponse;
 import com.smiletogether.historyserver.service.dto.ChannelMessageReaction;
-import com.smiletogether.historyserver.service.dto.ChannelMessageResponse;
-import com.smiletogether.historyserver.service.dto.ChannelMessageSaveRequest;
-import com.smiletogether.historyserver.service.dto.ChannelMessageUpdateRequest;
 import com.smiletogether.historyserver.service.dto.ChannelMessages;
-import com.smiletogether.historyserver.service.dto.ChannelMessagesRequest;
+import com.smiletogether.historyserver.service.dto.WorkspaceProfileDto;
+import com.smiletogether.historyserver.service.dto.request.ChannelMessageDeleteRequest;
+import com.smiletogether.historyserver.service.dto.request.ChannelMessageSaveRequest;
+import com.smiletogether.historyserver.service.dto.request.ChannelMessageUpdateRequest;
+import com.smiletogether.historyserver.service.dto.request.ChannelMessagesRequest;
+import com.smiletogether.historyserver.service.dto.response.ChannelMessageResponse;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,7 +34,7 @@ public class ChannelMessageService {
 
     private final ChannelMessageRepository channelMessageRepository;
     private final ReactionRepository reactionRepository;
-    private final static String SUCCESSES_DELETE_MESSAGE = "메세지를 성공적으로 삭제했습니다.";
+    private final ExternalProfileApiClient externalProfileApiClient;
 
     private ChannelMessageDocument findMessageById(String messageId) {
         ChannelMessageDocument channelMessageDocument = channelMessageRepository.findById(messageId)
@@ -42,13 +43,14 @@ public class ChannelMessageService {
     }
 
     private ReactionDocument findReactionById(String messageId, String emoji, String memberId) {
-        ReactionDocument reactionDocument = reactionRepository.findByMessageIdAndEmojiAndMemberId(messageId, emoji, memberId)
+        ReactionDocument reactionDocument = reactionRepository.findByMessageIdAndEmojiAndMemberId(messageId, emoji,
+                        memberId)
                 .orElseThrow(() -> new RuntimeException("리액션을 찾을 수 없습니다."));
         return reactionDocument;
     }
 
     public ChannelMessages getChannelMessages(ChannelMessagesRequest channelMessagesRequest, String workspaceId,
-                                              String channelId) {
+                                              String channelId, String token) {
         log.info("📌 요청받은 afterTime: {}", channelMessagesRequest.lastTimeStamp());
 
         LocalDateTime afterTime = channelMessagesRequest.lastTimeStamp();
@@ -67,7 +69,8 @@ public class ChannelMessageService {
         Map<String, List<ChannelMessageResponse>> groupedMessages = new LinkedHashMap<>();
 
         for (ChannelMessageDocument messageDoc : channelMessageDocuments) {
-            ChannelMessageResponse messageResponse = ChannelMessageResponse.of(messageDoc);
+            ChannelMessageResponse messageResponse = ChannelMessageResponse.of(messageDoc,
+                    getWorkspaceProfile(token, workspaceId, messageDoc.getSenderId()));
             String dateKey = formatDate(messageResponse.createdAt());
 
             groupedMessages.computeIfAbsent(dateKey, k -> new ArrayList<>()).add(messageResponse);
@@ -85,6 +88,7 @@ public class ChannelMessageService {
     public void saveMessage(ChannelMessageSaveRequest channelMessage) {
         ChannelMessageDocument newMessage = ChannelMessageDocument.builder()
                 .id(channelMessage.messageId())
+                .workspaceId(channelMessage.workspaceId())
                 .channelId(channelMessage.channelId())
                 .senderId(channelMessage.user().userId())
                 .content(channelMessage.content())
@@ -94,12 +98,14 @@ public class ChannelMessageService {
         channelMessageRepository.save(newMessage);
     }
 
-    public ChannelMessageResponse getChannelMessage(String messageId) {
+    public ChannelMessageResponse getChannelMessage(String messageId, String token) {
         ChannelMessageDocument channelMessageDocument = findMessageById(messageId);
-        return ChannelMessageResponse.of(channelMessageDocument);
+        return ChannelMessageResponse.of(channelMessageDocument,
+                getWorkspaceProfile(token, channelMessageDocument.getWorkspaceId(),
+                        channelMessageDocument.getChannelId()));
     }
 
-    public ChannelMessageResponse updateChannelMessage(ChannelMessageUpdateRequest channelMessageUpdateRequest) {
+    public void updateChannelMessage(ChannelMessageUpdateRequest channelMessageUpdateRequest) {
         ChannelMessageDocument channelMessageDocument = findMessageById(channelMessageUpdateRequest.messageId());
         channelMessageDocument = ChannelMessageDocument.builder()
                 .id(channelMessageDocument.getId())
@@ -118,11 +124,9 @@ public class ChannelMessageService {
                 .build();
 
         channelMessageRepository.save(channelMessageDocument);
-
-        return  ChannelMessageResponse.of(channelMessageDocument);
     }
 
-    public ChannelMessageDeleteResponse deleteChannelMessage(ChannelMessageDeleteRequest channelMessageDeleteRequest) {
+    public void deleteChannelMessage(ChannelMessageDeleteRequest channelMessageDeleteRequest) {
         ChannelMessageDocument channelMessageDocument = findMessageById(channelMessageDeleteRequest.messageId());
 
         ChannelMessageDocument updatedMessage = ChannelMessageDocument.builder()
@@ -143,8 +147,6 @@ public class ChannelMessageService {
 
         // ✅ ID가 동일하기 때문에 MongoDB에서 기존 Document를 덮어쓰기 함
         channelMessageRepository.save(updatedMessage);
-
-        return new ChannelMessageDeleteResponse("200",SUCCESSES_DELETE_MESSAGE);
     }
 
     // "YYYY-MM-DD" 포맷으로 변환
@@ -152,7 +154,7 @@ public class ChannelMessageService {
         return timestamp.toLocalDate().toString();
     }
 
-    public ChannelMessageResponse createChannelMessageReaction(ChannelMessageReaction channelMessageReaction) {
+    public void createChannelMessageReaction(ChannelMessageReaction channelMessageReaction) {
         ReactionDocument reactionDocument = ReactionDocument.builder()
                 .messageId(channelMessageReaction.messageId())
                 .memberId(channelMessageReaction.memberId())
@@ -203,11 +205,9 @@ public class ChannelMessageService {
                 .build();
 
         channelMessageRepository.save(channelMessageDocument);
-
-        return ChannelMessageResponse.of(channelMessageDocument);
     }
 
-    public ChannelMessageResponse deleteChannelMessageReaction(ChannelMessageReaction channelMessageReaction) {
+    public void deleteChannelMessageReaction(ChannelMessageReaction channelMessageReaction) {
 
         ReactionDocument reactionDocument = findReactionById(channelMessageReaction.messageId(),channelMessageReaction.emoji(), channelMessageReaction.memberId());
         reactionRepository.delete(reactionDocument);
@@ -249,7 +249,9 @@ public class ChannelMessageService {
                 .build();
 
         channelMessageRepository.save(channelMessageDocument);
+    }
 
-        return ChannelMessageResponse.of(channelMessageDocument);
+    private WorkspaceProfileDto getWorkspaceProfile(String token, String workspaceId, String memberId) {
+        return externalProfileApiClient.getWorkspaceProfile(token, workspaceId, memberId);
     }
 }
