@@ -27,7 +27,9 @@ const WorkspaceSideBar = () => {
             return (
               <WorkspaceIconButton
                 key={item.workspaceId}
-                className={`bg-gray-400 rounded-xl" ${item.workspaceId === workspaceId ? 'bg-gray-300' : null}`}
+                className={`bg-gray-400 rounded-xl" ${
+                  item.workspaceId === workspaceId ? 'bg-gray-300' : null
+                }`}
                 onClick={() => navigateToWorkspace(item.workspaceId)}
               >
                 <span className="text-xl">

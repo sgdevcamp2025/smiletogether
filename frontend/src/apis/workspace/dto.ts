@@ -21,7 +21,7 @@ export interface PostNewWorkspaceRequestDto {
   ownerId: string;
   userName: string;
   profileImage: string;
-  inviteUserList: string[];
+  inviteEmailList: string[];
 }
 
 export interface PostNewWorkspaceResponseDto {

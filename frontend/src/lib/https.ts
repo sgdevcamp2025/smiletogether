@@ -24,6 +24,7 @@ https.interceptors.request.use(
       config.baseURL = config.url;
     }
     config.headers.Authorization = `Bearer ${getToken()}`;
+    console.log('config.baseURL', config.baseURL);
     return config;
   },
   error => {
@@ -43,7 +44,9 @@ https.interceptors.response.use(
     if (status === 401) {
       try {
         const originConfig = config;
+        console.log('시 발려나');
         const refreshResponse = await postRefreshToken();
+        console.log('refreshResponse', refreshResponse);
         if (refreshResponse.status === 200) {
           const newAccessToken = refreshResponse.data.accessToken;
           localStorage.setItem('access-token', newAccessToken);

@@ -8,6 +8,7 @@ import ModalManager from '@/components/modals/ModalManager';
 import WorkspaceChannels from '@/components/workspace/WorkspaceChannelPanel/WorkspaceChannels';
 import WorkspaceDMs from '@/components/workspace/WorkspaceChannelPanel/WorkspaceDMs';
 import { useUserStore } from '@/stores/userStore';
+import { useEffect } from 'react';
 
 const WorkspaceChannelPanel = () => {
   const { workspaceId } = useParams();
@@ -25,7 +26,9 @@ const WorkspaceChannelPanel = () => {
     isChannelLoading,
     isChannelError,
   } = useWorkspaceChannelListQuery(workspaceId!);
-
+  useEffect(() => {
+    console.log('workspaceInfo', workspaceInfo);
+  }, [workspaceInfo]);
   const workspaceName = workspaceInfo?.name ?? '알 수 없는 워크스페이스';
   const setModal = useModalStore(state => state.setModal);
   const user = useUserStore(state => state.user);

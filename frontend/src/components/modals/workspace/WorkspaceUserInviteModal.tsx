@@ -89,8 +89,7 @@ const WorkspaceUserInviteModal = ({
       alert('초대할 이메일을 입력하세요.');
       return;
     }
-
-    if (customUserIviteMode && inviteChannel.length > 0) {
+    if (customUserIviteMode && inviteChannel.length === 0) {
       return alert('초대할 채널을 입력해주세요');
     }
     if (customUserIviteMode) submitChannelInvite();

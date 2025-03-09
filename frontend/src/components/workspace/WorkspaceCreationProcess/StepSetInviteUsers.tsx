@@ -28,7 +28,7 @@ const StepSetInviteUsers = () => {
         ownerId: getDummyOwnerId(),
         userName: userName,
         profileImage: workspaceProfileImage,
-        inviteUserList: invitedUsers,
+        inviteEmailList: invitedUsers,
       },
       {
         onSuccess: data => {

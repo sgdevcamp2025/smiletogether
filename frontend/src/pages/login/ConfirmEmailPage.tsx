@@ -29,11 +29,12 @@ const ConfirmEmailPage = () => {
     if (confirmResponse.data.code === '200') {
       const loginResponse = await postLogin(email);
 
-      if (loginResponse.data.isMember) {
+      if (loginResponse.data.status === '200') {
         navigate('/workspaces');
       } else {
         setIsRegistering(true);
       }
+      navigate('/workspaces');
     }
   };
 
@@ -41,7 +42,6 @@ const ConfirmEmailPage = () => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const name = formData.get('name') as string;
-    console.log(name);
     try {
       const registerResponse = await postRegister(name, email);
       console.log('회원가입 성공', registerResponse);

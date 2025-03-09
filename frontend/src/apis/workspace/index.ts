@@ -49,7 +49,10 @@ export const postInviteWorkspace = async (
   workspaceId: string,
   emails: string[]
 ) => {
-  const { data } = await https.post(`/api/invite/email/${workspaceId}`, emails);
+  const { data } = await https.post(`/api/invite/email/${workspaceId}`, {
+    domain: import.meta.env.VITE_BASE_CLIENT_API_URL,
+    inviteEmailList: emails,
+  });
   return data;
 };
 
