@@ -144,4 +144,149 @@ export class InviteService {
       workspaceName: workspace.name,
     };
   }
+
+  async generateEmailInvites(
+    domain: string,
+    inviteEmailList: string[],
+    workspaceId: string,
+  ): Promise<{
+    inviteUrls: { email: string; url: string }[];
+    inviteResults: { success: string[]; failed: string[] };
+  }> {
+    const inviteResults = {
+      success: [],
+      failed: [],
+    };
+
+    const inviteUrls = [];
+
+    for (const email of inviteEmailList) {
+      try {
+        const inviteCode = uuidv4();
+        const inviteKey = `invite_email:${inviteCode}`;
+        const inviteUrl = `${domain}/invite/email/${inviteCode}`;
+
+        await this.redis.set(
+          inviteKey,
+          JSON.stringify({ workspaceId, email }),
+          'EX',
+          this.INVITE_CODE_EXPIRATION,
+        );
+
+        const pendingInvitesKey = `pending_invites:${workspaceId}`;
+        await this.redis.sadd(pendingInvitesKey, email);
+
+        inviteUrls.push({ email, url: inviteUrl });
+
+        await fetch(
+          `http://localhost:8080/api/auth/send-inviteUrl?email=${encodeURIComponent(email)}&inviteUrl=${encodeURIComponent(inviteUrl)}`,
+          {
+            method: 'GET',
+          },
+        );
+
+        inviteResults.success.push(email);
+      } catch (error) {
+        console.error(error);
+        inviteResults.failed.push(email);
+      }
+    }
+    console.log(inviteUrls, inviteResults);
+
+    return { inviteUrls, inviteResults };
+  }
+
+  async getPendingInvites(
+    workspaceId: string,
+  ): Promise<{ key: string; emails: string[] }> {
+    const pendingInvitesKey = `pending_invites:${workspaceId}`;
+    const emails = await this.redis.smembers(pendingInvitesKey);
+
+    return { key: pendingInvitesKey, emails };
+  }
+
+  async acceptInviteEmail(
+    inviteCode: string,
+    userId: string,
+    userName: string,
+  ): Promise<{ workspaceId: string }> {
+    const inviteKey = `invite_email:${inviteCode}`;
+
+    const inviteData = await this.redis.get(inviteKey);
+
+    if (!inviteData) {
+      throw new NotFoundException(
+        '초대 링크가 만료되었거나 존재하지 않습니다.',
+      );
+    }
+
+    const { workspaceId, email } = JSON.parse(inviteData);
+
+    const workspace = await this.prismaService.workspace.findUnique({
+      where: {
+        workspace_id: workspaceId,
+      },
+    });
+
+    if (!workspace) {
+      throw new NotFoundException('해당 워크스페이스가 존재하지 않습니다.');
+    }
+
+    const existingMember = await this.prismaService.workspaceUser.findFirst({
+      where: { workspace_id: workspaceId, user_id: userId },
+    });
+
+    if (existingMember) {
+      throw new BadRequestException('이미 워크스페이스에 참여 중입니다.');
+    }
+
+    await this.prismaService.workspaceUser.create({
+      data: {
+        workspace_id: workspace.workspace_id,
+        user_id: userId,
+        role: 'member',
+        profile_name: userName,
+        profile_image: 'default.jpg',
+        position: '',
+        status_message: '',
+      },
+    });
+
+    const defaultChannels = await this.prismaService.channel.findMany({
+      where: {
+        workspace_id: workspaceId,
+        is_private: false,
+      },
+    });
+
+    for (const defaultChannel of defaultChannels) {
+      await this.prismaService.channelUser.create({
+        data: {
+          channel_id: defaultChannel.channel_id,
+          user_id: userId,
+          channel_role: 'member',
+        },
+      });
+    }
+
+    await this.redis.del(inviteKey);
+
+    const pendingInvitesKey = `pending_invites:${workspaceId}`;
+    await this.redis.srem(pendingInvitesKey, email);
+
+    return { workspaceId };
+  }
+
+  async getAllInviteData(): Promise<{ key: string; value: string }[]> {
+    const keys = await this.redis.keys('invite_*');
+    const data = [];
+
+    for (const key of keys) {
+      const value =
+        (await this.redis.get(key)) || (await this.redis.smembers(key));
+      data.push({ key, value });
+    }
+
+    return data;
+  }
 }

@@ -31,8 +31,9 @@ public class ExternalAuthApiServer {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
+        ExternalTokenRequest externalTokenRequest = new ExternalTokenRequest(userId);
 
-        HttpEntity<ExternalTokenRequest> requestEntity = new HttpEntity<>(headers);
+        HttpEntity<ExternalTokenRequest> requestEntity = new HttpEntity<>(externalTokenRequest, headers);
 
         ResponseEntity<ExternalTokenResponse> response = restTemplate.exchange(
                 uri,

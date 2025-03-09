@@ -105,6 +105,9 @@ public class MemberService {
 
         try {
             Member member = findMemberByEmail(email);
+            log.info("email: {}", member.getEmail());
+            log.info("memberId: {}", member.getId());
+
             TokenResponse tokenResponse = externalAuthApiServer.getToken(member.getId());
 
             setRefreshToken(response, tokenResponse.refreshToken());
