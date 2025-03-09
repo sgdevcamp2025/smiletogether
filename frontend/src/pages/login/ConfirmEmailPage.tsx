@@ -20,6 +20,7 @@ const ConfirmEmailPage = () => {
     }
 
     const confirmResponse = await postConfirmEmail(email, code);
+    console.log('confirmResponse', confirmResponse);
 
     if (confirmResponse.data.code === '400') {
       alert(confirmResponse.data.message);
@@ -28,13 +29,14 @@ const ConfirmEmailPage = () => {
 
     if (confirmResponse.data.code === '200') {
       const loginResponse = await postLogin(email);
+      console.log('loginResponse', loginResponse);
 
-      if (loginResponse.data.status === '200') {
-        navigate('/workspaces');
-      } else {
+      if (loginResponse.data.isMember === false) {
         setIsRegistering(true);
+      } else {
+        navigate('/workspaces');
       }
-      navigate('/workspaces');
+      // navigate('/workspaces');
     }
   };
 
@@ -42,6 +44,7 @@ const ConfirmEmailPage = () => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const name = formData.get('name') as string;
+    console.log(name);
     try {
       const registerResponse = await postRegister(name, email);
       console.log('회원가입 성공', registerResponse);
