@@ -21,7 +21,7 @@ export const getToken = () => {
   return localStorage.getItem('access-token');
 };
 
-export const getDummyOwnerId = () => {
+export const getOwnerId = () => {
   const token = localStorage.getItem('access-token');
   if (!token) {
     window.location.href = import.meta.env.VITE_BASE_CLIENT_API_URL;

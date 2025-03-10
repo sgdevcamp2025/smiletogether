@@ -10,7 +10,7 @@ export interface GetChannelResponse {
     displayName: string;
     username: string;
   };
-  name: string;
+  channelName: string;
   createdAt: string;
   isPrivate: boolean;
   totalMembers: number;
