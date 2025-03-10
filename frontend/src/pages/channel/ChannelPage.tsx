@@ -11,9 +11,6 @@ import { useDeleteMessage } from '@/hooks/channel/useDeleteMessage';
 
 const ChannelPage = () => {
   const { workspaceId, channelId } = useParams();
-  useEffect(() => {
-    console.log(workspaceId, channelId);
-  }, []);
   const { channelData, isChannelLoading, isChannelError } =
     useGetChannel(channelId);
   const { client, messages: initailMessages } = useWebSocket({

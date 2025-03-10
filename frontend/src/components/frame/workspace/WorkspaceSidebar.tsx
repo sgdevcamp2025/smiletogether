@@ -1,4 +1,5 @@
 import WorkspaceIconButton from '@/components/workspace/WorkspaceIconButton';
+import useWorkspaceChannelListQuery from '@/hooks/channel/useWorkspaceChannelListQuery';
 import useUserWorkspacesQuery from '@/hooks/workspace/useUserWorkspacesQuery';
 import { useNavigate, useParams } from 'react-router';
 
@@ -7,12 +8,17 @@ const WorkspaceSideBar = () => {
     useUserWorkspacesQuery();
   const { workspaceId } = useParams();
   const navigate = useNavigate();
+  const { channelList } = useWorkspaceChannelListQuery(workspaceId!);
 
   if (isWorkspacesLoading) return <p>로딩중</p>;
   if (isWorkspacesError) return <p>에러</p>;
 
   const navigateToWorkspace = (workspaceId: string) => {
-    navigate(`/workspace/${workspaceId}`);
+    if (!channelList) {
+      navigate('/');
+      return;
+    }
+    navigate(`/workspace/${workspaceId}/channel/${channelList[0].channelId}`);
   };
 
   const navigateToCreateWorkspace = () => {

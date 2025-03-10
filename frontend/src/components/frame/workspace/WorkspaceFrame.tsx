@@ -16,10 +16,10 @@ const WorkspaceFrame = () => {
     const fetchWorkspaceInfo = async () => {
       if (!user) naviagate('/');
       try {
-        const data = await getMyWorkspaceInfo(workspaceId, user.id!);
-        console.log(data);
+        await getMyWorkspaceInfo(workspaceId, user.id!);
       } catch (error) {
-        console.error('워크스페이스 유저 프로필 조회:', error);
+        alert(`워크스페이스 유저 프로필 조회 : ${error}`);
+        naviagate('/');
       }
     };
 
