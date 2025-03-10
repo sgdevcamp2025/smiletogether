@@ -26,11 +26,7 @@ const WorkspaceListItem = ({
     navigate(`/workspace/${workspaceId}/channel/${channelId}`);
   };
 
-  const {
-    channelList = [],
-    isChannelLoading,
-    isChannelError,
-  } = useWorkspaceChannelListQuery(workspaceId!);
+  const { channelList = [] } = useWorkspaceChannelListQuery(workspaceId!);
 
   return (
     <div className="flex items-center px-6 py-4 w-full border  shadow hover:bg-gray-50">

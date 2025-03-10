@@ -45,7 +45,6 @@ const HistoryMessages = ({
     if (topRef.current) observer.observe(topRef.current);
     return () => observer.disconnect();
   }, [hasNextPage, fetchNextPage]);
-
   return (
     <div ref={scrollContainerRef} className="overflow-auto]">
       {/* 맨 위에 보이지 않는 ref 배치 */}
