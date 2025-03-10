@@ -11,6 +11,7 @@ import { useUserStore } from '@/stores/userStore';
 
 const WorkspaceChannelPanel = () => {
   const { workspaceId } = useParams();
+  const clearUserStorage = useUserStore.persist.clearStorage;
 
   const { workspaceInfo, isWorkspaceLoading, isWorkspaceError } =
     useUserWorkspaceQuery(workspaceId!);
@@ -48,6 +49,7 @@ const WorkspaceChannelPanel = () => {
         }}
         onLogout={() => {
           alert('로그아웃이 완료되었습니다');
+          clearUserStorage();
           naviagte('/');
         }}
         onDelete={() => {

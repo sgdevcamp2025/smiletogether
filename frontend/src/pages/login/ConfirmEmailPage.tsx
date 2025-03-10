@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { postConfirmEmail, postLogin, postRegister } from '@/apis/user';
 import { InputCodeForm } from '@/components/login/InputCodeForm';
 import { InputNicknameForm } from '@/components/login/InputNicknameForm';
@@ -36,7 +37,6 @@ const ConfirmEmailPage = () => {
         setIsRegistering(true);
       } else {
         const userInfo = signInResponse.data.member;
-        console.log('userInfo', userInfo);
         setOriginUser(userInfo);
         setUser({
           userId: userInfo.id,
@@ -52,7 +52,7 @@ const ConfirmEmailPage = () => {
     const formData = new FormData(e.currentTarget);
     const name = formData.get('name') as string;
     try {
-      const registerResponse = await postRegister(name, email);
+      postRegister(name, email);
       const { signInResponse } = await postLogin(email);
       const userInfo = signInResponse.data.member;
       setOriginUser(userInfo);
@@ -61,7 +61,6 @@ const ConfirmEmailPage = () => {
       });
       navigate('/workspaces');
     } catch (error) {
-      console.error('회원가입 실패', error);
       alert('회원가입에 실패했습니다.');
     }
   };

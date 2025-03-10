@@ -2,7 +2,7 @@ import { Textarea } from '@/components/ui/textarea';
 import clsx from 'clsx';
 import { Client } from '@stomp/stompjs';
 import { useSendMessage } from '@/hooks/channel/useSendMessage';
-import React, { KeyboardEventHandler } from 'react';
+import React from 'react';
 
 interface MessageBoxProps {
   channelName: string;
