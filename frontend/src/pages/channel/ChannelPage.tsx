@@ -13,7 +13,6 @@ const ChannelPage = () => {
   const { workspaceId, channelId } = useParams();
   const { channelData, isChannelLoading, isChannelError } =
     useGetChannel(channelId);
-  console.log(channelData?.channelName, channelData, channelData?.createdBy);
   const { client, messages: initailMessages } = useWebSocket({
     workspaceId,
     channelId,
@@ -41,6 +40,11 @@ const ChannelPage = () => {
   useEffect(() => {
     setMessages(initailMessages);
   }, [initailMessages]);
+
+  // 채널 ID가 변경될 때마다 메시지를 초기화
+  useEffect(() => {
+    setMessages([]); // 채널이 바뀔 때 메시지를 초기화
+  }, [channelId]);
 
   // 메시지가 변경될 때마다 항상 스크롤 하단으로 이동
   useEffect(() => {
