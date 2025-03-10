@@ -5,6 +5,8 @@ import { useNavigate, useSearchParams } from 'react-router';
 import React from 'react';
 import useAcceptWorkspaceEmailInviteMutation from '@/hooks/workspace/useAcceptWorkspaceEmailInviteMutation';
 import useAcceptWorkspaceLinkInviteMutation from '@/hooks/workspace/useAcceptWorkspaceLinkInviteMutation';
+import { getUserJoinedWorkspaceChannels } from '@/apis/channel';
+import { getIsMemberOfWorkspaceByInviteLinkResponseDto } from '@/apis/workspace/dto';
 
 const WorkspaceJoinPage = () => {
   const isValidUser = localStorage.getItem('access-token');
@@ -13,10 +15,8 @@ const WorkspaceJoinPage = () => {
   const inviteType = searchParams.get('type');
   const inviteCode = searchParams.get('code');
   const [username, setUserName] = useState('');
-  const { acceptEmailInvite, acceptEmailInviteError } =
-    useAcceptWorkspaceEmailInviteMutation();
-  const { acceptLinkInvite, acceptLinkInviteError } =
-    useAcceptWorkspaceLinkInviteMutation();
+  const { acceptEmailInvite } = useAcceptWorkspaceEmailInviteMutation();
+  const { acceptLinkInvite } = useAcceptWorkspaceLinkInviteMutation();
 
   useEffect(() => {
     if (
@@ -41,9 +41,17 @@ const WorkspaceJoinPage = () => {
   }, [isValidUser, navigate]);
 
   useEffect(() => {
+    const fetchData = async (
+      data: getIsMemberOfWorkspaceByInviteLinkResponseDto
+    ) => {
+      const response = await getUserJoinedWorkspaceChannels(data.workspaceId);
+      navigate(
+        `/workspace/${data.workspaceId}/channel/${response[0].channelId}`
+      );
+    };
     if (!data) return;
     if (data.isWorkspaceMember) {
-      navigate(`/workspace/${data.workspaceId}`);
+      fetchData(data);
     }
   }, [data, isLoading, isError]);
 
