@@ -10,7 +10,7 @@ import { useUserStore } from '@/stores/userStore';
 const WorkspaceFrame = () => {
   const { workspaceId } = useParams();
   const naviagate = useNavigate();
-  const { user, setUser } = useUserStore();
+  const { setUser } = useUserStore();
   useEffect(() => {
     if (!workspaceId) return;
 
@@ -24,9 +24,8 @@ const WorkspaceFrame = () => {
         naviagate('/');
       }
     };
-
     fetchWorkspaceInfo();
-  }, [workspaceId, user]);
+  }, [workspaceId]);
   return (
     <div className="flex flex-col w-full max-h-screen">
       <WorkspaceHeader />

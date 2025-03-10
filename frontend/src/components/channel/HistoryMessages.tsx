@@ -21,10 +21,8 @@ const HistoryMessages = ({
     useChatMessages(workspaceId, channelId);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const topRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     if (!scrollContainerRef.current) return;
-
     const prevScrollHeight = scrollContainerRef.current.scrollHeight;
 
     const observer = new IntersectionObserver(

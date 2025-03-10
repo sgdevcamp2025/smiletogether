@@ -19,7 +19,7 @@ export const useChatMessages = (workspaceId: string, channelId: string) => {
       const oldestDate = dates[0];
       const oldestMessages = lastPage.groupedMessages[oldestDate];
       if (!oldestMessages || oldestMessages.length === 0) return undefined;
-
+      console.log(oldestMessages);
       return oldestMessages[0].createdAt;
     },
 
