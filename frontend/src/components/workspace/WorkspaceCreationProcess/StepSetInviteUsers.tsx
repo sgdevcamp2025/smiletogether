@@ -6,6 +6,7 @@ import { useWorkspaceCreationStore } from '@/stores/workspace';
 import EmailTagInput from '@/components/common/EmailTagInput';
 import { useCreateWorkspaceMutation } from '@/hooks/workspace/useCreateWorkspaceMutation';
 import { getOwnerId } from '@/lib/utils';
+import { getUserJoinedWorkspaceChannels } from '@/apis/channel';
 
 const StepSetInviteUsers = () => {
   const {
@@ -31,8 +32,14 @@ const StepSetInviteUsers = () => {
         inviteEmailList: invitedUsers,
       },
       {
-        onSuccess: data => {
-          navigate(`/workspace/${data.workspaceId}`);
+        onSuccess: async data => {
+          const response = await getUserJoinedWorkspaceChannels(
+            data.workspaceId
+          );
+
+          navigate(
+            `/workspace/${data.workspaceId}/channel/${response[0].channelId}`
+          );
           initWorkspaceStore();
         },
       }

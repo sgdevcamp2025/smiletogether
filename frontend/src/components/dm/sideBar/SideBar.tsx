@@ -11,10 +11,12 @@ const SideBar = () => {
   if (isError) return <p>로딩중입니다.</p>;
 
   return (
-    <div className="flex flex-col h-screen gap-2 bg-amber-200">
+    <div className="flex flex-col h-screen gap-2 bg-yellow-300">
       <SideBarHeader />
       <div className="flex flex-col">
-        {data?.dms.map((dm, index) => <DMList key={index} {...dm} />)}
+        {data?.dms.map((dm, index) => (
+          <DMList key={index} {...dm} />
+        ))}
       </div>
     </div>
   );

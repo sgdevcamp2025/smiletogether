@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { DMItem } from '@/types/dm';
+import { useNavigate, useParams } from 'react-router';
 
 interface WorkspaceDirectMessageListItemProps {
   dm: DMItem;
@@ -8,8 +9,15 @@ interface WorkspaceDirectMessageListItemProps {
 const WorkspaceDirectMessageListItem = ({
   dm,
 }: WorkspaceDirectMessageListItemProps) => {
+  const navigate = useNavigate();
+  const { workspaceId } = useParams();
   return (
-    <Button className="flex items-center justify-start w-full text-xs bg-transparent rounded-lg shadow-none hover:bg-transparent">
+    <Button
+      className="flex items-center justify-start w-full text-xs bg-transparent rounded-lg shadow-none hover:bg-transparent"
+      onClick={() => {
+        navigate(`/workspace/${workspaceId}/dm/${dm.dmId}`);
+      }}
+    >
       <div className="relative flex-shrink-0 w-6 h-6 ">
         <img
           src={dm.participants[0]?.profileImage}

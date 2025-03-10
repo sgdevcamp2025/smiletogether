@@ -22,8 +22,6 @@ const MainNavigationSidebar = () => {
                   navigate(
                     `/workspace/${workspaceId}/channel/${channelList[0].channelId}`
                   );
-                } else {
-                  navigate(`/workspace/${workspaceId}`);
                 }
               }
               if (item.type === 'DM') {
