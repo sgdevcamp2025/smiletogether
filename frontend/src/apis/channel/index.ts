@@ -7,11 +7,12 @@ import {
 import { GetChannelResponse, GetMessagesResponse } from './dto';
 import axios from 'axios';
 import { MessageType } from '@/types/chat';
+import { getToken } from '@/lib/utils';
 
 export const getChannel = async (
   channelId: string
 ): Promise<GetChannelResponse> => {
-  const response = await https.get(`api/channels/${channelId}`);
+  const response = await https.get(`/api/channels/${channelId}`);
   return response.data;
 };
 
@@ -70,9 +71,13 @@ export const getChatMessages = async (
       `http://localhost:8083/api/workspaces/${workspaceId}/channels/${channelId}/messages`,
       {
         params: { lastTimeStamp },
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+          'Content-Type': 'application/json',
+        },
       }
     );
-
+    console.log('getChatMessages', response);
     if (response.data) {
       return { groupedMessages: response.data.groupedMessages || {} };
     }

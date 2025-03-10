@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { Client } from '@stomp/stompjs';
 import { useUserStore } from '@/stores/userStore';
+import { getToken } from '@/lib/utils';
 
 interface UseSendMessageProps {
   workspaceId: string;
@@ -29,12 +30,11 @@ export const useSendMessage = ({
     if (!message.trim()) return;
 
     const messageData = { type: 'SEND', content: message };
-
     const publishPath = `/pub/workspaces/${workspaceId}/channels/${channelId}`;
     client.publish({
       destination: publishPath,
       headers: {
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlcklkIjoiMDNjNmIwODMtZThkNi00ODhjLWFhODMtMmEwMWIzZjM5ZDAwIiwiaWF0IjoxNTE2MjM5MDIyfQ.iVTdh4kkGh6f6gEZLf9MJPwkjusaXf58z_Tc4ncummw`,
+        Authorization: `Bearer ${getToken()}`,
       },
       body: JSON.stringify(messageData),
     });

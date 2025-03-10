@@ -13,7 +13,6 @@ const LoginPage = () => {
     const email = formData.get('email') as string;
     try {
       await postSendEmailCode(email);
-      console.log('이메일 전송 성공', email);
       navigate('/confirmemail', { state: { email: email } });
     } catch (error) {
       console.error('이메일 전송 실패', error);

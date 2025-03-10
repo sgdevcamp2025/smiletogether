@@ -11,5 +11,6 @@ export interface User {
 
 export interface WorkspaceMember extends User {
   userEmail: string;
-  role?: 'member' | 'admin';
+  role?: 'member' | 'admin' | 'pending_member';
+  nickName: string;
 }

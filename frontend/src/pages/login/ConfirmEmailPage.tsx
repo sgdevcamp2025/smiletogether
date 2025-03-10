@@ -1,6 +1,8 @@
 import { postConfirmEmail, postLogin, postRegister } from '@/apis/user';
 import { InputCodeForm } from '@/components/login/InputCodeForm';
 import { InputNicknameForm } from '@/components/login/InputNicknameForm';
+import { userOriginStore } from '@/stores/userOriginStore';
+import { useUserStore } from '@/stores/userStore';
 import { FormEvent, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 
@@ -9,6 +11,8 @@ const ConfirmEmailPage = () => {
   const location = useLocation();
   const [code, setCode] = useState('');
   const [isRegistering, setIsRegistering] = useState(false);
+  const { setUser: setOriginUser } = userOriginStore();
+  const { setUser } = useUserStore();
 
   const email = location.state?.email;
 
@@ -27,12 +31,18 @@ const ConfirmEmailPage = () => {
     }
 
     if (confirmResponse.data.code === '200') {
-      const loginResponse = await postLogin(email);
-
-      if (loginResponse.data.isMember) {
-        navigate('/workspaces');
-      } else {
+      const { signInResponse } = await postLogin(email);
+      if (signInResponse.data.isMember === false) {
         setIsRegistering(true);
+      } else {
+        const userInfo = signInResponse.data.member;
+        console.log('userInfo', userInfo);
+        setOriginUser(userInfo);
+        setUser({
+          userId: userInfo.id,
+        });
+        alert('성공');
+        navigate('/workspaces');
       }
     }
   };
@@ -41,17 +51,20 @@ const ConfirmEmailPage = () => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const name = formData.get('name') as string;
-    console.log(name);
     try {
       const registerResponse = await postRegister(name, email);
-      console.log('회원가입 성공', registerResponse);
+      const { signInResponse } = await postLogin(email);
+      const userInfo = signInResponse.data.member;
+      setOriginUser(userInfo);
+      setUser({
+        userId: userInfo.id,
+      });
       navigate('/workspaces');
     } catch (error) {
       console.error('회원가입 실패', error);
       alert('회원가입에 실패했습니다.');
     }
   };
-
   useEffect(() => {
     if (code.length === 6) {
       try {

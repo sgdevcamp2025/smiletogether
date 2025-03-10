@@ -25,7 +25,6 @@ const WorkspaceChannelPanel = () => {
     isChannelLoading,
     isChannelError,
   } = useWorkspaceChannelListQuery(workspaceId!);
-
   const workspaceName = workspaceInfo?.name ?? '알 수 없는 워크스페이스';
   const setModal = useModalStore(state => state.setModal);
   const user = useUserStore(state => state.user);
@@ -33,7 +32,6 @@ const WorkspaceChannelPanel = () => {
     workspaceInfo?.ownerId === user.userId ? 'admin' : 'member';
 
   const naviagte = useNavigate();
-
   if (!workspaceId) return <p>워크스페이스 정보를 불러오는 중...</p>;
   if (isChannelLoading || isWorkspaceLoading || isDMLoading)
     return <p>로딩 중입니다!</p>;
