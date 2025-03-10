@@ -23,6 +23,10 @@ export const useChatMessages = (workspaceId: string, channelId: string) => {
       return oldestMessages[0].createdAt;
     },
 
-    initialPageParam: new Date().toISOString().replace('Z', ''),
+    initialPageParam: new Date(
+      new Date().getTime() + 9 * 60 * 60 * 1000 + 1 * 60 * 1000
+    )
+      .toISOString()
+      .replace('Z', ''),
   });
 };
