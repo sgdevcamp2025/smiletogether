@@ -173,6 +173,63 @@ export class ChannelService {
       );
     }
 
+    const userChannels = await this.prismaService.channelUser.findMany({
+      where: { user_id: userId },
+      select: { channel_id: true },
+    });
+
+    const channelIds = userChannels.map((channel) => channel.channel_id);
+
+    const channels = await this.prismaService.channel.findMany({
+      where: {
+        workspace_id: workspaceId,
+        channel_id: { in: channelIds },
+      },
+      select: {
+        channel_id: true,
+        name: true,
+        is_private: true,
+      },
+    });
+
+    return {
+      channels: channels.map((channel) => ({
+        channelId: channel.channel_id,
+        name: channel.name,
+        isPrivate: channel.is_private,
+      })),
+    };
+  }
+
+  async getAllChannelsInWorkspace(
+    userId: string,
+    workspaceId: string,
+  ): Promise<WorkspaceChannelDto> {
+    const workspace = await this.prismaService.workspace.findUnique({
+      where: { workspace_id: workspaceId },
+    });
+
+    if (!workspace) {
+      throw new NotFoundException(
+        `워크스페이스 ID ${workspaceId}를 찾을 수 없습니다`,
+      );
+    }
+
+    const workspaceUser = await this.prismaService.workspaceUser.findUnique({
+      where: {
+        user_id_workspace_id: {
+          user_id: userId,
+          workspace_id: workspaceId,
+        },
+      },
+    });
+
+    if (!workspaceUser) {
+      throw new ForbiddenException(
+        `워크스페이스 ID ${workspaceId}에 대한 접근 권한이 없습니다다`,
+      );
+    }
+
     const channels = await this.prismaService.channel.findMany({
       where: {
         workspace_id: workspaceId,
@@ -212,6 +269,19 @@ export class ChannelService {
       },
     });
 
+    if (channelUsers.length === 0) {
+      return {
+        channelId: channel.channel_id,
+        channelName: channel.name,
+        createdBy: null,
+        description: channel.description,
+        isPrivate: channel.is_private,
+        totalMembers: 0,
+        members: [],
+        createdAt: channel.created_at.toISOString(),
+      };
+    }
+
     const userIds = channelUsers.map((user) => user.user_id);
     const members = await this.prismaService.workspaceUser.findMany({
       where: {
@@ -230,17 +300,20 @@ export class ChannelService {
     const adminUserId = channelUsers.find(
       (user) => user.channel_role === 'admin',
     )?.user_id;
-    const adminUser = members.find((member) => member.user_id === adminUserId);
+    const adminUser =
+      members.find((member) => member.user_id === adminUserId) ?? null;
 
-    const mappedAdminUser = {
-      userId: adminUser.user_id,
-      nickname: adminUser.profile_name,
-      displayName: adminUser.profile_name,
-      profileImage: adminUser.profile_image,
-      position: 'admin',
-      isActive: true,
-      statusMessage: adminUser.status_message,
-    };
+    const mappedAdminUser = adminUser
+      ? {
+          userId: adminUser.user_id,
+          nickname: adminUser.profile_name,
+          displayName: adminUser.profile_name,
+          profileImage: adminUser.profile_image,
+          position: 'admin',
+          isActive: true,
+          statusMessage: adminUser.status_message,
+        }
+      : null;
 
     const mappedMembers = members.map((member) => ({
       userId: member.user_id,
