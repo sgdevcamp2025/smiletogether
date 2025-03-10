@@ -21,10 +21,8 @@ const HistoryMessages = ({
     useChatMessages(workspaceId, channelId);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const topRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     if (!scrollContainerRef.current) return;
-
     const prevScrollHeight = scrollContainerRef.current.scrollHeight;
 
     const observer = new IntersectionObserver(
@@ -47,7 +45,6 @@ const HistoryMessages = ({
     if (topRef.current) observer.observe(topRef.current);
     return () => observer.disconnect();
   }, [hasNextPage, fetchNextPage]);
-
   return (
     <div ref={scrollContainerRef} className="overflow-auto]">
       {/* 맨 위에 보이지 않는 ref 배치 */}

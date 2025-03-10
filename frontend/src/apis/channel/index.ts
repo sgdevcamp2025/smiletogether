@@ -77,13 +77,30 @@ export const getChatMessages = async (
         },
       }
     );
-    console.log('getChatMessages', response);
-    if (response.data) {
-      return { groupedMessages: response.data.groupedMessages || {} };
-    }
-  } catch (error) {
-    alert(error);
-  }
 
-  return { groupedMessages: {} };
+    if (!response.data || !response.data.groupedMessages) {
+      return { groupedMessages: {} };
+    }
+
+    // 🔥 데이터 정렬 (타입 오류 해결)
+    const groupedMessages: Record<string, MessageType[]> = Object.entries(
+      response.data.groupedMessages as Record<string, MessageType[]>
+    )
+      .sort(
+        ([dateA], [dateB]) =>
+          new Date(dateB).getTime() - new Date(dateA).getTime()
+      ) // 날짜 정렬
+      .reduce((acc, [date, messages]) => {
+        acc[date] = messages.sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+        return acc;
+      }, {} as Record<string, MessageType[]>);
+
+    return { groupedMessages };
+  } catch (error) {
+    console.error('Error in getChatMessages:', error);
+    return { groupedMessages: {} };
+  }
 };

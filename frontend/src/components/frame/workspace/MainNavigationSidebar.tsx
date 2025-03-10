@@ -27,7 +27,7 @@ const MainNavigationSidebar = () => {
               if (item.type === 'DM') {
                 navigate(`/workspace/${workspaceId}/dm/1`);
               }
-              if (item.type === 'ETC') console.log('더보기 클릭');
+              if (item.type === 'ETC') alert('더보기는 아직 준비중입니다!');
             }}
           >
             <p>{item.icon}</p>
