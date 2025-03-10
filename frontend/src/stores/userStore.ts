@@ -1,5 +1,8 @@
 import { create } from 'zustand';
 import { User } from '@/types/user';
+import { useEffect } from 'react';
+import https from '@/lib/https';
+import { getOwnerId } from '@/lib/utils';
 
 interface UserState {
   user: User;
@@ -8,13 +11,38 @@ interface UserState {
 
 export const useUserStore = create<UserState>(set => ({
   user: {
-    userId: '03c6b083-e8d6-488c-aa83-2a01b3f39d00',
-    username: 'Subin Kim',
+    userId: '',
+    username: '',
     displayName: '',
-    profileImage: 'https://example.com/profile/subin.jpg',
-    position: '인재영입팀 김수빈 과장 (DevRel)',
-    isActive: true,
-    statusMessage: '고민이 있다면 언제든 메시지 주세요!',
+    profileImage: '',
+    position: '',
+    isActive: false,
+    statusMessage: '',
   },
   setUser: user => set(state => ({ user: { ...state.user, ...user } })),
 }));
+
+const getWorkspaceUser = async (workspaceId: string): Promise<User> => {
+  const response = await https.get(
+    `/api/workspaces/${workspaceId}/users/${getOwnerId()}`
+  );
+  console.log(response.data);
+  return response.data;
+};
+
+export const useUser = (workspaceId: string) => {
+  const { user, setUser } = useUserStore();
+
+  useEffect(() => {
+    if (user.userId === '') {
+      const getUserData = async () => {
+        const userData = await getWorkspaceUser(workspaceId);
+        setUser(userData);
+      };
+
+      getUserData();
+    }
+  }, [workspaceId, user.userId, setUser]);
+
+  return { user };
+};
