@@ -2,6 +2,7 @@ import { Textarea } from '@/components/ui/textarea';
 import clsx from 'clsx';
 import { Client } from '@stomp/stompjs';
 import { useSendMessage } from '@/hooks/channel/useSendMessage';
+import React, { KeyboardEventHandler } from 'react';
 
 interface MessageBoxProps {
   channelName: string;
@@ -50,6 +51,13 @@ const MessageBox = ({
     client,
   });
 
+  const sendMessageByEnter = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      sendMessage();
+    }
+  };
+
   return (
     <div className="w-full p-5">
       <div className="flex flex-col gap-3 px-3 py-2 bg-white border rounded-lg shadow-sm">
@@ -58,6 +66,7 @@ const MessageBox = ({
           placeholder={`${channelName}에 메시지 보내기`}
           onChange={handleChange}
           value={message}
+          onKeyDown={sendMessageByEnter}
         />
         <div className="flex items-center justify-between">
           <div className="flex gap-2">
