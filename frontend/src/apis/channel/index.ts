@@ -6,7 +6,6 @@ import {
 } from '@/apis/channel/dto';
 import { GetChannelResponse, GetMessagesResponse } from './dto';
 import axios from 'axios';
-import { MessageType } from '@/types/chat';
 import { getToken } from '@/lib/utils';
 
 export const getChannel = async (
@@ -65,7 +64,7 @@ export const getChatMessages = async (
   workspaceId: string,
   channelId: string,
   lastTimeStamp: string
-): Promise<{ groupedMessages: Record<string, MessageType[]> }> => {
+) => {
   try {
     const response = await axios.get(
       `http://localhost:8083/api/workspaces/${workspaceId}/channels/${channelId}/messages`,
@@ -78,27 +77,9 @@ export const getChatMessages = async (
       }
     );
 
-    if (!response.data || !response.data.groupedMessages) {
-      return { groupedMessages: {} };
+    if (response.data) {
+      return { groupedMessages: response.data.groupedMessages || {} };
     }
-
-    // 🔥 데이터 정렬 (타입 오류 해결)
-    const groupedMessages: Record<string, MessageType[]> = Object.entries(
-      response.data.groupedMessages as Record<string, MessageType[]>
-    )
-      .sort(
-        ([dateA], [dateB]) =>
-          new Date(dateB).getTime() - new Date(dateA).getTime()
-      ) // 날짜 정렬
-      .reduce((acc, [date, messages]) => {
-        acc[date] = messages.sort(
-          (a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
-        return acc;
-      }, {} as Record<string, MessageType[]>);
-
-    return { groupedMessages };
   } catch (error) {
     console.error('Error in getChatMessages:', error);
     return { groupedMessages: {} };
