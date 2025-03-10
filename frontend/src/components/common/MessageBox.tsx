@@ -52,7 +52,7 @@ const MessageBox = ({
   });
 
   const sendMessageByEnter = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       sendMessage();
     }
