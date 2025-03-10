@@ -5,6 +5,7 @@ import MainNavigationSidebar from '@/components/frame/workspace/MainNavigationSi
 import { useEffect } from 'react';
 import { getMyWorkspaceInfo } from '@/apis/user';
 import { userOriginStore } from '@/stores/userOriginStore';
+import { getOwnerId } from '@/lib/utils';
 
 const WorkspaceFrame = () => {
   const { workspaceId } = useParams();
@@ -16,7 +17,7 @@ const WorkspaceFrame = () => {
     const fetchWorkspaceInfo = async () => {
       if (!user) naviagate('/');
       try {
-        const data = await getMyWorkspaceInfo(workspaceId, user.id!);
+        const data = await getMyWorkspaceInfo(workspaceId, getOwnerId());
         console.log(data);
       } catch (error) {
         console.error('워크스페이스 유저 프로필 조회:', error);
