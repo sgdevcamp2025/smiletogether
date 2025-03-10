@@ -16,6 +16,7 @@ const ChannelPage = () => {
   }, []);
   const { channelData, isChannelLoading, isChannelError } =
     useGetChannel(channelId);
+  console.log(channelData?.channelName, channelData, channelData?.createdBy);
   const { client, messages: initailMessages } = useWebSocket({
     workspaceId,
     channelId,
@@ -76,7 +77,7 @@ const ChannelPage = () => {
       {channelData && channelData.createdBy && (
         <>
           <ChatHeader
-            name={channelData?.name}
+            name={channelData?.channelName}
             isPrivate={channelData?.isPrivate}
             totalMembers={channelData?.totalMembers}
             members={channelData?.members}
@@ -91,7 +92,7 @@ const ChannelPage = () => {
         {channelData && channelData.createdBy && (
           <ChannelInfo
             userId={channelData.createdBy.userId}
-            channelName={channelData.name}
+            channelName={channelData.channelName}
             displayName={channelData.createdBy.displayName}
             username={channelData.createdBy.username}
             createdAt={channelData.createdAt}
@@ -130,7 +131,7 @@ const ChannelPage = () => {
 
       {channelData && client && (
         <MessageBox
-          channelName={channelData.name}
+          channelName={channelData.channelName}
           workspaceId={workspaceId!}
           channelId={channelId!}
           client={client}
