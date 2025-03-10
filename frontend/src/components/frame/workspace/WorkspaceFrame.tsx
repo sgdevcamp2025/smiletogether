@@ -4,20 +4,21 @@ import WorkspaceSideBar from '@/components/frame/workspace/WorkspaceSidebar';
 import MainNavigationSidebar from '@/components/frame/workspace/MainNavigationSidebar';
 import { useEffect } from 'react';
 import { getMyWorkspaceInfo } from '@/apis/user';
-import { userOriginStore } from '@/stores/userOriginStore';
 import { getOwnerId } from '@/lib/utils';
+import { useUserStore } from '@/stores/userStore';
 
 const WorkspaceFrame = () => {
   const { workspaceId } = useParams();
-  const { user } = userOriginStore();
   const naviagate = useNavigate();
+  const { user, setUser } = useUserStore();
   useEffect(() => {
     if (!workspaceId) return;
 
     const fetchWorkspaceInfo = async () => {
-      if (!user) naviagate('/');
+      if (!getOwnerId()) naviagate('/');
       try {
-        await getMyWorkspaceInfo(workspaceId, getOwnerId());
+        const userData = await getMyWorkspaceInfo(workspaceId, getOwnerId());
+        setUser(userData);
       } catch (error) {
         alert(`워크스페이스 유저 프로필 조회 : ${error}`);
         naviagate('/');
