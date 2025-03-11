@@ -12,16 +12,82 @@ import {
   WorkspaceChannelDto,
 } from './dto/workspace-channel.dto';
 import { ChannelDetailsDto } from './dto/channel-detail.dto';
+import { validate as isUUID } from 'uuid';
 
 @Injectable()
 export class ChannelService {
   constructor(private readonly prismaService: PrismaService) {}
 
+  getEmailByUserId = async (userId: string): Promise<string> => {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/auth/identify-email?userId=${encodeURIComponent(userId)}`,
+      );
+      if (!response.ok) {
+        console.log(response);
+        return '해당 userId의 email이 존재하지 않습니다.';
+      }
+      const data = await response.json();
+      return data.email || '해당 userId의 email이 존재하지 않습니다.';
+    } catch (error) {
+      console.error(error);
+      return '해당 userId의 email이 존재하지 않습니다.';
+    }
+  };
+
+  getUserIdByEmail = async (email: string): Promise<string> => {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/auth/check-memberId?email=${encodeURIComponent(email)}`,
+      );
+      if (!response.ok) return '해당 email의 userId가 존재하지 않습니다.';
+      const data = await response.json();
+      return data.userId || '해당 email의 userId가 존재하지 않습니다.';
+    } catch (error) {
+      console.error(error);
+      return '해당 email의 userId가 존재하지 않습니다.';
+    }
+  };
+
+  async inviteChannels(
+    emails: string[],
+    channelIdList: string[],
+  ): Promise<{
+    success: { email: string; channelId: string }[];
+    failed: { email: string; channelId?: string; message: string }[];
+  }> {
+    const inviteResults = {
+      success: [],
+      failed: [],
+    };
+
+    for (const email of emails) {
+      const userId = await this.getUserIdByEmail(email);
+      if (!userId || userId === '해당 email의 userId가 존재하지 않습니다.') {
+        inviteResults.failed.push({ email, message: 'User ID not found.' });
+        continue;
+      }
+      for (const channelId of channelIdList) {
+        try {
+          await this.joinChannel(userId, channelId);
+          inviteResults.success.push({ email, channelId });
+        } catch (error) {
+          inviteResults.failed.push({
+            email,
+            channelId,
+            message: error.message,
+          });
+        }
+      }
+    }
+    return inviteResults;
+  }
+
   async createChannel(
     userId: string,
     createChannelDto: CreateChannelDto,
   ): Promise<ChannelResponseDto> {
-    const { workspaceId, name, description, isPrivate } = createChannelDto;
+    const { workspaceId, name, isPrivate, emails } = createChannelDto;
 
     const workspaceUser = await this.prismaService.workspaceUser.findUnique({
       where: {
@@ -40,7 +106,7 @@ export class ChannelService {
       data: {
         workspace_id: workspaceId,
         name: name,
-        description: description,
+        description: `${name} 채널입니다.`,
         is_private: isPrivate,
       },
     });
@@ -52,6 +118,20 @@ export class ChannelService {
         channel_role: 'admin',
       },
     });
+
+    for (const email of emails) {
+      const newUserId = await this.getUserIdByEmail(email);
+      if (isUUID(newUserId))
+        await this.joinChannel(newUserId, newChannel.channel_id);
+      else
+        console.log(
+          '해당 이메일로 조회된 userId가 올바르지 않습니다.',
+          '조회 한 userEmail: ',
+          email,
+          '조회 된 userId: ',
+          newUserId,
+        );
+    }
 
     const channelResponse: ChannelResponseDto = {
       channelId: newChannel.channel_id,
@@ -65,6 +145,63 @@ export class ChannelService {
   }
 
   async getChannelsByUser(
+    userId: string,
+    workspaceId: string,
+  ): Promise<WorkspaceChannelDto> {
+    const workspace = await this.prismaService.workspace.findUnique({
+      where: { workspace_id: workspaceId },
+    });
+
+    if (!workspace) {
+      throw new NotFoundException(
+        `워크스페이스 ID ${workspaceId}를 찾을 수 없습니다`,
+      );
+    }
+
+    const workspaceUser = await this.prismaService.workspaceUser.findUnique({
+      where: {
+        user_id_workspace_id: {
+          user_id: userId,
+          workspace_id: workspaceId,
+        },
+      },
+    });
+
+    if (!workspaceUser) {
+      throw new ForbiddenException(
+        `워크스페이스 ID ${workspaceId}에 대한 접근 권한이 없습니다다`,
+      );
+    }
+
+    const userChannels = await this.prismaService.channelUser.findMany({
+      where: { user_id: userId },
+      select: { channel_id: true },
+    });
+
+    const channelIds = userChannels.map((channel) => channel.channel_id);
+
+    const channels = await this.prismaService.channel.findMany({
+      where: {
+        workspace_id: workspaceId,
+        channel_id: { in: channelIds },
+      },
+      select: {
+        channel_id: true,
+        name: true,
+        is_private: true,
+      },
+    });
+
+    return {
+      channels: channels.map((channel) => ({
+        channelId: channel.channel_id,
+        name: channel.name,
+        isPrivate: channel.is_private,
+      })),
+    };
+  }
+
+  async getAllChannelsInWorkspace(
     userId: string,
     workspaceId: string,
   ): Promise<WorkspaceChannelDto> {
@@ -132,41 +269,60 @@ export class ChannelService {
       },
     });
 
+    if (channelUsers.length === 0) {
+      return {
+        channelId: channel.channel_id,
+        channelName: channel.name,
+        createdBy: null,
+        description: channel.description,
+        isPrivate: channel.is_private,
+        totalMembers: 0,
+        members: [],
+        createdAt: channel.created_at.toISOString(),
+      };
+    }
+
     const userIds = channelUsers.map((user) => user.user_id);
     const members = await this.prismaService.workspaceUser.findMany({
       where: {
         user_id: { in: userIds },
+        workspace_id: channel.workspace_id,
       },
       select: {
         user_id: true,
         profile_name: true,
         profile_image: true,
+        role: true,
+        status_message: true,
       },
     });
 
     const adminUserId = channelUsers.find(
       (user) => user.channel_role === 'admin',
     )?.user_id;
-    const adminUser = members.find((member) => member.user_id === adminUserId);
+    const adminUser =
+      members.find((member) => member.user_id === adminUserId) ?? null;
 
-    const mappedAdminUser = {
-      userId: adminUser.user_id,
-      nickname: adminUser.profile_name,
-      displayName: '',
-      profileImage: adminUser.profile_image,
-      position: '',
-      isActive: true,
-      statusMessage: '',
-    };
+    const mappedAdminUser = adminUser
+      ? {
+          userId: adminUser.user_id,
+          nickname: adminUser.profile_name,
+          displayName: adminUser.profile_name,
+          profileImage: adminUser.profile_image,
+          position: 'admin',
+          isActive: true,
+          statusMessage: adminUser.status_message,
+        }
+      : null;
 
     const mappedMembers = members.map((member) => ({
       userId: member.user_id,
       nickname: member.profile_name,
-      displayName: '',
+      displayName: member.profile_name,
       profileImage: member.profile_image,
-      position: '',
+      position: member.role,
       isActive: true,
-      statusMessage: '',
+      statusMessage: member.status_message,
     }));
 
     return {

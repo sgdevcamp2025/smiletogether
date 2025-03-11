@@ -6,7 +6,7 @@ export class ChannelDetailsDto {
   createdBy: MemberDto;
   isPrivate: boolean;
   totalMembers: number;
-  members: MemberDto[];
+  members: MemberDto[] | null;
 }
 
 export class MemberDto {

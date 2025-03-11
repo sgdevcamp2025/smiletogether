@@ -35,6 +35,12 @@ export class ChannelController {
     return this.channelService.createChannel(userId, createChannelDto);
   }
 
+  @Get('getEmailByUserId')
+  async getEmailByUserId(@UserId() userId: string): Promise<any> {
+    console.log(userId);
+    return this.channelService.getEmailByUserId(userId);
+  }
+
   @Get('workspaces/:workspaceId')
   async getChannelsByUser(
     @UserId() userId: string,
@@ -43,11 +49,27 @@ export class ChannelController {
     return this.channelService.getChannelsByUser(userId, workspaceId);
   }
 
+  @Get('workspaces/:workspaceId/allChannel')
+  async getAllChannelsInWorkspace(
+    @UserId() userId: string,
+    @Param('workspaceId') workspaceId: string,
+  ): Promise<WorkspaceChannelDto> {
+    return this.channelService.getAllChannelsInWorkspace(userId, workspaceId);
+  }
+
   @Get(':channelId')
   async getChannelById(
     @Param('channelId') channelId: string,
   ): Promise<ChannelDetailsDto> {
     return this.channelService.getChannelById(channelId);
+  }
+
+  @Post('invite')
+  async inviteChannel(
+    @Body('emails') emails: string[],
+    @Body('channelIdList') channelIdList: string[],
+  ): Promise<any> {
+    return this.channelService.inviteChannels(emails, channelIdList);
   }
 
   @Post(':channelId/join')

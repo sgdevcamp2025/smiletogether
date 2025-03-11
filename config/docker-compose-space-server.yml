@@ -1,5 +1,7 @@
+networks:
+  space_network:
 services:
-  postgres:
+  space-postgres:
     image: postgres:latest
     container_name: space_db_postgres
     restart: always
@@ -10,21 +12,41 @@ services:
     ports:
       - "5433:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - space_postgres_data:/var/lib/postgresql/data
+      - ../script/space_server_init.sql:/app/script/space_server_init.sql
+    networks:
+      - space_network
+
+  space-redis:
+    image: redis:latest
+    container_name: space_db_redis
+    restart: always
+    ports:
+      - "6381:6379"
+    volumes:
+      - space_redis_data:/data
+    networks:
+      - space_network
 
   space-server:
     build:
       context: ../backend/space-server
-    container_name: space_server
+    container_name: space-server
     restart: always
     environment:
       DATABASE_URL: postgresql://myuser:mypassword@space_db_postgres:5432/mydatabase
+      REDIS_HOST: space_db_redis
+      REDIS_PORT: 6379
     ports:
       - "8090:8090"
     depends_on:
-      - postgres
+      - space-postgres
+      - space-redis
     command: >
       sh -c "npx prisma migrate deploy && npx prisma generate && pnpm run start:dev"
+    networks:
+      - space_network
 
 volumes:
-  postgres_data:
+  space_postgres_data:
+  space_redis_data:
