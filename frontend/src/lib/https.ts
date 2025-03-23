@@ -1,65 +1,16 @@
-import axios from 'axios';
-import { getToken } from '@/lib/utils';
-import { postRefreshToken } from '@/apis/user';
+import { createApi } from '@/lib/createApi';
 
-const mockApiList = ['/api/dms'];
+// VITE_BASE_USER_API_URL = http://localhost:8080
+// VITE_BASE_CHAT1_API_URL = http://localhost:8081
+// VITE_BASE_CHAT2_API_URL = http://localhost:8082
+// VITE_BASE_CHAT3_API_URL = http://localhost:8083
+// VITE_BASE_HISTORY_API_URL = http://localhost:8084
+// VITE_BASE_SPACE_API_URL = http://localhost:8090
+// VITE_BASE_AUTH_API_URL = http://localhost:8091
+// VITE_BASE_CLIENT_API_URL = http://localhost:5173
 
-const https = axios.create({
-  withCredentials: true,
-  timeout: 10000,
-});
-
-https.interceptors.request.use(
-  config => {
-    const isMockApi = mockApiList.some(item => config.url!.startsWith(item));
-    if (isMockApi) {
-      config.baseURL = '';
-    } else if (
-      config.url!.startsWith('/api/workspaces') ||
-      config.url!.startsWith('/api/invite') ||
-      config.url!.startsWith('/api/channels')
-    ) {
-      config.baseURL = import.meta.env.VITE_BASE_SERVER_API_URL;
-    } else {
-      config.baseURL = config.url;
-    }
-    config.headers.Authorization = `Bearer ${getToken()}`;
-    return config;
-  },
-  error => {
-    return Promise.reject(error);
-  }
-);
-
-https.interceptors.response.use(
-  response => {
-    return response;
-  },
-  async error => {
-    const {
-      config,
-      response: { status },
-    } = error;
-    if (status === 401) {
-      try {
-        const originConfig = config;
-        const refreshResponse = await postRefreshToken();
-        if (refreshResponse.status === 200) {
-          const newAccessToken = refreshResponse.data.accessToken;
-          localStorage.setItem('access-token', newAccessToken);
-          originConfig.headers.Authorization = `Bearer ${newAccessToken}`;
-          return axios(originConfig);
-        } else if (refreshResponse.status === 401) {
-          alert('로그인 시간이 만료되었습니다.');
-          window.location.href = import.meta.env.VITE_BASE_CLIENT_API_URL;
-        }
-      } catch (error) {
-        alert(`Unable to refresh access token ${error}`);
-        window.location.href = import.meta.env.VITE_BASE_CLIENT_API_URL;
-      }
-    }
-    return Promise.reject(error);
-  }
-);
-
-export default https;
+export const userApi = createApi(import.meta.env.VITE_BASE_USER_API_URL);
+export const chatApi = createApi(import.meta.env.VITE_BASE_CHAT3_API_URL);
+export const spaceApi = createApi(import.meta.env.VITE_BASE_SPACE_API_URL);
+export const authApi = createApi(import.meta.env.VITE_BASE_AUTH_API_URL);
+export const directMessageApi = createApi('/api/dms');
