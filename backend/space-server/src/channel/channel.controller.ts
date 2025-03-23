@@ -49,6 +49,14 @@ export class ChannelController {
     return this.channelService.getChannelsByUser(userId, workspaceId);
   }
 
+  @Get('workspaces/:workspaceId/allChannel')
+  async getAllChannelsInWorkspace(
+    @UserId() userId: string,
+    @Param('workspaceId') workspaceId: string,
+  ): Promise<WorkspaceChannelDto> {
+    return this.channelService.getAllChannelsInWorkspace(userId, workspaceId);
+  }
+
   @Get(':channelId')
   async getChannelById(
     @Param('channelId') channelId: string,

@@ -59,15 +59,15 @@ VALUES
     ('24fabb10-fb3a-11ef-a453-6640c3b0a710', '24fa79f4-fb3a-11ef-a453-6640c3b0a700', 'product', 'Product management discussions', FALSE, NOW(), NOW()),
 
     -- Smile Gate 워크스페이스
-    ('24fac210-fb3a-11ef-a453-6640c3b0a711', '24fa7058-fb3a-11ef-a453-6640c3b0a700', 'team-leads', 'Private discussions for team leads', TRUE, NOW(), NOW()),
-    ('24fac690-fb3a-11ef-a453-6640c3b0a712', '24fa7058-fb3a-11ef-a453-6640c3b0a700', 'marketing', 'Marketing strategy and content', FALSE, NOW(), NOW()),
-    ('24faca10-fb3a-11ef-a453-6640c3b0a713', '24fa7058-fb3a-11ef-a453-6640c3b0a700', 'qa', 'Quality assurance and bug reports', FALSE, NOW(), NOW()),
+    ('24fac210-fb3a-11ef-a453-6640c3b0a711', '24fa7022-fb3a-11ef-a453-6640c3b0a700', 'team-leads', 'Private discussions for team leads', TRUE, NOW(), NOW()),
+    ('24fac690-fb3a-11ef-a453-6640c3b0a712', '24fa7022-fb3a-11ef-a453-6640c3b0a700', 'marketing', 'Marketing strategy and content', FALSE, NOW(), NOW()),
+    ('24faca10-fb3a-11ef-a453-6640c3b0a713', '24fa7022-fb3a-11ef-a453-6640c3b0a700', 'qa', 'Quality assurance and bug reports', FALSE, NOW(), NOW()),
 
     -- Online DevCamp 워크스페이스
-    ('24fad010-fb3a-11ef-a453-6640c3b0a714', '24fa79f4-fb3a-11ef-a453-6640c3b0a700', 'mentors', 'Discussion for mentors', TRUE, NOW(), NOW()),
-    ('24fad430-fb3a-11ef-a453-6640c3b0a715', '24fa79f4-fb3a-11ef-a453-6640c3b0a700', 'students', 'Discussion for students', FALSE, NOW(), NOW()),
-    ('24fad850-fb3a-11ef-a453-6640c3b0a716', '24fa79f4-fb3a-11ef-a453-6640c3b0a700', 'projects', 'Collaboration on projects', FALSE, NOW(), NOW()),
-    ('24fadc70-fb3a-11ef-a453-6640c3b0a717', '24fa79f4-fb3a-11ef-a453-6640c3b0a700', 'events', 'Planning community events', FALSE, NOW(), NOW()),
+    ('24fad010-fb3a-11ef-a453-6640c3b0a714', '24fa7914-fb3a-11ef-a453-6640c3b0a700', 'mentors', 'Discussion for mentors', TRUE, NOW(), NOW()),
+    ('24fad430-fb3a-11ef-a453-6640c3b0a715', '24fa7914-fb3a-11ef-a453-6640c3b0a700', 'students', 'Discussion for students', FALSE, NOW(), NOW()),
+    ('24fad850-fb3a-11ef-a453-6640c3b0a716', '24fa7914-fb3a-11ef-a453-6640c3b0a700', 'projects', 'Collaboration on projects', FALSE, NOW(), NOW()),
+    ('24fadc70-fb3a-11ef-a453-6640c3b0a717', '24fa7914-fb3a-11ef-a453-6640c3b0a700', 'events', 'Planning community events', FALSE, NOW(), NOW()),
 
     -- Smile Work 워크스페이스
     ('24fae410-fb3a-11ef-a453-6640c3b0a718', '24fa8516-fb3a-11ef-a453-6640c3b0a700', 'hr', 'HR discussions and policies', TRUE, NOW(), NOW()),

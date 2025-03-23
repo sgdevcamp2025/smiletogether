@@ -1,0 +1,9 @@
+version: "3"
+services:
+  member-server:
+    image: imjanghyeok/smiletogether-member-server-arm:latest
+    restart: always
+    ports:
+      - 8080:8080
+    container_name: member-member-server
+    platform: linux/arm64
