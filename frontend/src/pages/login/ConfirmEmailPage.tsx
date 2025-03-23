@@ -52,7 +52,7 @@ const ConfirmEmailPage = () => {
     const formData = new FormData(e.currentTarget);
     const name = formData.get('name') as string;
     try {
-      postRegister(name, email);
+      await postRegister(name, email);
       const { signInResponse } = await postLogin(email);
       const userInfo = signInResponse.data.member;
       setOriginUser(userInfo);
