@@ -1,4 +1,4 @@
-import { spaceApi, chatApi } from '@/lib/https';
+import { spaceApi, chatApi } from '@/lib/clients';
 import {
   getWorkspaceChannelsResponseDto,
   postWorkspaceChannelsRequestDto,

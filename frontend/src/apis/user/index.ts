@@ -1,4 +1,4 @@
-import { userApi, authApi, spaceApi } from '@/lib/https';
+import { userApi, authApi, spaceApi } from '@/lib/clients';
 
 export const postLogin = async (email: string) => {
   const signInResponse = await userApi.post(`/api/auth/sign-in`, {

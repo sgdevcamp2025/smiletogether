@@ -8,7 +8,7 @@ import {
   getIsMemberOfWorkspaceByInviteLinkResponseDto,
   postAcceptWorkspaceEmailInviteResponseDto,
 } from '@/apis/workspace/dto';
-import { spaceApi } from '@/lib/https';
+import { spaceApi } from '@/lib/clients';
 
 export const postNewWorkspace = async (
   workspaceInfo: PostNewWorkspaceRequestDto
