@@ -10,7 +10,6 @@ const WorkSpaceListPage = () => {
   const { workspacesInfo, isWorkspacesError, isWorkspacesLoading } =
     useUserWorkspacesQuery();
   const { user } = userOriginStore();
-  console.log('user', user);
 
   if (isWorkspacesLoading) return <div>로딩중...</div>;
   if (isWorkspacesError) return <div>에러 발생</div>;
