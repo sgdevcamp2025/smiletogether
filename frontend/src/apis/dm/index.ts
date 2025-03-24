@@ -1,12 +1,12 @@
 import { DMListResponseDto, DMResponseDto } from '@/apis/dm/dto';
-import https from '@/lib/https';
+import { directMessageApi } from '@/lib/clients';
 
 export const getDMList = async (): Promise<DMListResponseDto> => {
-  const { data } = await https.get('/api/dms');
+  const { data } = await directMessageApi.get('');
   return data;
 };
 
 export const getDMMessage = async (dmId: string): Promise<DMResponseDto> => {
-  const { data } = await https.get(`/api/dms/${dmId}`);
+  const { data } = await directMessageApi.get(`/${dmId}`);
   return data;
 };
