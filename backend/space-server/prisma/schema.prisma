@@ -1,0 +1,66 @@
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  extensions = [uuidOssp(map: "uuid-ossp")]
+}
+
+model Workspace {
+  workspace_id   String   @id @default(dbgenerated("uuid_generate_v1mc()")) @db.Uuid
+  name           String 
+  created_at     DateTime @default(now()) 
+  updated_at     DateTime @updatedAt 
+  workspace_image String  @default("default.jpg")
+
+  WorkspaceUser WorkspaceUser[]
+  Channel Channel[]
+}
+
+model WorkspaceUser {
+  profile_id     String   @id @default(dbgenerated("uuid_generate_v1mc()")) @db.Uuid
+  user_id        String   @db.Uuid   
+  workspace_id   String   @db.Uuid   
+  role           String   @default("member")
+  joined_at      DateTime @default(now())
+  profile_image  String   @default("default.jpg")
+  profile_name   String?
+  position       String?
+  status_message String?
+
+  workspace Workspace @relation(fields: [workspace_id], references: [workspace_id], onDelete: Cascade)
+
+  @@unique([user_id, workspace_id])
+}
+
+// 채널 테이블
+model Channel {
+  channel_id   String   @id @default(dbgenerated("uuid_generate_v1mc()")) @db.Uuid
+  workspace_id String   @db.Uuid
+  name         String
+  description  String?
+  is_private   Boolean  @default(false)
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  workspace Workspace @relation(fields: [workspace_id], references: [workspace_id], onDelete: Cascade)
+
+  ChannelUser ChannelUser[]
+}
+
+// 채널-사용자 관계 테이블
+model ChannelUser {
+  mapping_id    String   @id @default(dbgenerated("uuid_generate_v1mc()")) @db.Uuid
+  user_id       String   @db.Uuid   
+  channel_id    String   @db.Uuid   
+  joined_at     DateTime @default(now())
+  channel_role  String   @default("member")
+  
+  channel Channel @relation(fields: [channel_id], references: [channel_id], onDelete: Cascade)
+
+  @@unique([user_id, channel_id])
+}
