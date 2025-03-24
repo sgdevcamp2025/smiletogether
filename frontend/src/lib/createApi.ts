@@ -4,13 +4,13 @@ import axios from 'axios';
 
 export const createApi = (apiUrl: string) => {
   const instance = axios.create({
+    baseURL: apiUrl,
     withCredentials: true,
     timeout: 10000,
   });
 
   instance.interceptors.request.use(
     config => {
-      config.baseURL = apiUrl;
       config.headers.Authorization = `Bearer ${getToken()}`;
       return config;
     },
@@ -39,6 +39,7 @@ export const createApi = (apiUrl: string) => {
             return axios(originConfig);
           } else if (refreshResponse.status === 401) {
             alert('로그인 시간이 만료되었습니다.');
+            localStorage.clear();
             window.location.href = import.meta.env.VITE_BASE_CLIENT_API_URL;
           }
         } catch (error) {

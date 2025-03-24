@@ -50,7 +50,7 @@ export const postInviteWorkspace = async (
   emails: string[]
 ) => {
   const { data } = await spaceApi.post(`/api/invite/email/${workspaceId}`, {
-    domain: import.meta.env.VITE_BASE_CLIENT_API_URL,
+    domain: import.meta.env.VITE_BASE_SPACE_API_URL,
     inviteEmailList: emails,
   });
   return data;
