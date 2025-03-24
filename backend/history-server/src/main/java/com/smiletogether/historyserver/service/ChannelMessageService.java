@@ -16,10 +16,12 @@ import com.smiletogether.historyserver.service.dto.request.ChannelMessagesReques
 import com.smiletogether.historyserver.service.dto.response.ChannelMessageResponse;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -76,11 +78,18 @@ public class ChannelMessageService {
             groupedMessages.computeIfAbsent(dateKey, k -> new ArrayList<>()).add(messageResponse);
         }
 
-        // 날짜 순서대로 그룹화된 메시지를 내림차순으로 정렬하여 가장 오래된 날짜부터 보이도록 설정
+        // 날짜 순서대로 그룹화된 메시지를 정렬 (날짜별로 오래된 순서 유지)
         Map<String, List<ChannelMessageResponse>> reversedGroupedMessages = new LinkedHashMap<>();
         groupedMessages.entrySet().stream()
-                .sorted(Map.Entry.<String, List<ChannelMessageResponse>>comparingByKey()) // 날짜 오름차순으로 정렬
-                .forEachOrdered(entry -> reversedGroupedMessages.put(entry.getKey(), entry.getValue()));
+                .sorted(Map.Entry.<String, List<ChannelMessageResponse>>comparingByKey()) // 날짜 오름차순 정렬
+                .forEachOrdered(entry -> {
+                    // 각 날짜별 메시지를 createdAt 기준으로 오름차순 정렬
+                    List<ChannelMessageResponse> sortedMessages = entry.getValue().stream()
+                            .sorted(Comparator.comparing(ChannelMessageResponse::createdAt)) // 오래된 순 정렬
+                            .collect(Collectors.toList());
+
+                    reversedGroupedMessages.put(entry.getKey(), sortedMessages);
+                });
 
         return new ChannelMessages(channelId, reversedGroupedMessages);
     }
