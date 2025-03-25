@@ -1,10 +1,10 @@
 import { IoPersonSharp } from 'react-icons/io5';
-import { MemberProps } from '@/components/workspace/WorkspaceListItem';
 import WorkspaceAvatarList from '@/components/workspace/WorkspaceAvatarList';
+import { WorkspaceMember } from '@/types/user';
 
 interface WorkspaceListItemDetailProps {
   name: string;
-  members: MemberProps[];
+  members: WorkspaceMember[];
   memberCount: number;
 }
 

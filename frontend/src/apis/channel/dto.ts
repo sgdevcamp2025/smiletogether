@@ -10,11 +10,25 @@ export interface GetChannelResponse {
     displayName: string;
     username: string;
   };
-  name: string;
+  channelName: string;
   createdAt: string;
   isPrivate: boolean;
   totalMembers: number;
   members: User[];
+}
+
+export interface postWorkspaceChannelsRequestDto {
+  workspaceId: string;
+  name: string;
+  isPrivate: boolean;
+  emails: string[];
+}
+
+export interface postWorkspaceChannelsResponseDto {
+  channelId: string;
+  name: string;
+  isPrivate: boolean;
+  createdAt: string;
 }
 
 interface Reaction {
@@ -23,7 +37,7 @@ interface Reaction {
   users: string[];
 }
 
-interface Message {
+export interface Message {
   messageId: string;
   user: User;
   content: string;
