@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { User } from '@/types/user';
 import {
   DropdownMenu,
@@ -12,12 +13,17 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import ChannleDelete from '../channel/ChannleDelete';
+import ChannleInfoModal from '../channel/infoModal';
+import useLeaveWorkspaceChannelMutation from '@/hooks/channel/useLeaveWorkspaceChannelMutation';
+import { useParams } from 'react-router';
 
 interface ChatHeaderProps {
   name: string;
   isPrivate?: boolean;
   totalMembers?: number;
   members?: User[];
+  manager: string;
 }
 
 const ChatHeader = ({
@@ -25,8 +31,39 @@ const ChatHeader = ({
   isPrivate,
   totalMembers,
   members,
+  manager,
 }: ChatHeaderProps) => {
+  const [openDeleteChannel, setOpenDeleteChannel] = useState(false);
+  const [openInfoChannel, setOpenInfoChannel] = useState(false);
+  const [infoTab, setInfoTab] = useState<'정보' | '멤버'>('정보');
   const displayMembers = members ? members?.slice(0, 3) : [];
+  const { mutate } = useLeaveWorkspaceChannelMutation();
+  const { channelId } = useParams();
+
+  const handleDeleteChannel = () => {
+    if (isPrivate) {
+      setTimeout(() => setOpenDeleteChannel(true), 100);
+    } else {
+      onClickDelteChannel();
+    }
+  };
+
+  const onClickDelteChannel = () => {
+    setOpenDeleteChannel(false);
+    if (channelId) {
+      mutate(
+        { channelId },
+        {
+          onSuccess: () => {
+            alert('채널 삭제 성공');
+          },
+          onError: () => {
+            alert('채널 삭제 실패');
+          },
+        }
+      );
+    }
+  };
 
   return (
     <header className="flex flex-col w-full px-5 pt-3 pb-0 gap-4 border-b border-zinc-200">
@@ -35,35 +72,39 @@ const ChatHeader = ({
           {isPrivate && (
             <img className="w-5 h-5" src="/icons/Private.svg" alt="private" />
           )}
-          <span className="text-lg font-bold">{name}</span>
+          <span
+            onClick={() => {
+              setInfoTab('정보');
+              setOpenInfoChannel(true);
+            }}
+            className="text-lg font-bold"
+          >
+            {name}
+          </span>
         </div>
+
         <div className="flex gap-2">
           {members && (
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger
-                  className="flex items-center gap-2 border px-2 rounded-sm"
-                  onClick={() => {
-                    console.log('유저 모달 연결');
-                  }}
-                >
-                  <div className="flex gap-1">
-                    {displayMembers.map(item => (
-                      <img
-                        key={item.userId}
-                        className="w-5 h-5 rounded-sm -ml-3 first:ml-0"
-                        src={item.profileImage}
-                      />
-                    ))}
-                  </div>
-                  {totalMembers}
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>이 channel의 모든 멤버 보기</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+            <div
+              className="flex items-center gap-2 border px-2 rounded-sm"
+              onClick={() => {
+                setInfoTab('멤버');
+                setOpenInfoChannel(true);
+              }}
+            >
+              <div className="flex gap-1">
+                {displayMembers.map(item => (
+                  <img
+                    key={item.userId}
+                    className="w-5 h-5 rounded-sm -ml-3 first:ml-0"
+                    src={item.profileImage}
+                  />
+                ))}
+              </div>
+              {totalMembers}
+            </div>
           )}
+
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger
@@ -86,10 +127,20 @@ const ChatHeader = ({
             <DropdownMenuTrigger>
               <img src="/icons/Option.svg" alt="option" />
             </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem>채널 세부정보 열기</DropdownMenuItem>
+            <DropdownMenuContent forceMount>
+              <DropdownMenuItem
+                onClick={() => {
+                  setInfoTab('정보');
+                  setOpenInfoChannel(true);
+                }}
+              >
+                채널 세부정보 열기
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-red-500">
+              <DropdownMenuItem
+                className="text-red-500"
+                onClick={handleDeleteChannel}
+              >
                 채널에서 나가기
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -102,6 +153,30 @@ const ChatHeader = ({
           <span className="font-semibold">메시지</span>
         </div>
       </div>
+
+      {/* 채널 정보 모달 */}
+      {members && (
+        <ChannleInfoModal
+          open={openInfoChannel}
+          setOpen={setOpenInfoChannel}
+          totalMembers={totalMembers}
+          isPrivate={isPrivate}
+          name={name}
+          manager={manager}
+          setOpenDeleteChannel={setOpenDeleteChannel}
+          members={members}
+          tab={infoTab}
+        />
+      )}
+
+      {/* 채널에서 나가기 */}
+      <ChannleDelete
+        openDeleteChannel={openDeleteChannel}
+        setOpenDeleteChannel={setOpenDeleteChannel}
+        name={name}
+        isPrivate={isPrivate}
+        onClickDeleteChannel={onClickDelteChannel}
+      />
     </header>
   );
 };

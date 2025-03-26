@@ -1,9 +1,14 @@
-import { ChangeEvent, useState } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import clsx from 'clsx';
+import { Client } from '@stomp/stompjs';
+import { useSendMessage } from '@/hooks/channel/useSendMessage';
+import React from 'react';
 
 interface MessageBoxProps {
   channelName: string;
+  workspaceId: string;
+  channelId: string;
+  client: Client;
 }
 
 const icons = [
@@ -34,24 +39,36 @@ const icons = [
   },
 ];
 
-const MessageBox = ({ channelName }: MessageBoxProps) => {
-  const [message, setMessage] = useState('');
+const MessageBox = ({
+  channelName,
+  workspaceId,
+  channelId,
+  client,
+}: MessageBoxProps) => {
+  const { message, handleChange, sendMessage, isDisabled } = useSendMessage({
+    workspaceId,
+    channelId,
+    client,
+  });
 
-  const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setMessage(e.target.value);
+  const sendMessageByEnter = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
   };
 
-  const isDisabled = message.trim() === '';
-
   return (
-    <div className="fixed bottom-5 left-0 px-5 w-full">
-      <div className="flex flex-col gap-3 bg-white border px-3 py-2 rounded-lg shadow-sm">
+    <div className="w-full p-5">
+      <div className="flex flex-col gap-3 px-3 py-2 bg-white border rounded-lg shadow-sm">
         <Textarea
-          className="flex-grow h-auto resize-none border-none shadow-none focus-visible:ring-0 px-0"
+          className="flex-grow h-auto px-0 border-none shadow-none resize-none focus-visible:ring-0"
           placeholder={`${channelName}에 메시지 보내기`}
           onChange={handleChange}
+          value={message}
+          onKeyDown={sendMessageByEnter}
         />
-        <div className="flex justify-between items-center">
+        <div className="flex items-center justify-between">
           <div className="flex gap-2">
             {icons.map((icon, index) => (
               <button
@@ -71,6 +88,7 @@ const MessageBox = ({ channelName }: MessageBoxProps) => {
                 : 'bg-lime-500 cursor-pointer'
             )}
             disabled={isDisabled}
+            onClick={sendMessage}
           >
             <img src="/icons/Send.svg" alt="send" />
           </button>

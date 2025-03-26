@@ -1,4 +1,5 @@
 import UserHoverCard from '../common/UserHoverCard';
+import { useModalStore } from '@/stores/modalStore';
 
 interface ChannelInfoProps {
   userId: string;
@@ -17,6 +18,7 @@ const ChannelInfo = ({
   createdAt,
   isPrivate,
 }: ChannelInfoProps) => {
+  const setModal = useModalStore(state => state.setModal);
   const date = new Date(createdAt);
 
   const month = date.getMonth() + 1;
@@ -42,7 +44,7 @@ const ChannelInfo = ({
       <button
         className="flex gap-1 py-1 px-3 border border-zinc-950 text-sm font-semibold rounded-md mt-4"
         onClick={() => {
-          console.log('여기는 나중에 사람 추가 모달 연결');
+          setModal('USER_INVITE');
         }}
       >
         <img src="/icons/AddPeople.svg" alt="사람 추가" />
