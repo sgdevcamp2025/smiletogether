@@ -1,5 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { postConfirmEmail, postLogin, postRegister } from '@/apis/user';
+import {
+  postConfirmEmail,
+  postLogin,
+  postRegister,
+  postSignIn,
+} from '@/apis/user';
 import { InputCodeForm } from '@/components/login/InputCodeForm';
 import { InputNicknameForm } from '@/components/login/InputNicknameForm';
 import { userOriginStore } from '@/stores/userOriginStore';
@@ -26,17 +31,19 @@ const ConfirmEmailPage = () => {
 
     const confirmResponse = await postConfirmEmail(email, code);
 
-    if (confirmResponse.data.code === '400') {
-      alert(confirmResponse.data.message);
+    if (confirmResponse.code === '400') {
+      alert(confirmResponse.message);
       return;
     }
 
-    if (confirmResponse.data.code === '200') {
-      const { signInResponse } = await postLogin(email);
-      if (signInResponse.data.isMember === false) {
+    if (confirmResponse.code === '200') {
+      const { isMember, member } = await postSignIn(email);
+      if (isMember === false) {
         setIsRegistering(true);
       } else {
-        const userInfo = signInResponse.data.member;
+        const { accessToken } = await postLogin(member.id);
+        if (accessToken) localStorage.setItem('access-token', accessToken);
+        const userInfo = member;
         setOriginUser(userInfo);
         setUser({
           userId: userInfo.id,
@@ -50,11 +57,13 @@ const ConfirmEmailPage = () => {
   const handleRegister = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const name = formData.get('name') as string;
+    const name = String(formData.get('name'));
     try {
       await postRegister(name, email);
-      const { signInResponse } = await postLogin(email);
-      const userInfo = signInResponse.data.member;
+      const { member } = await postSignIn(email);
+      const { accessToken } = await postLogin(member.id);
+      if (accessToken) localStorage.setItem('access-token', accessToken);
+      const userInfo = member;
       setOriginUser(userInfo);
       setUser({
         userId: userInfo.id,
