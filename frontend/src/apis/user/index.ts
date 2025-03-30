@@ -14,7 +14,13 @@ export const postLogin = async (memberId: string) => {
   return data;
 };
 
-export const postRegister = async (username: string, email: string) => {
+export const postSignUp = async ({
+  username,
+  email,
+}: {
+  username: string;
+  email: string;
+}) => {
   const { data } = await userApi.post(`/api/auth/sign-up`, {
     username,
     email,

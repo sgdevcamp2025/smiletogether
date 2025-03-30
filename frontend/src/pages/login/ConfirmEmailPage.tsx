@@ -2,7 +2,7 @@
 import {
   postConfirmEmail,
   postLogin,
-  postRegister,
+  postSignUp,
   postSignIn,
 } from '@/apis/user';
 import { InputCodeForm } from '@/components/login/InputCodeForm';
@@ -59,15 +59,17 @@ const ConfirmEmailPage = () => {
     const formData = new FormData(e.currentTarget);
     const name = String(formData.get('name'));
     try {
-      await postRegister(name, email);
+      await postSignUp({ username: name, email });
       const { member } = await postSignIn(email);
       const { accessToken } = await postLogin(member.id);
       if (accessToken) localStorage.setItem('access-token', accessToken);
+      else alert('accessToken 발급 실패');
       const userInfo = member;
       setOriginUser(userInfo);
       setUser({
         userId: userInfo.id,
       });
+      alert('성공');
       navigate('/workspaces');
     } catch (error) {
       alert('회원가입에 실패했습니다.');
