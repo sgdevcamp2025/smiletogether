@@ -1,8 +1,8 @@
-import { useLoginMutation } from '@/hooks/auth/useAuthMutations';
-import { useToast } from '@/hooks/use-toast';
+import { useNavigate } from 'react-router';
 import { userOriginStore } from '@/stores/userOriginStore';
 import { useUserStore } from '@/stores/userStore';
-import { useNavigate } from 'react-router';
+import { useLoginMutation } from '@/hooks/auth/useAuthMutations';
+import { useToast } from '@/hooks/use-toast';
 
 export const useAuth = () => {
   const { setUser: setOriginUser } = userOriginStore();
@@ -12,7 +12,7 @@ export const useAuth = () => {
   const login = useLoginMutation();
   const navigate = useNavigate();
 
-  const handleLogin = async (member: {
+  const loginWithMember = async (member: {
     id: string;
     username: string;
     email: string;
@@ -37,5 +37,5 @@ export const useAuth = () => {
     });
   };
 
-  return { handleLogin };
+  return { loginWithMember };
 };

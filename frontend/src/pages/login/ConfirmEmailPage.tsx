@@ -18,7 +18,7 @@ const ConfirmEmailPage = () => {
   const signUp = useSignUpMutation();
   const signIn = useSignInMutation();
   const confirmEmail = useConfirmEmailMutation();
-  const { handleLogin } = useAuth();
+  const { loginWithMember } = useAuth();
 
   const { toast } = useToast();
 
@@ -39,7 +39,7 @@ const ConfirmEmailPage = () => {
       if (confirmResponse.code === '200') {
         const { isMember, member } = await signIn.mutateAsync(email);
         if (isMember === false) setIsRegistering(true);
-        else await handleLogin(member);
+        else await loginWithMember(member);
       }
     } catch (error) {
       toast({
@@ -56,7 +56,7 @@ const ConfirmEmailPage = () => {
     try {
       await signUp.mutateAsync({ username: name, email });
       const { member } = await signIn.mutateAsync(email);
-      await handleLogin(member);
+      await loginWithMember(member);
     } catch (error) {
       toast({
         title: `회원가입에 실패했습니다. ${error}`,
