@@ -10,15 +10,13 @@ const LoginPage = () => {
   const handleEmailSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const email = formData.get('email') as string;
+    const email = String(formData.get('email'));
     if (!email) {
       alert('이메일을 입력해주세요.');
       return;
     }
     sendEmail(email, {
-      onSuccess: () => {
-        navigate('/confirmemail', { state: { email } });
-      },
+      onSuccess: () => navigate('/confirmemail', { state: { email } }),
     });
   };
 
