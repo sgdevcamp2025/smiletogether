@@ -3,16 +3,18 @@ import { LoginForm } from '@/components/login/LoginForm';
 import { FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSendEmailMutation } from '@/hooks/auth/useEmailMutation';
+import { useToast } from '@/hooks/use-toast';
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const sendEmail = useSendEmailMutation();
+  const { toast } = useToast();
   const handleEmailSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const email = String(formData.get('email'));
     if (!email) {
-      alert('이메일을 입력해주세요.');
+      toast({ title: '이메일을 입력해주세요' });
       return;
     }
     sendEmail.mutate(email, {

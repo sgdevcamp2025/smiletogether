@@ -8,6 +8,7 @@ import {
 } from '@/hooks/auth/useAuthMutations';
 import { useConfirmEmailMutation } from '@/hooks/auth/useEmailMutation';
 import { useAuth } from '@/hooks/auth/useAuth';
+import { useToast } from '@/hooks/use-toast';
 
 const ConfirmEmailPage = () => {
   const location = useLocation();
@@ -19,11 +20,15 @@ const ConfirmEmailPage = () => {
   const confirmEmail = useConfirmEmailMutation();
   const { handleLogin } = useAuth();
 
+  const { toast } = useToast();
+
   const email = location.state?.email;
 
   const submitInput = async () => {
     if (!email) {
-      alert('이메일을 입력해주세요.');
+      toast({
+        title: '이메일을 입력해주세요',
+      });
       return;
     }
 
@@ -37,7 +42,9 @@ const ConfirmEmailPage = () => {
         else await handleLogin(member);
       }
     } catch (error) {
-      alert(`코드 확인에 실패했습니다. ${error}`);
+      toast({
+        title: `코드 확인에 실패했습니다. ${error}`,
+      });
       return;
     }
   };
@@ -51,7 +58,9 @@ const ConfirmEmailPage = () => {
       const { member } = await signIn.mutateAsync(email);
       await handleLogin(member);
     } catch (error) {
-      alert(`회원가입에 실패했습니다. ${error}`);
+      toast({
+        title: `회원가입에 실패했습니다. ${error}`,
+      });
     }
   };
 
