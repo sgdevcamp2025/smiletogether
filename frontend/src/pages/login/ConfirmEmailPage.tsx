@@ -25,32 +25,38 @@ const ConfirmEmailPage = () => {
   const handleLogin = async () => {
     if (!email) {
       alert('이메일을 다시 전송해주세요.');
-      navigate('/');
       return;
     }
 
-    const confirmResponse = await postConfirmEmail(email, code);
-
-    if (confirmResponse.code === '400') {
-      alert(confirmResponse.message);
-      return;
-    }
-
-    if (confirmResponse.code === '200') {
-      const { isMember, member } = await postSignIn(email);
-      if (isMember === false) {
-        setIsRegistering(true);
-      } else {
-        const { accessToken } = await postLogin(member.id);
-        if (accessToken) localStorage.setItem('access-token', accessToken);
-        const userInfo = member;
-        setOriginUser(userInfo);
-        setUser({
-          userId: userInfo.id,
-        });
-        alert('성공');
-        navigate('/workspaces');
+    try {
+      const confirmResponse = await postConfirmEmail(email, code);
+      if (confirmResponse.code === '400') {
+        alert(confirmResponse.message);
+        return;
       }
+
+      if (confirmResponse.code === '200') {
+        const { isMember, member } = await postSignIn(email);
+        if (isMember === false) setIsRegistering(true);
+        else {
+          const { accessToken } = await postLogin(member.id);
+          if (accessToken) localStorage.setItem('access-token', accessToken);
+          else {
+            alert('accessToken 발급 실패');
+            return;
+          }
+          const userInfo = member;
+          setOriginUser(userInfo);
+          setUser({
+            userId: userInfo.id,
+          });
+          alert('성공');
+          navigate('/workspaces');
+        }
+      }
+    } catch (error) {
+      alert('코드 확인에 실패했습니다.');
+      return;
     }
   };
 
