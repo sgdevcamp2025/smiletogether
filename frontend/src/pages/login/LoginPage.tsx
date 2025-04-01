@@ -2,11 +2,11 @@ import ModalPortal from '@/components/common/ModalPortal';
 import { LoginForm } from '@/components/login/LoginForm';
 import { FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSendEmailMutation } from '@/hooks/auth/useSendEmailMutation';
+import { useSendEmailMutation } from '@/hooks/auth/useEmailMutation';
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const { sendEmail, sendEmailIsPending } = useSendEmailMutation();
+  const sendEmail = useSendEmailMutation();
   const handleEmailSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -15,7 +15,7 @@ const LoginPage = () => {
       alert('이메일을 입력해주세요.');
       return;
     }
-    sendEmail(email, {
+    sendEmail.mutate(email, {
       onSuccess: () => navigate('/confirmemail', { state: { email } }),
     });
   };
@@ -38,7 +38,7 @@ const LoginPage = () => {
           <LoginForm onSubmit={handleEmailSubmit} />
         </div>
       </div>
-      {sendEmailIsPending && (
+      {sendEmail.isPending && (
         <ModalPortal>
           <div className=" min-w-64 min-h-48 bg-white text-black flex flex-col items-center justify-center p-5 rounded-lg shadow-lg">
             <div className="w-16 h-16 border-8 border-gray-300 border-t-yellow-500 rounded-full animate-spin"></div>
