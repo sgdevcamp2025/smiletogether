@@ -1,32 +1,31 @@
 import { userApi, authApi, spaceApi } from '@/lib/clients';
 
-export const postLogin = async (email: string) => {
-  const signInResponse = await userApi.post(`/api/auth/sign-in`, {
+export const postSignIn = async (email: string) => {
+  const { data } = await userApi.post(`/api/auth/sign-in`, {
     email,
   });
-
-  const { isMember, member } = signInResponse.data;
-
-  if (!isMember) return { signInResponse };
-
-  const issueTokenResponse = await authApi.post(`/api/auth/login`, {
-    userId: member.id,
-  });
-  if (issueTokenResponse.data.accessToken)
-    localStorage.setItem('access-token', issueTokenResponse.data.accessToken);
-
-  return { signInResponse, issueTokenResponse };
+  return data;
 };
 
-export const postRegister = async (username: string, email: string) => {
-  const registerResponse = await userApi.post(`/api/auth/sign-up`, {
+export const postLogin = async (memberId: string) => {
+  const { data } = await authApi.post(`/api/auth/login`, {
+    userId: memberId,
+  });
+  return data;
+};
+
+export const postSignUp = async ({
+  username,
+  email,
+}: {
+  username: string;
+  email: string;
+}) => {
+  const { data } = await userApi.post(`/api/auth/sign-up`, {
     username,
     email,
   });
-  if (registerResponse.data.code == '201') {
-    return await postLogin(email);
-  }
-  return registerResponse;
+  return data;
 };
 
 export const postRefreshToken = async () => {
@@ -34,17 +33,17 @@ export const postRefreshToken = async () => {
   return response;
 };
 
-export const postSendEmailCode = async (email: string) => {
-  await userApi.post(`/api/auth/send-code?email=${email}`);
-  return;
+export const postSendEmailCode = async (email: string): Promise<string> => {
+  const { data } = await userApi.post(`/api/auth/send-code?email=${email}`);
+  return data;
 };
 
 export const postConfirmEmail = async (email: string, code: string) => {
-  const response = await userApi.post(`/api/auth/certificate-email`, {
+  const { data } = await userApi.post(`/api/auth/certificate-email`, {
     email,
     code,
   });
-  return response;
+  return data;
 };
 
 export const getMyWorkspaceInfo = async (
