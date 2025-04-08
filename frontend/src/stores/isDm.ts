@@ -1,12 +1,13 @@
 import { create } from 'zustand';
-interface IsDmState {
-  dmId: string | null;
-  setDmId: (dmId: string | null) => void;
+
+interface IsDmSideBarState {
+  isDmSideBar: boolean;
+  setIsDmSideBar: (isDmSideBar: boolean) => void;
 }
 
-const useIsDmStore = create<IsDmState>(set => ({
-  dmId: null,
-  setDmId: dmId => set({ dmId }),
+const useIsDmSideBarStore = create<IsDmSideBarState>(set => ({
+  isDmSideBar: false,
+  setIsDmSideBar: isDmSideBar => set({ isDmSideBar }),
 }));
 
-export default useIsDmStore;
+export default useIsDmSideBarStore;
