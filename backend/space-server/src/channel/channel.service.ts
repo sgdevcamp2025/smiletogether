@@ -21,7 +21,7 @@ export class ChannelService {
   getEmailByUserId = async (userId: string): Promise<string> => {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/auth/identify-email?userId=${encodeURIComponent(userId)}`,
+        `http://host.docker.internal:8080/api/auth/identify-email?userId=${encodeURIComponent(userId)}`,
       );
       if (!response.ok) {
         console.log(response);
@@ -38,7 +38,7 @@ export class ChannelService {
   getUserIdByEmail = async (email: string): Promise<string> => {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/auth/check-memberId?email=${encodeURIComponent(email)}`,
+        `http://host.docker.internal:8080/api/auth/check-memberId?email=${encodeURIComponent(email)}`,
       );
       if (!response.ok) return '해당 email의 userId가 존재하지 않습니다.';
       const data = await response.json();

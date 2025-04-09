@@ -179,7 +179,7 @@ export class InviteService {
         inviteUrls.push({ email, url: inviteUrl });
 
         await fetch(
-          `http://localhost:8080/api/auth/send-inviteUrl?email=${encodeURIComponent(email)}&inviteUrl=${encodeURIComponent(inviteUrl)}`,
+          `http://host.docker.internal:8080/api/auth/send-inviteUrl?email=${encodeURIComponent(email)}&inviteUrl=${encodeURIComponent(inviteUrl)}`,
           {
             method: 'GET',
           },

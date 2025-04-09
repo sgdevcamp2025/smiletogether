@@ -11,23 +11,16 @@ services:
       POSTGRES_DB: mydatabase
     ports:
       - "5433:5432"
-    volumes:
-      - space_postgres_data:/var/lib/postgresql/data
-      - ../script/space_server_init.sql:/app/script/space_server_init.sql
     networks:
       - space_network
-
   space-redis:
     image: redis:latest
     container_name: space_db_redis
     restart: always
     ports:
       - "6381:6379"
-    volumes:
-      - space_redis_data:/data
     networks:
       - space_network
-
   space-server:
     build:
       context: ../backend/space-server
@@ -43,10 +36,8 @@ services:
       - space-postgres
       - space-redis
     command: >
-      sh -c "npx prisma migrate deploy && npx prisma generate && pnpm run start:dev"
+      sh -c "npx prisma migrate deploy && 
+       npx prisma generate &&
+       pnpm run start:dev"
     networks:
       - space_network
-
-volumes:
-  space_postgres_data:
-  space_redis_data:
