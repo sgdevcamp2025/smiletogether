@@ -1,32 +1,43 @@
 import { getChatMessages } from '@/apis/channel';
 import { MessageType } from '@/types/chat';
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
 interface ChatMessagesResponse {
   groupedMessages: Record<string, MessageType[]>;
 }
 
-export const useChatMessages = (workspaceId: string, channelId: string) => {
-  return useInfiniteQuery<ChatMessagesResponse>({
-    queryKey: ['chatMessages', workspaceId, channelId],
-    queryFn: async ({ pageParam }) =>
-      getChatMessages(workspaceId, channelId, pageParam as string),
+const formatTimeStamp = (date = new Date()) => {
+  const koreaDate = new Date(date.getTime() + 9 * 60 * 60 * 1000);
+  const withoutZ = koreaDate.toISOString().slice(0, -1);
+  const milliseconds = withoutZ.split('.')[1];
+  const microseconds = milliseconds + '000';
+  return withoutZ.split('.')[0] + '.' + microseconds;
+};
 
-    getNextPageParam: lastPage => {
-      const dates = Object.keys(lastPage.groupedMessages).sort();
-      if (dates.length === 0) return undefined;
-
-      const oldestDate = dates[0];
-      const oldestMessages = lastPage.groupedMessages[oldestDate];
-      if (!oldestMessages || oldestMessages.length === 0) return undefined;
-
-      return oldestMessages[0].createdAt;
+export const useChatMessages = (
+  workspaceId: string,
+  channelId: string,
+  lastTimeStamp: Date
+) => {
+  return useQuery<ChatMessagesResponse>({
+    queryKey: ['chatMessages', workspaceId, channelId, lastTimeStamp],
+    queryFn: async () => {
+      try {
+        const response = await getChatMessages(
+          workspaceId,
+          channelId,
+          formatTimeStamp(lastTimeStamp)
+        );
+        return response;
+      } catch (error: unknown) {
+        return { groupedMessages: {} };
+      }
     },
-
-    initialPageParam: new Date(
-      new Date().getTime() + 9 * 60 * 60 * 1000 + 1 * 60 * 1000
-    )
-      .toISOString()
-      .replace('Z', ''),
+    enabled: !!workspaceId && !!channelId,
+    refetchOnMount: false,
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 30,
+    retry: 1,
+    retryDelay: 1000,
   });
 };

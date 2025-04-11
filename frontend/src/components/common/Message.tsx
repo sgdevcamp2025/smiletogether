@@ -68,6 +68,8 @@ const Message = ({
   };
   if (!user) return;
 
+  const safeContent = content || '';
+
   return (
     <div
       className={`relative flex gap-2 w-full py-2 px-5 transition-colors ${
@@ -87,7 +89,7 @@ const Message = ({
       {isEditing ? (
         <EditBox
           onCancel={handleCancelEdit}
-          content={content}
+          content={safeContent}
           onSave={handleSaveEdit}
         />
       ) : (
@@ -101,7 +103,9 @@ const Message = ({
             />
             <p className="text-sm text-zinc-400">{formatTime(createdAt)}</p>
           </div>
-          <p className="text-base">{content}</p>
+          <p className="text-base" title={safeContent}>
+            {safeContent}
+          </p>
         </div>
       )}
 

@@ -19,6 +19,7 @@ const HistoryMessages = ({
 }: HistoryMessageProps) => {
   const { data, fetchNextPage, isFetchingNextPage, hasNextPage } =
     useChatMessages(workspaceId, channelId);
+  console.log('data', data);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const topRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
