@@ -2,13 +2,14 @@ import { Textarea } from '@/components/ui/textarea';
 import clsx from 'clsx';
 import { Client } from '@stomp/stompjs';
 import { useSendMessage } from '@/hooks/channel/useSendMessage';
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 
 interface MessageBoxProps {
   channelName: string;
   workspaceId: string;
   channelId: string;
   client: Client;
+  onMessageSent?: () => void;
 }
 
 const icons = [
@@ -44,15 +45,37 @@ const MessageBox = ({
   workspaceId,
   channelId,
   client,
+  onMessageSent,
 }: MessageBoxProps) => {
-  const { message, handleChange, sendMessage, isDisabled } = useSendMessage({
-    workspaceId,
-    channelId,
-    client,
-  });
+  const { message, handleChange, sendMessage, isDisabled, isSending } =
+    useSendMessage({
+      workspaceId,
+      channelId,
+      client,
+      onMessageSent: () => {
+        // 메시지 전송 완료 후 텍스트 영역에 포커스
+        if (textareaRef.current) {
+          textareaRef.current.focus();
+        }
+        // 원래 콜백도 실행
+        if (onMessageSent) {
+          onMessageSent();
+        }
+      },
+    });
+
+  // Textarea에 대한 참조 추가
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // 메시지가 초기화되면(전송 후) 포커스 설정
+  useEffect(() => {
+    if (message === '' && !isSending && textareaRef.current) {
+      textareaRef.current.focus();
+    }
+  }, [message, isSending]);
 
   const sendMessageByEnter = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === 'Enter' && !e.shiftKey && !isDisabled && !isSending) {
       e.preventDefault();
       sendMessage();
     }
@@ -62,11 +85,13 @@ const MessageBox = ({
     <div className="w-full p-5">
       <div className="flex flex-col gap-3 px-3 py-2 bg-white border rounded-lg shadow-sm">
         <Textarea
+          ref={textareaRef}
           className="flex-grow h-auto px-0 border-none shadow-none resize-none focus-visible:ring-0"
           placeholder={`${channelName}에 메시지 보내기`}
           onChange={handleChange}
           value={message}
           onKeyDown={sendMessageByEnter}
+          disabled={isSending}
         />
         <div className="flex items-center justify-between">
           <div className="flex gap-2">
@@ -75,22 +100,29 @@ const MessageBox = ({
                 key={index}
                 onClick={icon.onClick}
                 className="cursor-pointer"
+                disabled={isSending}
               >
                 <img className="w-5 h-5" src={icon.src} alt={icon.alt} />
               </button>
             ))}
           </div>
           <button
-            className={clsx(
-              'px-2 py-1 rounded-sm transition-colors',
-              isDisabled
-                ? 'bg-zinc-300 cursor-not-allowed'
-                : 'bg-lime-500 cursor-pointer'
-            )}
-            disabled={isDisabled}
+            className={clsx('px-2 py-1 rounded-sm transition-colors', {
+              'bg-zinc-400 cursor-not-allowed': isSending,
+              'bg-zinc-300 cursor-not-allowed': !isSending && isDisabled,
+              'bg-lime-500 cursor-pointer hover:bg-lime-600':
+                !isSending && !isDisabled,
+            })}
+            disabled={isDisabled || isSending}
             onClick={sendMessage}
           >
-            <img src="/icons/Send.svg" alt="send" />
+            {isSending ? (
+              <span className="text-xs text-white animate-pulse px-1">
+                전송중
+              </span>
+            ) : (
+              <img src="/icons/Send.svg" alt="send" />
+            )}
           </button>
         </div>
       </div>
