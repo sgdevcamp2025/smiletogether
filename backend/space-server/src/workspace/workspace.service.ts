@@ -203,14 +203,25 @@ export class WorkspaceService {
             inviteResults.failed.push(email);
           }
         } else {
-          console.log(
-            '해당 이메일로 조회된 userId가 올바르지 않습니다.',
-            '조회 한 userEmail: ',
-            email,
-            '조회 된 userId: ',
-            newUserId,
-          );
-          inviteResults.failed.push(email);
+          // 가입되지 않은 이메일의 경우 초대 링크 보내기
+          try {
+            const domain = 'http://localhost:5173';
+            const { inviteResults: emailInviteResults } =
+              await this.inviteService.generateEmailInvites(
+                domain,
+                [email],
+                workspace.workspace_id,
+              );
+
+            if (emailInviteResults.success.includes(email)) {
+              inviteResults.success.push(email);
+            } else {
+              inviteResults.failed.push(email);
+            }
+          } catch (error) {
+            console.log(`Failed to send invite link to ${email}:`, error);
+            inviteResults.failed.push(email);
+          }
         }
       }
 
