@@ -2,9 +2,10 @@ package com.smiletogether.historyserver.controller;
 
 import com.smiletogether.historyserver.infrastructure.JwtExtractor;
 import com.smiletogether.historyserver.service.ChannelMessageService;
-import com.smiletogether.historyserver.service.dto.response.ChannelMessageResponse;
 import com.smiletogether.historyserver.service.dto.ChannelMessages;
 import com.smiletogether.historyserver.service.dto.request.ChannelMessagesRequest;
+import com.smiletogether.historyserver.service.dto.response.ChannelMessageResponse;
+import com.smiletogether.historyserver.util.KafkaLagChecker;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,7 @@ public class ChannelMessageController {
 
     private final ChannelMessageService channelMessageService;
     private final JwtExtractor jwtExtractor;
+    private final KafkaLagChecker kafkaLagChecker;
 
     @GetMapping("/api/workspaces/{workspaceId}/channels/{channelId}/messages")
     public ChannelMessages getMessages(
@@ -32,6 +34,11 @@ public class ChannelMessageController {
             throw new RuntimeException("Missing or invalid token");
         }
         log.info("Extracted token: {}", token);
+
+        if (!kafkaLagChecker.waitUntilPartitionSynced("history-topic", "history-server-group", channelId, 5, 100)) {
+            log.error("Kafka offset lag timeout – 메시지가 너무 늦게 소비됨");
+        }
+
         return channelMessageService.getChannelMessages(channelMessagesRequest, workspaceId, channelId, token);
     }
 
