@@ -13,7 +13,6 @@ import { WorkspaceDetailResponseDto } from './dto/workspace-detail.dto';
 import { WorkspaceDeleteResponseDto } from './dto/delete-workspace.dto';
 import { InviteWorkspaceDto } from './dto/invite-workspace.dto';
 import { ProfileResponseDto } from 'src/common/dto/profile-response.dto';
-import { isUUID } from 'class-validator';
 
 @Injectable()
 export class WorkspaceService {
@@ -173,55 +172,25 @@ export class WorkspaceService {
         const newUserId = await this.getUserIdByEmail(email);
         const newUserNickName = await this.getNameByUserId(newUserId);
         console.log(newUserId, newUserNickName);
-        if (isUUID(newUserId)) {
-          try {
-            // 워크스페이스 멤버로 추가
-            await prisma.workspaceUser.create({
-              data: {
-                workspace_id: workspace.workspace_id,
-                user_id: newUserId,
-                role: 'member',
-                profile_name: newUserNickName,
-                profile_image: 'default.jpg',
-                position: '',
-                status_message: '',
-              },
-            });
 
-            // 기본 채널에 추가
-            await prisma.channelUser.create({
-              data: {
-                channel_id: defaultChannel.channel_id,
-                user_id: newUserId,
-                channel_role: 'member',
-              },
-            });
+        // 초대 링크 전송송
+        try {
+          const domain = 'http://localhost:5173';
+          const { inviteResults: emailInviteResults } =
+            await this.inviteService.generateEmailInvites(
+              domain,
+              [email],
+              workspace.workspace_id,
+            );
 
+          if (emailInviteResults.success.includes(email)) {
             inviteResults.success.push(email);
-          } catch (error) {
-            console.log(`Failed to invite user ${email}:`, error);
+          } else {
             inviteResults.failed.push(email);
           }
-        } else {
-          // 가입되지 않은 이메일의 경우 초대 링크 보내기
-          try {
-            const domain = 'http://localhost:5173';
-            const { inviteResults: emailInviteResults } =
-              await this.inviteService.generateEmailInvites(
-                domain,
-                [email],
-                workspace.workspace_id,
-              );
-
-            if (emailInviteResults.success.includes(email)) {
-              inviteResults.success.push(email);
-            } else {
-              inviteResults.failed.push(email);
-            }
-          } catch (error) {
-            console.log(`Failed to send invite link to ${email}:`, error);
-            inviteResults.failed.push(email);
-          }
+        } catch (error) {
+          console.log(`Failed to send invite link to ${email}:`, error);
+          inviteResults.failed.push(email);
         }
       }
 
