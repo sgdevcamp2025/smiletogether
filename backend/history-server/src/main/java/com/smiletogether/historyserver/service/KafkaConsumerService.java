@@ -2,12 +2,13 @@ package com.smiletogether.historyserver.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smiletogether.historyserver.service.dto.request.ChannelMessageDeleteRequest;
 import com.smiletogether.historyserver.service.dto.ChannelMessageReaction;
+import com.smiletogether.historyserver.service.dto.request.ChannelMessageDeleteRequest;
 import com.smiletogether.historyserver.service.dto.request.ChannelMessageSaveRequest;
 import com.smiletogether.historyserver.service.dto.request.ChannelMessageUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
@@ -15,62 +16,74 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 public class KafkaConsumerService {
+
     private final ObjectMapper objectMapper;
     private final ChannelMessageService channelMessageService;
 
     @KafkaListener(topics = "history-topic", groupId = "history-server-group")
-    public void consumeChannelMessage(String messageJson) {
+    public void consumeChannelMessage(ConsumerRecord<String, String> record) {
+        String messageJson = record.value();
+
+        log.info("[Kafka][history-topic] partition: {}, offset: {}, key: {}, topic: {}",
+                record.partition(), record.offset(), record.key(), record.topic());
+        log.info("Raw message: {}", messageJson);
+
         try {
             JsonNode jsonNode = objectMapper.readTree(messageJson);
             String type = jsonNode.get("type").asText();
-            log.info("Received channel message: {}", messageJson);
 
             switch (type) {
-                case "SEND":
-                    ChannelMessageSaveRequest saveRequest = objectMapper.readValue(messageJson, ChannelMessageSaveRequest.class);
+                case "SEND" -> {
+                    ChannelMessageSaveRequest saveRequest = objectMapper.readValue(messageJson,
+                            ChannelMessageSaveRequest.class);
                     channelMessageService.saveMessage(saveRequest);
-                    log.info("Kafka: 메시지 저장 성공");
-                    break;
-
-                case "UPDATE":
-                    ChannelMessageUpdateRequest updateRequest = objectMapper.readValue(messageJson, ChannelMessageUpdateRequest.class);
+                    log.info("Message saved (messageId: {})",
+                            saveRequest.messageId());
+                }
+                case "UPDATE" -> {
+                    ChannelMessageUpdateRequest updateRequest = objectMapper.readValue(messageJson,
+                            ChannelMessageUpdateRequest.class);
                     channelMessageService.updateChannelMessage(updateRequest);
-                    log.info("Kafka: 메시지 업데이트 성공");
-                    break;
-
-                case "DELETE":
-                    ChannelMessageDeleteRequest deleteRequest = objectMapper.readValue(messageJson, ChannelMessageDeleteRequest.class);
+                    log.info("Message updated (messageId: {})",
+                            updateRequest.messageId());
+                }
+                case "DELETE" -> {
+                    ChannelMessageDeleteRequest deleteRequest = objectMapper.readValue(messageJson,
+                            ChannelMessageDeleteRequest.class);
                     channelMessageService.deleteChannelMessage(deleteRequest);
-                    log.info("Kafka: 메시지 삭제 성공");
-                    break;
-
-                default:
-                    log.warn("⚠Kafka: 알 수 없는 메시지 타입: {}", type);
+                    log.info("Message deleted (messageId: {})",
+                            deleteRequest.messageId());
+                }
+                default -> log.warn("Unknown message type: {}", type);
             }
         } catch (Exception e) {
-            log.error("Kafka: 메시지 처리 실패", e);
+            log.error("Failed to process message: {}", messageJson, e);
         }
     }
 
-
     @KafkaListener(topics = "channel-message-reaction", groupId = "history-group")
-    public void consumeEmojiReaction(String messageJson) {
+    public void consumeEmojiReaction(ConsumerRecord<String, String> record) {
+        String messageJson = record.value();
+
+        log.info("[Kafka][reaction-topic] partition: {}, offset: {}, key: {}, topic: {}",
+                record.partition(), record.offset(), record.key(), record.topic());
+        log.info("Raw reaction message: {}", messageJson);
+
         try {
-            ChannelMessageReaction channelMessageReaction = objectMapper.readValue(messageJson, ChannelMessageReaction.class);
+            ChannelMessageReaction reaction = objectMapper.readValue(messageJson, ChannelMessageReaction.class);
+            String type = reaction.type();
 
-            String type = channelMessageReaction.type();
-            if (type.equals("CREATE")) {
-                channelMessageService.createChannelMessageReaction(channelMessageReaction);
-                log.info("성공");
+            switch (type) {
+                case "CREATE" -> {
+                    channelMessageService.createChannelMessageReaction(reaction);
+                }
+                case "DELETE" -> {
+                    channelMessageService.deleteChannelMessageReaction(reaction);
+                }
+                default -> log.warn("Unknown reaction type: {}", type);
             }
-
-            if (type.equals("DELETE")) {
-                channelMessageService.deleteChannelMessageReaction(channelMessageReaction);
-                log.info("성공");
-            }
-
         } catch (Exception e) {
-            log.error("Failed to deserialize Kafka message", e);
+            log.error("Failed to process reaction message: {}", messageJson, e);
         }
     }
 }

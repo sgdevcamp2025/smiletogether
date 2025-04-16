@@ -34,9 +34,25 @@ public class ChatService {
     }
 
     private WorkspaceProfileDto initProfile(String token, String workspaceId, String userId) {
-        log.info("Initializing workspace profile");
-        return externalProfileApiClient.getWorkspaceProfile(token, workspaceId, userId);
+        log.info("Initializing workspace profile: workspaceId={}, userId={}", workspaceId, userId);
+        WorkspaceProfileDto profile = externalProfileApiClient.getWorkspaceProfile(token, workspaceId, userId);
+
+        if (profile == null) {
+            log.warn("⚠️ 프로필 불러오기 실패. 기본 프로필로 대체: workspaceId={}, userId={}", workspaceId, userId);
+
+            return new WorkspaceProfileDto(
+                userId,
+                "익명 사용자",                         // displayName
+                "https://example.com/default.png",    // profileImage
+                "미정",                                // position
+                false,                                 // isActive
+                "상태 메시지 없음"                     // statusMessage
+            );
+        }
+
+        return profile;
     }
+
 
     private ChannelMessageDto createChannelChat(String workspaceId, String channelId,
                                                 WorkspaceProfileDto senderProfile, String content) {
