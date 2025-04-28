@@ -1,4 +1,4 @@
-import { getMessages } from '@/apis/channel';
+import { getMessages } from '@/apis/channel/index';
 import { useQuery } from '@tanstack/react-query';
 
 export const useGetMessages = (channelId?: string) => {

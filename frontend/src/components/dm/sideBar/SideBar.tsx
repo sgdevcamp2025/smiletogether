@@ -14,9 +14,7 @@ const SideBar = () => {
     <div className="flex flex-col h-screen gap-2 bg-yellow-300">
       <SideBarHeader />
       <div className="flex flex-col">
-        {data?.dms.map((dm, index) => (
-          <DMList key={index} {...dm} />
-        ))}
+        {data?.dms.map((dm, index) => <DMList key={index} {...dm} />)}
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import { postInviteWorkspaceChannels } from '@/apis/channel';
+import { postInviteWorkspaceChannels } from '@/apis/channel/index';
 import { useMutation } from '@tanstack/react-query';
 
 const useInviteChannelMutation = () => {

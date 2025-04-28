@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.cursor/
+public/
+*.config.js
+vite.config.ts
+postcss.config.js
+tailwind.config.js
+*.d.ts
+coverage/
+build/
+.git/
+pnpm-lock.yaml
+package-lock.json 

@@ -21,4 +21,13 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  // ESLint 플러그인 관련 옵션 비활성화
+  server: {
+    hmr: { overlay: false }, // Error Overlay 비활성화
+  },
+  // 개발 모드에서 ESLint 경고 비활성화
+  esbuild: {
+    legalComments: 'none',
+    jsx: 'automatic',
+  },
 });

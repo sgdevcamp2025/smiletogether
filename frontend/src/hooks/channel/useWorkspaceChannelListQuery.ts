@@ -1,4 +1,4 @@
-import { getUserJoinedWorkspaceChannels } from '@/apis/channel';
+import { getUserJoinedWorkspaceChannels } from '@/apis/channel/index';
 import { useQuery } from '@tanstack/react-query';
 
 const useWorkspaceChannelListQuery = (workspaceId: string) => {

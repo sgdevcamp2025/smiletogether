@@ -1,4 +1,4 @@
-import { getChannel } from '@/apis/channel';
+import { getChannel } from '@/apis/channel/index';
 import { useQuery } from '@tanstack/react-query';
 
 export const useGetChannel = (channelId?: string) => {

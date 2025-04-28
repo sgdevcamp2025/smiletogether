@@ -6,11 +6,11 @@ interface WorkspaceCreationState {
   userName: string;
   workspaceProfileImage: string;
   invitedUsers: string[];
-  setStep: (step: number) => void;
-  setWorkspaceName: (name: string) => void;
-  setUserName: (name: string) => void;
-  setWorkspaceProfileImage: (setWorkspaceProfileImage: string) => void;
-  setInvitedUsers: (users: string[]) => void;
+  setStep: (newStep: number) => void;
+  setWorkspaceName: (newName: string) => void;
+  setUserName: (newName: string) => void;
+  setWorkspaceProfileImage: (newImage: string) => void;
+  setInvitedUsers: (newUsers: string[]) => void;
   initWorkspaceStore: () => void;
 }
 
@@ -21,12 +21,12 @@ export const useWorkspaceCreationStore = create<WorkspaceCreationState>(
     userName: '',
     workspaceProfileImage: '',
     invitedUsers: [],
-    setStep: step => set({ step }),
-    setWorkspaceName: name => set({ workspaceName: name }),
-    setUserName: name => set({ userName: name }),
-    setWorkspaceProfileImage: (workspaceProfileImage: string) =>
-      set({ workspaceProfileImage }),
-    setInvitedUsers: users => set({ invitedUsers: users }),
+    setStep: newStep => set({ step: newStep }),
+    setWorkspaceName: newName => set({ workspaceName: newName }),
+    setUserName: newName => set({ userName: newName }),
+    setWorkspaceProfileImage: newImage =>
+      set({ workspaceProfileImage: newImage }),
+    setInvitedUsers: newUsers => set({ invitedUsers: newUsers }),
     initWorkspaceStore: () =>
       set({
         step: 1,
@@ -37,3 +37,16 @@ export const useWorkspaceCreationStore = create<WorkspaceCreationState>(
       }),
   })
 );
+
+// 워크스페이스 사이드바 상태 관리 스토어 추가
+type SidebarType = 'Home' | 'DM' | 'MyActive';
+
+interface WorkspaceSidebarState {
+  activeSidebar: SidebarType;
+  setActiveSidebar: (newType: SidebarType) => void;
+}
+
+export const useWorkspaceSidebarStore = create<WorkspaceSidebarState>(set => ({
+  activeSidebar: 'Home',
+  setActiveSidebar: newType => set({ activeSidebar: newType }),
+}));

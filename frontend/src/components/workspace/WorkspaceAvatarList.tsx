@@ -12,7 +12,7 @@ const WorkspaceAvatarList = ({ members }: WorkspaceAvatarListProps) => {
         members
           .slice(0, 5)
           .map(item => (
-            <Avatar src={item.profileImage} alt="user_profile_image" />
+            <Avatar src={item.profileImage || ''} alt="user_profile_image" />
           ))}
     </div>
   );

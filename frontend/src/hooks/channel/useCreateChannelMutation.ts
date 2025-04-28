@@ -1,4 +1,4 @@
-import { postNewWorkspaceChannels } from '@/apis/channel';
+import { postNewWorkspaceChannels } from '@/apis/channel/index';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const useCreateChannelMutation = (workspaceId: string) => {
