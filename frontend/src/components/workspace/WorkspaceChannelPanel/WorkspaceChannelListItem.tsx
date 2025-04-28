@@ -1,5 +1,4 @@
 import { Button } from '@/components/ui/button';
-import { useEffect } from 'react';
 import { FaHashtag } from 'react-icons/fa';
 import { FiLock } from 'react-icons/fi';
 import { useNavigate, useParams } from 'react-router';

@@ -5,8 +5,8 @@ import { useNavigate, useSearchParams } from 'react-router';
 import React from 'react';
 import useAcceptWorkspaceEmailInviteMutation from '@/hooks/workspace/useAcceptWorkspaceEmailInviteMutation';
 import useAcceptWorkspaceLinkInviteMutation from '@/hooks/workspace/useAcceptWorkspaceLinkInviteMutation';
-import { getUserJoinedWorkspaceChannels } from '@/apis/channel';
 import { getIsMemberOfWorkspaceByInviteLinkResponseDto } from '@/apis/workspace/dto';
+import { getUserJoinedWorkspaceChannels } from '@/apis/channel/index';
 
 const WorkspaceJoinPage = () => {
   const isValidUser = localStorage.getItem('access-token');

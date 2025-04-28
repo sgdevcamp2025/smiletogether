@@ -1,4 +1,4 @@
-import { leaveWorkspaceChannel } from '@/apis/channel';
+import { leaveWorkspaceChannel } from '@/apis/channel/index';
 import { useMutation } from '@tanstack/react-query';
 
 const useLeaveWorkspaceChannelMutation = () => {

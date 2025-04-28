@@ -1,4 +1,4 @@
-import { getUserJoinedWorkspaceChannels } from '@/apis/channel';
+import { getUserJoinedWorkspaceChannels } from '@/apis/channel/index';
 import { getUserWorkspaces, postRemoveWorkspace } from '@/apis/workspace';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router';

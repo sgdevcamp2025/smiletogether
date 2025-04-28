@@ -1,9 +1,10 @@
 import { getChatMessages } from '@/apis/channel';
 import { MessageType } from '@/types/chat';
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 
-interface ChatMessagesResponse {
+export interface ChatMessagesResponse {
   groupedMessages: Record<string, MessageType[]>;
+  nextPageParam?: Date;
 }
 
 const formatTimeStamp = (date = new Date()) => {
@@ -17,22 +18,31 @@ const formatTimeStamp = (date = new Date()) => {
 export const useChatMessages = (
   workspaceId: string,
   channelId: string,
-  lastTimeStamp: Date
+  lastTimeStamp?: Date
 ) => {
-  return useQuery<ChatMessagesResponse>({
-    queryKey: ['chatMessages', workspaceId, channelId, lastTimeStamp],
-    queryFn: async () => {
+  return useInfiniteQuery<ChatMessagesResponse>({
+    queryKey: ['chatMessages', workspaceId, channelId],
+    queryFn: async ({ pageParam }) => {
       try {
+        const timestamp = pageParam
+          ? formatTimeStamp(pageParam as Date)
+          : formatTimeStamp(lastTimeStamp || new Date());
         const response = await getChatMessages(
           workspaceId,
           channelId,
-          formatTimeStamp(lastTimeStamp)
+          timestamp
         );
-        return response;
-      } catch (error: unknown) {
+        return {
+          ...response,
+          nextPageParam: new Date(timestamp),
+        };
+      } catch {
+        // 에러 로깅이나 처리가 필요하면 여기에 추가
         return { groupedMessages: {} };
       }
     },
+    initialPageParam: lastTimeStamp || new Date(),
+    getNextPageParam: lastPage => lastPage.nextPageParam,
     enabled: !!workspaceId && !!channelId,
     refetchOnMount: false,
     staleTime: 1000 * 60 * 5,

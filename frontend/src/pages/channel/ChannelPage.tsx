@@ -61,7 +61,7 @@ const ChannelPage = () => {
       try {
         await refetch();
         setInitialLoadDone(true);
-      } catch (error) {
+      } catch {
         setInitialLoadDone(true);
       }
     };
@@ -71,10 +71,13 @@ const ChannelPage = () => {
 
   // 히스토리 데이터 처리
   useEffect(() => {
-    if (!data?.groupedMessages) return;
+    if (!data?.pages || data.pages.length === 0) return;
 
     // 빈 응답인지 확인
-    const isEmpty = Object.keys(data.groupedMessages).length === 0;
+    const latestPage = data.pages[0];
+    const isEmpty =
+      !latestPage.groupedMessages ||
+      Object.keys(latestPage.groupedMessages).length === 0;
 
     if (isEmpty) {
       setHasMoreMessages(false);
@@ -84,21 +87,24 @@ const ChannelPage = () => {
     setHistoryMessages(prev => {
       const updatedHistory = { ...prev };
 
-      // 새 히스토리 데이터를 기존 데이터와 병합
-      Object.entries(data.groupedMessages).forEach(([date, messages]) => {
-        if (!updatedHistory[date]) {
-          updatedHistory[date] = [];
-        }
-
-        // 중복 방지하여 추가
-        messages.forEach(msg => {
-          const isDuplicate = updatedHistory[date].some(
-            existingMsg => existingMsg.messageId === msg.messageId
-          );
-
-          if (!isDuplicate) {
-            updatedHistory[date].push(msg);
+      // 모든 페이지의 데이터 병합
+      data.pages.forEach(page => {
+        // 새 히스토리 데이터를 기존 데이터와 병합
+        Object.entries(page.groupedMessages).forEach(([date, messages]) => {
+          if (!updatedHistory[date]) {
+            updatedHistory[date] = [];
           }
+
+          // 중복 방지하여 추가
+          messages.forEach(msg => {
+            const isDuplicate = updatedHistory[date].some(
+              existingMsg => existingMsg.messageId === msg.messageId
+            );
+
+            if (!isDuplicate) {
+              updatedHistory[date].push(msg);
+            }
+          });
         });
       });
 
@@ -216,8 +222,12 @@ const ChannelPage = () => {
         // 새 메시지가 없으면 더 이상 로드하지 않음
         if (
           !result.data ||
-          Object.keys(result.data.groupedMessages).length === 0 ||
-          Object.values(result.data.groupedMessages).flat().length === 0
+          !result.data.pages ||
+          result.data.pages.length === 0 ||
+          !result.data.pages[0].groupedMessages ||
+          Object.keys(result.data.pages[0].groupedMessages).length === 0 ||
+          Object.values(result.data.pages[0].groupedMessages).flat().length ===
+            0
         ) {
           setHasMoreMessages(false);
         }

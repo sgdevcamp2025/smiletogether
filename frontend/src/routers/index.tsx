@@ -10,8 +10,6 @@ import WorkspaceChannelPanel from '@/components/workspace/WorkspaceChannelPanel'
 import SplitPaneLayout from '@/components/common/SplitPaneLayout';
 import NotFoundPage from '@/pages/NotFoundPage';
 import WorkspaceJoinPage from '@/pages/workspace/WorkspaceJoinPage';
-import DMContent from '@/components/dm/DMContent';
-import SideBar from '@/components/dm/sideBar';
 import DMPage from '@/pages/dm/DMPage';
 
 export const router = createBrowserRouter([

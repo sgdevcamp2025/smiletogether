@@ -6,7 +6,7 @@ import { useWorkspaceCreationStore } from '@/stores/workspace';
 import EmailTagInput from '@/components/common/EmailTagInput';
 import { useCreateWorkspaceMutation } from '@/hooks/workspace/useCreateWorkspaceMutation';
 import { getOwnerId } from '@/lib/utils';
-import { getUserJoinedWorkspaceChannels } from '@/apis/channel';
+import { getUserJoinedWorkspaceChannels } from '@/apis/channel/index';
 
 const StepSetInviteUsers = () => {
   const {

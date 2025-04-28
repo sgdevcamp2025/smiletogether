@@ -5,16 +5,13 @@ import WorkspaceChannelList from '@/components/workspace/WorkspaceSideBar/Worksp
 
 const WorkspaceChannelSidebar = () => {
   const { workspaceID } = useParams();
-  const {
-    data: workspacesInfo,
-    isLoading: isWorkspaceLoading,
-    isError: isWorkspaceError,
-  } = useUserWorkspaceQuery(workspaceID!);
+  const { workspaceInfo, isWorkspaceLoading, isWorkspaceError } =
+    useUserWorkspaceQuery(workspaceID!);
 
   const {
-    data: channelList = [],
-    isLoading: isChannelLoading,
-    isError: isChannelError,
+    channelList = [],
+    isChannelLoading,
+    isChannelError,
   } = useWorkspaceChannelListQuery(workspaceID!);
 
   if (isChannelLoading || isWorkspaceLoading) return <p>로딩 중입니다!</p>;
@@ -23,7 +20,7 @@ const WorkspaceChannelSidebar = () => {
   return (
     <div className="text-wrap">
       <h3 className="mt-4 px-4 scroll-m-20 text-xl font-semibold tracking-tight text-white">
-        {workspacesInfo?.name}
+        {workspaceInfo?.name}
       </h3>
       <WorkspaceChannelList sectionTitle={'채널'} listItems={channelList} />
     </div>

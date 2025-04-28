@@ -22,6 +22,7 @@ const HistoryMessages = ({
   console.log('data', data);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const topRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (!scrollContainerRef.current) return;
     const prevScrollHeight = scrollContainerRef.current.scrollHeight;
@@ -46,8 +47,9 @@ const HistoryMessages = ({
     if (topRef.current) observer.observe(topRef.current);
     return () => observer.disconnect();
   }, [hasNextPage, fetchNextPage]);
+
   return (
-    <div ref={scrollContainerRef} className="overflow-auto]">
+    <div ref={scrollContainerRef} className="overflow-auto">
       {/* 맨 위에 보이지 않는 ref 배치 */}
       <div ref={topRef} className="h-4" />
 
