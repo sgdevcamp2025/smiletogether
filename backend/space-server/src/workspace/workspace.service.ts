@@ -128,7 +128,7 @@ export class WorkspaceService {
           await this.externalApiService.getNameByUserId(newUserId);
         console.log(newUserId, newUserNickName);
 
-        // 초대 링크 전송송
+        // 초대 링크 전송
         try {
           const domain = 'http://localhost:5173';
           const { inviteResults: emailInviteResults } =
