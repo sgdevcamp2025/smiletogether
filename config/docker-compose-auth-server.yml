@@ -21,6 +21,8 @@ services:
       - "8091:8091"
     depends_on:
       - auth-redis
-    command: pnpm run start:dev
+    command: >
+      sh -c "pnpm run build &&
+       pnpm run start:prod"
     networks:
       - auth_network
