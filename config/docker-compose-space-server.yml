@@ -39,6 +39,7 @@ services:
     command: >
       sh -c "npx prisma migrate deploy && 
        npx prisma generate &&
-       pnpm run start:dev"
+       pnpm run build &&
+       pnpm run start:prod"
     networks:
       - space_network
