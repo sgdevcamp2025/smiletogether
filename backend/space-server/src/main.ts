@@ -20,6 +20,6 @@ async function bootstrap() {
     allowedHeaders: 'Content-Type, Accept, Authorization',
   });
   app.useGlobalFilters(new PrismaExceptionFilter());
-  await app.listen(process.env.PORT ?? 8090);
+  await app.listen(8090);
 }
 bootstrap();

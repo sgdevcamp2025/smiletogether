@@ -13,41 +13,14 @@ import {
 } from './dto/workspace-channel.dto';
 import { ChannelDetailsDto } from './dto/channel-detail.dto';
 import { validate as isUUID } from 'uuid';
+import { ExternalApiService } from 'src/external-api/external-api.service';
 
 @Injectable()
 export class ChannelService {
-  constructor(private readonly prismaService: PrismaService) {}
-
-  getEmailByUserId = async (userId: string): Promise<string> => {
-    try {
-      const response = await fetch(
-        `http://host.docker.internal:8080/api/auth/identify-email?userId=${encodeURIComponent(userId)}`,
-      );
-      if (!response.ok) {
-        console.log(response);
-        return '해당 userId의 email이 존재하지 않습니다.';
-      }
-      const data = await response.json();
-      return data.email || '해당 userId의 email이 존재하지 않습니다.';
-    } catch (error) {
-      console.error(error);
-      return '해당 userId의 email이 존재하지 않습니다.';
-    }
-  };
-
-  getUserIdByEmail = async (email: string): Promise<string> => {
-    try {
-      const response = await fetch(
-        `http://host.docker.internal:8080/api/auth/check-memberId?email=${encodeURIComponent(email)}`,
-      );
-      if (!response.ok) return '해당 email의 userId가 존재하지 않습니다.';
-      const data = await response.json();
-      return data.userId || '해당 email의 userId가 존재하지 않습니다.';
-    } catch (error) {
-      console.error(error);
-      return '해당 email의 userId가 존재하지 않습니다.';
-    }
-  };
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly externalApiService: ExternalApiService,
+  ) {}
 
   async inviteChannels(
     emails: string[],
@@ -62,7 +35,7 @@ export class ChannelService {
     };
 
     for (const email of emails) {
-      const userId = await this.getUserIdByEmail(email);
+      const userId = await this.externalApiService.getUserIdByEmail(email);
       if (!userId || userId === '해당 email의 userId가 존재하지 않습니다.') {
         inviteResults.failed.push({ email, message: 'User ID not found.' });
         continue;
@@ -120,7 +93,7 @@ export class ChannelService {
     });
 
     for (const email of emails) {
-      const newUserId = await this.getUserIdByEmail(email);
+      const newUserId = await this.externalApiService.getUserIdByEmail(email);
       if (isUUID(newUserId))
         await this.joinChannel(newUserId, newChannel.channel_id);
       else
@@ -513,5 +486,10 @@ export class ChannelService {
         statusMessage: user.status_message,
       })),
     };
+  }
+
+  async getEmailByUserId(userId: string): Promise<any> {
+    const email = await this.externalApiService.getEmailByUserId(userId);
+    return { email: email };
   }
 }

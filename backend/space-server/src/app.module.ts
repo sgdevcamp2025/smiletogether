@@ -5,10 +5,12 @@ import { AppService } from './app.service';
 import { WorkspaceModule } from './workspace/workspace.module';
 import { ChannelModule } from './channel/channel.module';
 import { InviteModule } from './invite/invite.module';
+import { ExternalApiModule } from './external-api/external-api.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
+    ExternalApiModule,
     WorkspaceModule,
     ChannelModule,
     InviteModule,

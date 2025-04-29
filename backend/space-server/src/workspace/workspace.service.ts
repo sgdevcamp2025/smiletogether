@@ -13,62 +13,16 @@ import { WorkspaceDetailResponseDto } from './dto/workspace-detail.dto';
 import { WorkspaceDeleteResponseDto } from './dto/delete-workspace.dto';
 import { InviteWorkspaceDto } from './dto/invite-workspace.dto';
 import { ProfileResponseDto } from 'src/common/dto/profile-response.dto';
+import { ExternalApiService } from 'src/external-api/external-api.service';
 
 @Injectable()
 export class WorkspaceService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly inviteService: InviteService,
+    private readonly externalApiService: ExternalApiService,
   ) {}
   private readonly logger = new Logger(WorkspaceService.name);
-
-  getEmailByUserId = async (userId: string): Promise<string> => {
-    try {
-      const response = await fetch(
-        `http://host.docker.internal:8080/api/auth/identify-email?userId=${encodeURIComponent(userId)}`,
-      );
-      if (!response.ok) {
-        console.log(response);
-        return '해당 userId의 email이 존재하지 않습니다.';
-      }
-      const data = await response.json();
-      console.log(data);
-      return data.email || '해당 userId의 email이 존재하지 않습니다.';
-    } catch (error) {
-      console.error(error);
-      return '해당 userId의 email이 존재하지 않습니다.';
-    }
-  };
-
-  getUserIdByEmail = async (email: string): Promise<string> => {
-    try {
-      const response = await fetch(
-        `http://host.docker.internal:8080/api/auth/check-memberId?email=${encodeURIComponent(email)}`,
-      );
-      if (!response.ok) return '해당 email의 userId가 존재하지 않습니다.';
-      const data = await response.json();
-      console.log(data);
-      return data.userId || '해당 email의 userId가 존재하지 않습니다.';
-    } catch (error) {
-      console.error(error);
-      return '해당 email의 userId가 존재하지 않습니다.';
-    }
-  };
-
-  getNameByUserId = async (userId: string): Promise<string> => {
-    try {
-      const response = await fetch(
-        `http://host.docker.internal:8080/api/auth/identify-user-name?userId=${userId}`,
-      );
-      if (!response.ok) return '해당 userId의 userName이 존재하지 않습니다.';
-      const data = await response.json();
-      console.log(data);
-      return data.userName || '해당 userId의 userName이 존재하지 않습니다.';
-    } catch (error) {
-      console.error(error);
-      return '해당 userId의 userName이 존재하지 않습니다.';
-    }
-  };
 
   async getUserWorkspaces(userId: string): Promise<any> {
     const workspaces = await this.prismaService.workspace.findMany({
@@ -99,7 +53,7 @@ export class WorkspaceService {
 
     return {
       userWorkspaces: {
-        email: await this.getEmailByUserId(userId),
+        email: await this.externalApiService.getEmailByUserId(userId),
         workspaces: workspaces.map((workspace) => ({
           workspaceId: workspace.workspace_id,
           name: workspace.name,
@@ -169,8 +123,9 @@ export class WorkspaceService {
       // 초대된 사용자들 처리
       for (const email of inviteEmailList) {
         console.log('초대할 email: ', email);
-        const newUserId = await this.getUserIdByEmail(email);
-        const newUserNickName = await this.getNameByUserId(newUserId);
+        const newUserId = await this.externalApiService.getUserIdByEmail(email);
+        const newUserNickName =
+          await this.externalApiService.getNameByUserId(newUserId);
         console.log(newUserId, newUserNickName);
 
         // 초대 링크 전송송
@@ -356,7 +311,7 @@ export class WorkspaceService {
     const usersWithEmail = await Promise.all(
       workspace.WorkspaceUser.map(async (user) => ({
         userId: user.user_id,
-        userEmail: await this.getEmailByUserId(user.user_id),
+        userEmail: await this.externalApiService.getEmailByUserId(user.user_id),
         nickName: user.profile_name,
         profileImage: user.profile_image || '',
         role: user.role,

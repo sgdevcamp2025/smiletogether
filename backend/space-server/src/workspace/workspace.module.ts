@@ -5,9 +5,11 @@ import { PrismaModule } from 'prisma/prisma.module';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { InviteModule } from 'src/invite/invite.module';
+import { ExternalApiModule } from 'src/external-api/external-api.module';
 
 @Module({
   imports: [
+    ExternalApiModule,
     InviteModule,
     PrismaModule,
     JwtModule.register({
