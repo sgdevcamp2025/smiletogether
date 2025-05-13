@@ -26,3 +26,6 @@ dist-ssr
 .env
 
 *.tsbuildinfo
+smiletogether-1fe9a-firebase-adminsdk-fbsvc-0ecde2f4db.json
+
+test
