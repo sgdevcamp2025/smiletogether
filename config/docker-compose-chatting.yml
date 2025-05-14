@@ -43,6 +43,8 @@ services:
       - mongodb
     networks:
       - history_network
+      - space_network
+      - kafka-network
 
   chat-server:
     image: imjanghyeok/smiletogether-chat-server:latest  # Docker Hub에서 가져오기
@@ -52,6 +54,19 @@ services:
       - "8081:8081"
     networks:
       - chat_network
+      - space_network
+      - kafka-network
+
+  notification-server:
+    image: imjanghyeok/smiletogether-notification-server:latest
+    container_name: notification-server
+    restart: always
+    ports:
+      - "8082:8082"
+    networks:
+      - history_network
+      - kafka-network
+      - space_network
 
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
@@ -87,8 +102,6 @@ services:
       - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
     networks:
       - kafka-network
-    volumes:
-      - kafka_00:/bitnami/kafka
 
   # ✅ 브로커 3개 (KRaft 모드 적용)
   kafka_01:
@@ -107,13 +120,11 @@ services:
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
       - KAFKA_LISTENERS=INTERNAL://0.0.0.0:9092,EXTERNAL://kafka_01:19001
-      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka_01:9092,EXTERNAL://host.docker.internal:19001
+      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka_01:9092,EXTERNAL://localhost:19001
       - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
       - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
     networks:
       - kafka-network
-    volumes:
-      - kafka_01:/bitnami/kafka
 
   kafka_02:
     image: bitnami/kafka:3.7.0
@@ -131,13 +142,11 @@ services:
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
       - KAFKA_LISTENERS=INTERNAL://0.0.0.0:9092,EXTERNAL://kafka_02:19002
-      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka_02:9092,EXTERNAL://host.docker.internal:19002
+      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka_02:9092,EXTERNAL://localhost:19002
       - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
       - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
     networks:
       - kafka-network
-    volumes:
-      - kafka_02:/bitnami/kafka
 
   kafka_03:
     image: bitnami/kafka:3.7.0
@@ -155,13 +164,11 @@ services:
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
       - KAFKA_LISTENERS=INTERNAL://0.0.0.0:9092,EXTERNAL://kafka_03:19003
-      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka_03:9092,EXTERNAL://host.docker.internal:19003
+      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka_03:9092,EXTERNAL://localhost:19003
       - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
       - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
     networks:
       - kafka-network
-    volumes:
-      - kafka_03:/bitnami/kafka
 
 
 networks:
@@ -171,6 +178,9 @@ networks:
     driver: bridge
   kafka-network:
     driver: bridge
+  space_network:
+    driver: bridge
+
 
 volumes:
   data:
