@@ -67,7 +67,7 @@ services:
     container_name: notification-server
     restart: always
     ports:
-      - "8082:8082"
+      - "8087:8087"
     networks:
       - history_network
       - kafka-network
