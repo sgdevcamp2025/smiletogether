@@ -11,6 +11,8 @@ public record ChannelMessageDto(
         @JsonProperty("channelId") String channelId,
         @JsonProperty("user") WorkspaceProfileDto user,
         @JsonProperty("content") String content,
+        @JsonProperty("token") String token,
+
 
         @JsonProperty("createdAt")
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")

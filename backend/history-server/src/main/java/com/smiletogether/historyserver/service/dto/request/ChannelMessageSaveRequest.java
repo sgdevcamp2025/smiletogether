@@ -9,6 +9,7 @@ public record ChannelMessageSaveRequest(
         String channelId,
         WorkspaceProfileDto user,
         String content,
+        String token,
         LocalDateTime createdAt,
         LocalDateTime updatedAt,
         String type
