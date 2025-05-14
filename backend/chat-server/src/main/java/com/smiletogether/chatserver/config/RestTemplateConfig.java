@@ -14,8 +14,8 @@ public class RestTemplateConfig {
         defaultUriBuilderFactory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE);
 
         SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
-        requestFactory.setConnectTimeout(20);
-        requestFactory.setReadTimeout(20);
+        requestFactory.setConnectTimeout(3000);
+        requestFactory.setReadTimeout(3000);
 
         RestTemplate restTemplate = new RestTemplate(requestFactory);
         restTemplate.setUriTemplateHandler(defaultUriBuilderFactory);
