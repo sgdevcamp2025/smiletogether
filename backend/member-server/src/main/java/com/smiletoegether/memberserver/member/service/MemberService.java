@@ -131,14 +131,13 @@ public class MemberService {
     }
 
     private void setRefreshToken(HttpServletResponse response, String refreshToken) {
-        // Refresh Token을 HttpOnly 쿠키에 저장
         Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
-        refreshTokenCookie.setHttpOnly(true);  // JavaScript에서 접근 방지 (XSS 공격 방지)
-        refreshTokenCookie.setSecure(true);    // HTTPS에서만 전송
-        refreshTokenCookie.setPath("/");       // 모든 경로에서 접근 가능
-        refreshTokenCookie.setMaxAge(604800);  // 7일 동안 유지 (604800초)
+        refreshTokenCookie.setHttpOnly(true);
+        refreshTokenCookie.setSecure(true);
+        refreshTokenCookie.setPath("/");
+        refreshTokenCookie.setMaxAge(604800);
 
-        response.addCookie(refreshTokenCookie); // ✅ 쿠키를 응답에 추가
+        response.addCookie(refreshTokenCookie);
     }
 
     public String identifyEmail(String userId) {
