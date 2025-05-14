@@ -21,15 +21,17 @@ public class MessageProducer {
 
     private static final String CHAT_TOPIC = "channel-topic";
     private static final String HISTORY_TOPIC = "history-topic";
+    private static final String NOTIFICATION_TOPIC = "notification-topic";
 
     public void sendMessage(ChannelMessageDto dto) {
         try {
-            String key = dto.channelId(); // ✅ key = channelId
+            String key = dto.channelId();
             String json = objectMapper.writeValueAsString(dto);
 
             log.info("Kafka send (key = {}, topic = {}): {}", key, CHAT_TOPIC, json);
             kafkaTemplate.send(CHAT_TOPIC, key, json);
             kafkaTemplate.send(HISTORY_TOPIC, key, json);
+            kafkaTemplate.send(NOTIFICATION_TOPIC, json);
 
         } catch (Exception e) {
             log.error("❌ Failed to send message", e);
@@ -38,7 +40,7 @@ public class MessageProducer {
 
     public void updateMessage(ChannelMessageUpdateKafkaRequest req, ChannelMessageUpdateDto dto) {
         try {
-            String key = dto.channelId(); // ✅ 동일하게 channelId 기준
+            String key = dto.channelId();
             String jsonForChat = objectMapper.writeValueAsString(dto);
             String jsonForHistory = objectMapper.writeValueAsString(req);
 
@@ -53,7 +55,7 @@ public class MessageProducer {
 
     public void deleteMessage(ChannelMessageDeleteRequest req, ChannelMessageDeleteDto dto) {
         try {
-            String key = dto.channelId(); // ✅ 역시 key 지정
+            String key = dto.channelId();
             String jsonForChat = objectMapper.writeValueAsString(dto);
             String jsonForHistory = objectMapper.writeValueAsString(req);
 
