@@ -2,7 +2,8 @@ version: '3.8'
 
 services:
   mongodb:
-    image: mongo:latest
+    image: mongo:7.0.5
+    platform: linux/arm64
     container_name: mongodb
     restart: always
     ports:
@@ -17,11 +18,12 @@ services:
       - history_network
 
   mongo-express:
-    image: mongo-express:latest
+    image: mongo-express:1.0.0-20
+    platform: linux/arm64
     container_name: mongo-express
     restart: always
     ports:
-      - 20000:8081  # 프론트에서 사용 가능하도록 포트 수정
+      - 20000:8081
     environment:
       - ME_CONFIG_MONGODB_ADMINUSERNAME=rootuser
       - ME_CONFIG_MONGODB_ADMINPASSWORD=rootpass
@@ -32,7 +34,8 @@ services:
       - history_network
 
   history-server:
-    image: imjanghyeok/smiletogether-history-server-arm:latest  # Docker Hub에서 가져오기
+    image: imjanghyeok/smiletogether-history-server-arm:latest
+    platform: linux/arm64
     container_name: history-server
     restart: always
     ports:
@@ -43,20 +46,36 @@ services:
       - mongodb
     networks:
       - history_network
-    platform: linux/arm64
+      - space_network
+      - kafka-network
 
   chat-server:
-    image: imjanghyeok/smiletogether-chat-server-arm:latest  # Docker Hub에서 가져오기
+    image: imjanghyeok/smiletogether-chat-server-arm:latest
+    platform: linux/arm64
     container_name: chat-server
     restart: always
     ports:
       - "8081:8081"
     networks:
       - chat_network
+      - space_network
+      - kafka-network
+
+  notification-server:
+    image: imjanghyeok/smiletogether-notification-server-arm:latest
     platform: linux/arm64
+    container_name: notification-server
+    restart: always
+    ports:
+      - "8087:8087"
+    networks:
+      - history_network
+      - kafka-network
+      - space_network
 
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
+    platform: linux/arm64
     container_name: kafka-ui
     ports:
       - "5001:5001"
@@ -69,9 +88,9 @@ services:
     networks:
       - kafka-network
 
-    # ✅ 컨트롤러 1개 (테스트 환경)
   kafka_00:
-    image: bitnami/kafka:3.7.0
+    image: arm64v8/bitnami/kafka:3.7.0
+    platform: linux/arm64
     container_name: kafka_00
     restart: unless-stopped
     ports:
@@ -89,12 +108,10 @@ services:
       - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
     networks:
       - kafka-network
-    volumes:
-      - kafka_00:/bitnami/kafka
 
-  # ✅ 브로커 3개 (KRaft 모드 적용)
   kafka_01:
-    image: bitnami/kafka:3.7.0
+    image: arm64v8/bitnami/kafka:3.7.0
+    platform: linux/arm64
     container_name: kafka_01
     restart: unless-stopped
     ports:
@@ -109,16 +126,15 @@ services:
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
       - KAFKA_LISTENERS=INTERNAL://0.0.0.0:9092,EXTERNAL://kafka_01:19001
-      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka_01:9092,EXTERNAL://host.docker.internal:19001
+      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka_01:9092,EXTERNAL://localhost:19001
       - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
       - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
     networks:
       - kafka-network
-    volumes:
-      - kafka_01:/bitnami/kafka
 
   kafka_02:
-    image: bitnami/kafka:3.7.0
+    image: arm64v8/bitnami/kafka:3.7.0
+    platform: linux/arm64
     container_name: kafka_02
     restart: unless-stopped
     ports:
@@ -133,16 +149,15 @@ services:
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
       - KAFKA_LISTENERS=INTERNAL://0.0.0.0:9092,EXTERNAL://kafka_02:19002
-      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka_02:9092,EXTERNAL://host.docker.internal:19002
+      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka_02:9092,EXTERNAL://localhost:19002
       - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
       - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
     networks:
       - kafka-network
-    volumes:
-      - kafka_02:/bitnami/kafka
 
   kafka_03:
-    image: bitnami/kafka:3.7.0
+    image: arm64v8/bitnami/kafka:3.7.0
+    platform: linux/arm64
     container_name: kafka_03
     restart: unless-stopped
     ports:
@@ -157,14 +172,11 @@ services:
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
       - KAFKA_LISTENERS=INTERNAL://0.0.0.0:9092,EXTERNAL://kafka_03:19003
-      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka_03:9092,EXTERNAL://host.docker.internal:19003
+      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka_03:9092,EXTERNAL://localhost:19003
       - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
       - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
     networks:
       - kafka-network
-    volumes:
-      - kafka_03:/bitnami/kafka
-
 
 networks:
   history_network:
@@ -173,14 +185,12 @@ networks:
     driver: bridge
   kafka-network:
     driver: bridge
+  space_network:
+    driver: bridge
 
 volumes:
   data:
   kafka_00:
-    driver: local
   kafka_01:
-    driver: local
   kafka_02:
-    driver: local
   kafka_03:
-    driver: local

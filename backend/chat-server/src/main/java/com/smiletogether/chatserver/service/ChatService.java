@@ -29,7 +29,7 @@ public class ChatService {
         log.info("---------------------------------------------------------------");
         WorkspaceProfileDto senderProfile = initProfile(token, workspaceId, userId);
         ChannelMessageDto channelMessageDto = createChannelChat(workspaceId, channelId, senderProfile,
-                message.content());
+                message.content(), token);
         messageProducer.sendMessage(channelMessageDto);
     }
 
@@ -55,9 +55,9 @@ public class ChatService {
 
 
     private ChannelMessageDto createChannelChat(String workspaceId, String channelId,
-                                                WorkspaceProfileDto senderProfile, String content) {
+                                                WorkspaceProfileDto senderProfile, String content, String token) {
         String messageId = uuidGenerator();
-        return new ChannelMessageDto("SEND", messageId, workspaceId, channelId, senderProfile, content,
+        return new ChannelMessageDto("SEND", messageId, workspaceId, channelId, senderProfile, content, token,
                 LocalDateTime.now(),
                 LocalDateTime.now(), false);
     }
