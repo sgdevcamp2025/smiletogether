@@ -12,3 +12,18 @@ export const postFirebaseToken = async (data: postFirebaseTokenRequest) => {
   );
   return response.data;
 };
+
+interface postChannelMessageNotificationRequest {
+  workspaceId: string;
+  channelId: string;
+}
+
+export const postChannelMessageNotification = async ({
+  workspaceId,
+  channelId,
+}: postChannelMessageNotificationRequest) => {
+  const response = await alarmApi.post(
+    `/api/workspaces/${workspaceId}/channels/${channelId}/notifications/message`
+  );
+  return response.data;
+};

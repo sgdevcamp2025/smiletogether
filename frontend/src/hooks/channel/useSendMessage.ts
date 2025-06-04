@@ -2,6 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { Client } from '@stomp/stompjs';
 import { useUserStore } from '@/stores/userStore';
 import { getToken } from '@/lib/utils';
+import { postChannelMessageNotification } from '@/apis/alarm';
 
 interface UseSendMessageProps {
   workspaceId: string;
@@ -25,7 +26,7 @@ export const useSendMessage = ({
     setMessage(e.target.value);
   };
 
-  const sendMessage = useCallback(() => {
+  const sendMessage = useCallback(async () => {
     if (isSending) {
       return;
     }
@@ -60,6 +61,7 @@ export const useSendMessage = ({
         },
         body: JSON.stringify(messageData),
       });
+      await postChannelMessageNotification({ workspaceId, channelId });
 
       if (onMessageSent) {
         setTimeout(onMessageSent, 100);

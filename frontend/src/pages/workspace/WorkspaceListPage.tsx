@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router';
 import { userOriginStore } from '@/stores/userOriginStore';
 import { useEffect } from 'react';
 import { messaging } from '@/firebase-messaging-sw';
-import { getToken } from 'firebase/messaging';
+import { getToken, onMessage } from 'firebase/messaging';
 import { postFirebaseToken } from '@/apis/alarm';
 
 const WorkSpaceListPage = () => {
@@ -23,7 +23,6 @@ const WorkSpaceListPage = () => {
           getToken(messaging, {
             vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY,
           }).then(fmc_responsed_token => {
-            console.log(fmc_responsed_token);
             const expiredAt = new Date();
             expiredAt.setDate(expiredAt.getDate() + 30); // 30일 후 만료일 설정
             const exsiting_token = localStorage.getItem('fcm_token');
@@ -35,6 +34,9 @@ const WorkSpaceListPage = () => {
                 expiredAt: expiredAt.toISOString(),
               }).then(() => {
                 localStorage.setItem('fcm_token', fmc_responsed_token);
+                onMessage(messaging, payload => {
+                  console.log('포그라운드 메세지', payload);
+                });
               });
             }
           });
