@@ -27,6 +27,8 @@ const WorkSpaceListPage = () => {
             expiredAt.setDate(expiredAt.getDate() + 30); // 30일 후 만료일 설정
             const exsiting_token = localStorage.getItem('fcm_token');
             // localstorage에 없거나 있어도 fcm에서 발급받은것과 저장된것이 같다면 서버에 업데이트 해줄 필요가 없음
+            console.log(fmc_responsed_token);
+
             if (!exsiting_token || fmc_responsed_token !== exsiting_token) {
               return postFirebaseToken({
                 userId: user.id,
@@ -34,9 +36,6 @@ const WorkSpaceListPage = () => {
                 expiredAt: expiredAt.toISOString(),
               }).then(() => {
                 localStorage.setItem('fcm_token', fmc_responsed_token);
-                onMessage(messaging, payload => {
-                  console.log('포그라운드 메세지', payload);
-                });
               });
             }
           });
