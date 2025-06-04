@@ -22,10 +22,11 @@ public class NotificationController {
     private final FirebaseMessagingService firebaseMessagingService;
     private final FirebaseTokenService firebaseTokenService;
 
-    @PostMapping("/api/notification/subscribe-info")
+    @PostMapping("/api/notification/subscription-info")
     public ResponseEntity<CommonResponse> saveSubscribeInfo(
             @RequestBody NotificationPushSubscriptionRequest notificationPushSubscriptionRequest
     ) {
+        System.out.println("요청 수신: " + notificationPushSubscriptionRequest);
         return ResponseEntity.ok(notificationService.saveNotificationPushSubscription(notificationPushSubscriptionRequest));
     }
 
