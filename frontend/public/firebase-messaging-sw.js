@@ -1,15 +1,19 @@
-import { initializeApp } from 'firebase/app';
-import { getAnalytics } from 'firebase/analytics';
+importScripts(
+  'https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js'
+);
+importScripts(
+  'https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging-compat.js'
+);
 
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
+  apiKey: 'AIzaSyAptfb7eJZmJ5FJ1f4KHzBg5T1dEAO8t00',
+  authDomain: 'smiletogether-7f133.firebaseapp.com',
+  projectId: 'smiletogether-7f133',
+  storageBucket: 'smiletogether-7f133.firebasestorage.app',
+  messagingSenderId: '539498288848',
+  appId: '1:539498288848:web:36ddde5a11a144c492f0d5',
+  measurementId: 'G-6K3NH8TJKK',
 };
+firebase.initializeApp(firebaseConfig);
 
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+const messaging = firebase.messaging();
