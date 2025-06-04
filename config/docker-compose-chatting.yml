@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   mongodb:
     image: mongo:latest
@@ -14,14 +12,14 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=rootpass
       - MONGO_INITDB_DATABASE=history-db
     networks:
-      - history_network
+      - smiletogether-network
 
   mongo-express:
     image: mongo-express:latest
     container_name: mongo-express
     restart: always
     ports:
-      - 20000:8081  # 프론트에서 사용 가능하도록 포트 수정
+      - 20000:8081
     environment:
       - ME_CONFIG_MONGODB_ADMINUSERNAME=rootuser
       - ME_CONFIG_MONGODB_ADMINPASSWORD=rootpass
@@ -29,10 +27,10 @@ services:
     depends_on:
       - mongodb
     networks:
-      - history_network
+      - smiletogether-network
 
   history-server:
-    image: imjanghyeok/smiletogether-history-server:latest  # Docker Hub에서 가져오기
+    image: imjanghyeok/smiletogether-history-server:latest
     container_name: history-server
     restart: always
     ports:
@@ -42,20 +40,16 @@ services:
     depends_on:
       - mongodb
     networks:
-      - history_network
-      - space_network
-      - kafka-network
+      - smiletogether-network
 
   chat-server:
-    image: imjanghyeok/smiletogether-chat-server:latest  # Docker Hub에서 가져오기
+    image: imjanghyeok/smiletogether-chat-server:latest
     container_name: chat-server
     restart: always
     ports:
       - "8081:8081"
     networks:
-      - chat_network
-      - space_network
-      - kafka-network
+      - smiletogether-network
 
   notification-server:
     image: imjanghyeok/smiletogether-notification-server:latest
@@ -64,9 +58,7 @@ services:
     ports:
       - "8087:8087"
     networks:
-      - history_network
-      - kafka-network
-      - space_network
+      - smiletogether-network
 
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
@@ -80,9 +72,8 @@ services:
     depends_on:
       - kafka_01
     networks:
-      - kafka-network
+      - smiletogether-network
 
-    # ✅ 컨트롤러 1개 (테스트 환경)
   kafka_00:
     image: bitnami/kafka:3.7.0
     container_name: kafka_00
@@ -101,9 +92,8 @@ services:
       - KAFKA_LISTENERS=CONTROLLER://0.0.0.0:9093
       - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
     networks:
-      - kafka-network
+      - smiletogether-network
 
-  # ✅ 브로커 3개 (KRaft 모드 적용)
   kafka_01:
     image: bitnami/kafka:3.7.0
     container_name: kafka_01
@@ -124,7 +114,7 @@ services:
       - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
       - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
     networks:
-      - kafka-network
+      - smiletogether-network
 
   kafka_02:
     image: bitnami/kafka:3.7.0
@@ -146,7 +136,7 @@ services:
       - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
       - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
     networks:
-      - kafka-network
+      - smiletogether-network
 
   kafka_03:
     image: bitnami/kafka:3.7.0
@@ -168,27 +158,16 @@ services:
       - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
       - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
     networks:
-      - kafka-network
-
+      - smiletogether-network
 
 networks:
-  history_network:
+  smiletogether-network:
+    name: smiletogether-network
     driver: bridge
-  chat_network:
-    driver: bridge
-  kafka-network:
-    driver: bridge
-  space_network:
-    driver: bridge
-
 
 volumes:
   data:
   kafka_00:
-    driver: local
   kafka_01:
-    driver: local
   kafka_02:
-    driver: local
   kafka_03:
-    driver: local

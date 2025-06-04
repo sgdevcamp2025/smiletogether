@@ -54,43 +54,43 @@ public class NotificationService {
             String title = createNotificationTitle(chatNotificationPushMessageRequest);
             String body = createNotificationBody(chatNotificationPushMessageRequest);
 
-            String member = "24fa8a1c-fb3a-11ef-a453-6640c3b0a701";
-            Map<String, String> data = new HashMap<>();
-            data.put("userId", member);
-            data.put("workspaceId", chatNotificationPushMessageRequest.workspaceId());
-            data.put("channelId", chatNotificationPushMessageRequest.channelId());
-            data.put("sender", chatNotificationPushMessageRequest.senderId());
-            List<NotificationPushSubscription> notificationPushSubscriptions= notificationPushSubscriptionRepository.findAllByUserId(member);
-            for (NotificationPushSubscription notificationPushSubscription : notificationPushSubscriptions) {
-                firebaseMessagingService.sendMessage(
-                        accessToken,
-                        notificationPushSubscription.getToken(),
-                        title,
-                        body,
-                        data
-                );
-            }
-
-//            List<String> members = spaceServerApiClient.getChannelMembers(chatNotificationPushMessageRequest.token(),
-//                    chatNotificationPushMessageRequest.channelId());
-//
-//            for (String member : members) {
-//                Map<String, String> data = new HashMap<>();
-//                data.put("userId", member);
-//                data.put("workspaceId", chatNotificationPushMessageRequest.workspaceId());
-//                data.put("channelId", chatNotificationPushMessageRequest.channelId());
-//                data.put("sender", chatNotificationPushMessageRequest.senderId());
-//                List<NotificationPushSubscription> notificationPushSubscriptions= notificationPushSubscriptionRepository.findAllByUserId(member);
-//                for (NotificationPushSubscription notificationPushSubscription : notificationPushSubscriptions) {
-//                    firebaseMessagingService.sendMessage(
-//                            accessToken,
-//                            notificationPushSubscription.getToken(),
-//                            title,
-//                            body,
-//                            data
-//                            );
-//                }
+//            String member = "24fa8a1c-fb3a-11ef-a453-6640c3b0a701";
+//            Map<String, String> data = new HashMap<>();
+//            data.put("userId", member);
+//            data.put("workspaceId", chatNotificationPushMessageRequest.workspaceId());
+//            data.put("channelId", chatNotificationPushMessageRequest.channelId());
+//            data.put("sender", chatNotificationPushMessageRequest.senderId());
+//            List<NotificationPushSubscription> notificationPushSubscriptions= notificationPushSubscriptionRepository.findAllByUserId(member);
+//            for (NotificationPushSubscription notificationPushSubscription : notificationPushSubscriptions) {
+//                firebaseMessagingService.sendMessage(
+//                        accessToken,
+//                        notificationPushSubscription.getToken(),
+//                        title,
+//                        body,
+//                        data
+//                );
 //            }
+
+            List<String> members = spaceServerApiClient.getChannelMembers(chatNotificationPushMessageRequest.token(),
+                    chatNotificationPushMessageRequest.channelId());
+
+            for (String member : members) {
+                Map<String, String> data = new HashMap<>();
+                data.put("userId", member);
+                data.put("workspaceId", chatNotificationPushMessageRequest.workspaceId());
+                data.put("channelId", chatNotificationPushMessageRequest.channelId());
+                data.put("sender", chatNotificationPushMessageRequest.senderId());
+                List<NotificationPushSubscription> notificationPushSubscriptions= notificationPushSubscriptionRepository.findAllByUserId(member);
+                for (NotificationPushSubscription notificationPushSubscription : notificationPushSubscriptions) {
+                    firebaseMessagingService.sendMessage(
+                            accessToken,
+                            notificationPushSubscription.getToken(),
+                            title,
+                            body,
+                            data
+                            );
+                }
+            }
 
         } catch (IOException e) {
             throw new RuntimeException("토큰을 받아오지 못했습니다.");

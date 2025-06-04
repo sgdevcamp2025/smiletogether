@@ -1,5 +1,8 @@
 networks:
-  auth_network:
+  smiletogether-network:
+    name: smiletogether-network
+    driver: bridge
+
 services:
   auth-redis:
     image: redis:latest
@@ -8,7 +11,8 @@ services:
     ports:
       - "6380:6379"
     networks:
-      - auth_network
+      - smiletogether-network
+
   auth-server:
     build:
       context: ../backend/auth-server
@@ -23,6 +27,6 @@ services:
       - auth-redis
     command: >
       sh -c "pnpm run build &&
-       pnpm run start:prod"
+             pnpm run start:prod"
     networks:
-      - auth_network
+      - smiletogether-network

@@ -1,8 +1,6 @@
-version: '3.8'
-
 services:
   mongodb:
-    image: mongo:7.0.5
+    image: mongo:latest
     platform: linux/arm64
     container_name: mongodb
     restart: always
@@ -15,10 +13,10 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=rootpass
       - MONGO_INITDB_DATABASE=history-db
     networks:
-      - history_network
+      - smiletogether-network
 
   mongo-express:
-    image: mongo-express:1.0.0-20
+    image: mongo-express:latest
     platform: linux/arm64
     container_name: mongo-express
     restart: always
@@ -31,7 +29,7 @@ services:
     depends_on:
       - mongodb
     networks:
-      - history_network
+      - smiletogether-network
 
   history-server:
     image: imjanghyeok/smiletogether-history-server-arm:latest
@@ -45,9 +43,7 @@ services:
     depends_on:
       - mongodb
     networks:
-      - history_network
-      - space_network
-      - kafka-network
+      - smiletogether-network
 
   chat-server:
     image: imjanghyeok/smiletogether-chat-server-arm:latest
@@ -57,9 +53,7 @@ services:
     ports:
       - "8081:8081"
     networks:
-      - chat_network
-      - space_network
-      - kafka-network
+      - smiletogether-network
 
   notification-server:
     image: imjanghyeok/smiletogether-notification-server-arm:latest
@@ -69,9 +63,7 @@ services:
     ports:
       - "8087:8087"
     networks:
-      - history_network
-      - kafka-network
-      - space_network
+      - smiletogether-network
 
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
@@ -86,10 +78,10 @@ services:
     depends_on:
       - kafka_01
     networks:
-      - kafka-network
+      - smiletogether-network
 
   kafka_00:
-    image: arm64v8/bitnami/kafka:3.7.0
+    image: bitnami/kafka:3.7.0
     platform: linux/arm64
     container_name: kafka_00
     restart: unless-stopped
@@ -107,10 +99,10 @@ services:
       - KAFKA_LISTENERS=CONTROLLER://0.0.0.0:9093
       - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
     networks:
-      - kafka-network
+      - smiletogether-network
 
   kafka_01:
-    image: arm64v8/bitnami/kafka:3.7.0
+    image: bitnami/kafka:3.7.0
     platform: linux/arm64
     container_name: kafka_01
     restart: unless-stopped
@@ -130,10 +122,10 @@ services:
       - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
       - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
     networks:
-      - kafka-network
+      - smiletogether-network
 
   kafka_02:
-    image: arm64v8/bitnami/kafka:3.7.0
+    image: bitnami/kafka:3.7.0
     platform: linux/arm64
     container_name: kafka_02
     restart: unless-stopped
@@ -153,10 +145,10 @@ services:
       - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
       - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
     networks:
-      - kafka-network
+      - smiletogether-network
 
   kafka_03:
-    image: arm64v8/bitnami/kafka:3.7.0
+    image: bitnami/kafka:3.7.0
     platform: linux/arm64
     container_name: kafka_03
     restart: unless-stopped
@@ -176,16 +168,11 @@ services:
       - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
       - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
     networks:
-      - kafka-network
+      - smiletogether-network
 
 networks:
-  history_network:
-    driver: bridge
-  chat_network:
-    driver: bridge
-  kafka-network:
-    driver: bridge
-  space_network:
+  smiletogether-network:
+    name: smiletogether-network
     driver: bridge
 
 volumes:

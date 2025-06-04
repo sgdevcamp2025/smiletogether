@@ -14,9 +14,9 @@ public class WebConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**") // 모든 경로 허용
-                        .allowedOrigins("http://localhost:3000", "http://localhost:8090", "http://localhost:8091") // React 앱 주소
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                        .allowedHeaders("*")
+                        .allowedOrigins("http://localhost:3000", "http://localhost:5173", "http://localhost:8090", "http://localhost:8091") // React 앱 주소
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH" ,"OPTIONS")
+                        .allowedHeaders("Authorization", "Content-Type")
                         .allowCredentials(true);
             }
         };
