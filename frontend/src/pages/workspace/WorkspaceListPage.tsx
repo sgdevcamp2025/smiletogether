@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router';
 import { userOriginStore } from '@/stores/userOriginStore';
 import { useEffect } from 'react';
 import { messaging } from '@/firebase-messaging-sw';
-import { getToken, onMessage } from 'firebase/messaging';
+import { getToken } from 'firebase/messaging';
 import { postFirebaseToken } from '@/apis/alarm';
 
 const WorkSpaceListPage = () => {
