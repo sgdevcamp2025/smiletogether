@@ -1,13 +1,59 @@
 services:
-  mongodb:
+  chat-server:
+    container_name: chat-server
+    image: imjanghyeok/smiletogether-chat-server-arm:latest
+    platform: linux/arm64
+    restart: always
+    ports:
+      - 8081:8081
+    mem_limit: 768m
+    cpus: '0.70'
+    networks:
+      - smiletogether-network
+
+  history-server:
+    container_name: history-server
+    image: imjanghyeok/smiletogether-history-server-arm:latest
+    platform: linux/arm64
+    restart: always
+    ports:
+      - 8084:8084
+    mem_limit: 512m
+    cpus: '0.50'
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://rootuser:rootpass@mongodb-history:27017/history-db?authSource=admin
+    depends_on:
+      - mongodb-history
+    networks:
+      - smiletogether-network
+
+  notification-server:
+    container_name: notification-server
+    image: imjanghyeok/smiletogether-notification-server-arm:latest
+    platform: linux/arm64
+    restart: always
+    ports:
+      - 8087:8087
+    mem_limit: 512m
+    cpus: '0.50'
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://rootuser:rootpass@mongodb-notification:27017/history-db?authSource=admin
+    depends_on:
+      - mongodb-notification
+    networks:
+      - smiletogether-network
+
+  mongodb-history:
+    container_name: mongodb-history
     image: mongo:latest
     platform: linux/arm64
-    container_name: mongodb
     restart: always
     ports:
       - 27017:27017
+    mem_limit: 512m
+    cpus: '0.50'
     volumes:
-      - data:/data/db
+      - data-history:/data/db
     environment:
       - MONGO_INITDB_ROOT_USERNAME=rootuser
       - MONGO_INITDB_ROOT_PASSWORD=rootpass
@@ -15,79 +61,89 @@ services:
     networks:
       - smiletogether-network
 
-  mongo-express:
-    image: mongo-express:latest
+  mongodb-notification:
+    container_name: mongodb-notification
+    image: mongo:latest
     platform: linux/arm64
-    container_name: mongo-express
     restart: always
     ports:
-      - 20000:8081
+      - 27018:27017
+    mem_limit: 512m
+    cpus: '0.50'
+    volumes:
+      - data-notification:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=rootuser
+      - MONGO_INITDB_ROOT_PASSWORD=rootpass
+      - MONGO_INITDB_DATABASE=notification-db
+    networks:
+      - smiletogether-network
+
+  mongo-express-history:
+    container_name: mongo-express-history
+    image: mongo-express:latest
+    platform: linux/arm64
+    restart: always
+    ports:
+      - 20000:20000
+    mem_limit: 256m
+    cpus: '0.30'
+    depends_on:
+      - mongodb-history
     environment:
       - ME_CONFIG_MONGODB_ADMINUSERNAME=rootuser
       - ME_CONFIG_MONGODB_ADMINPASSWORD=rootpass
-      - ME_CONFIG_MONGODB_SERVER=mongodb
-    depends_on:
-      - mongodb
+      - ME_CONFIG_MONGODB_SERVER=mongodb-history
     networks:
       - smiletogether-network
 
-  history-server:
-    image: imjanghyeok/smiletogether-history-server-arm:latest
+  mongo-express-notification:
+    container_name: mongo-express-notification
+    image: mongo-express:latest
     platform: linux/arm64
-    container_name: history-server
     restart: always
     ports:
-      - "8083:8083"
+      - 20001:20001
+    mem_limit: 256m
+    cpus: '0.30'
+    depends_on:
+      - mongodb-notification
     environment:
-      - SPRING_DATA_MONGODB_URI=mongodb://rootuser:rootpass@mongodb:27017/history-db?authSource=admin
-    depends_on:
-      - mongodb
-    networks:
-      - smiletogether-network
-
-  chat-server:
-    image: imjanghyeok/smiletogether-chat-server-arm:latest
-    platform: linux/arm64
-    container_name: chat-server
-    restart: always
-    ports:
-      - "8081:8081"
-    networks:
-      - smiletogether-network
-
-  notification-server:
-    image: imjanghyeok/smiletogether-notification-server-arm:latest
-    platform: linux/arm64
-    container_name: notification-server
-    restart: always
-    ports:
-      - "8087:8087"
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=rootuser
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=rootpass
+      - ME_CONFIG_MONGODB_SERVER=mongodb-notification
     networks:
       - smiletogether-network
 
   kafka-ui:
+    container_name: kafka-ui
     image: provectuslabs/kafka-ui:latest
     platform: linux/arm64
-    container_name: kafka-ui
+    restart: always
     ports:
-      - "5001:5001"
+      - 5001:5001
+    mem_limit: 1024m
+    cpus: '1.0'
+    depends_on:
+      - kafka_01
     environment:
+      - SERVER_PORT=10000
       - KAFKA_CLUSTERS_0_NAME=LocalKafka
       - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka_01:9092,kafka_02:9092,kafka_03:9092
       - DYNAMIC_CONFIG_ENABLED=true
-    depends_on:
-      - kafka_01
     networks:
       - smiletogether-network
 
   kafka_00:
+    container_name: kafka_00
     image: bitnami/kafka:3.7.0
     platform: linux/arm64
-    container_name: kafka_00
     restart: unless-stopped
     ports:
-      - '9093:9093'
-      - '19000:19000'
+      - 9093:9092
+      - 19000:19000
+    mem_limit: 1024m
+    cpus: '1.0'
     environment:
       - KAFKA_CFG_NODE_ID=0
       - KAFKA_KRAFT_MODE=true
@@ -97,18 +153,19 @@ services:
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT
       - KAFKA_LISTENERS=CONTROLLER://0.0.0.0:9093
-      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
     networks:
       - smiletogether-network
 
   kafka_01:
+    container_name: kafka_01
     image: bitnami/kafka:3.7.0
     platform: linux/arm64
-    container_name: kafka_01
     restart: unless-stopped
     ports:
-      - '9094:9092'
-      - '19001:19001'
+      - 9094:9092
+      - 19001:19001
+    mem_limit: 1024m
+    cpus: '1.0'
     environment:
       - KAFKA_CFG_NODE_ID=1
       - KAFKA_KRAFT_MODE=true
@@ -125,13 +182,15 @@ services:
       - smiletogether-network
 
   kafka_02:
+    container_name: kafka_02
     image: bitnami/kafka:3.7.0
     platform: linux/arm64
-    container_name: kafka_02
     restart: unless-stopped
     ports:
-      - '9095:9092'
-      - '19002:19002'
+      - 9095:9092
+      - 19002:19002
+    mem_limit: 1024m
+    cpus: '1.0'
     environment:
       - KAFKA_CFG_NODE_ID=2
       - KAFKA_KRAFT_MODE=true
@@ -143,18 +202,19 @@ services:
       - KAFKA_LISTENERS=INTERNAL://0.0.0.0:9092,EXTERNAL://kafka_02:19002
       - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka_02:9092,EXTERNAL://localhost:19002
       - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
-      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
     networks:
       - smiletogether-network
 
   kafka_03:
+    container_name: kafka_03
     image: bitnami/kafka:3.7.0
     platform: linux/arm64
-    container_name: kafka_03
     restart: unless-stopped
     ports:
-      - '9096:9092'
-      - '19003:19003'
+      - 9096:9092
+      - 19003:19003
+    mem_limit: 1024m
+    cpus: '1.0'
     environment:
       - KAFKA_CFG_NODE_ID=3
       - KAFKA_KRAFT_MODE=true
@@ -166,18 +226,18 @@ services:
       - KAFKA_LISTENERS=INTERNAL://0.0.0.0:9092,EXTERNAL://kafka_03:19003
       - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka_03:9092,EXTERNAL://localhost:19003
       - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
-      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
     networks:
       - smiletogether-network
 
-networks:
-  smiletogether-network:
-    name: smiletogether-network
-    driver: bridge
-
 volumes:
-  data:
   kafka_00:
   kafka_01:
   kafka_02:
   kafka_03:
+  data-history:
+  data-notification:
+
+networks:
+  smiletogether-network:
+    driver: bridge
+    name: smiletogether-network

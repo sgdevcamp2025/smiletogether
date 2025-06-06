@@ -1,0 +1,71 @@
+version: "3.8"
+
+services:
+  mongodb-history:
+    image: mongo:latest
+    container_name: mongodb-history
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - data-history:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=histuser
+      - MONGO_INITDB_ROOT_PASSWORD=histpass
+      - MONGO_INITDB_DATABASE=history-db
+    networks:
+      - smiletogether-network
+
+  mongodb-notification:
+    image: mongo:latest
+    container_name: mongodb-notification
+    restart: always
+    ports:
+      - 27018:27017
+    volumes:
+      - data-notification:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=notiuser
+      - MONGO_INITDB_ROOT_PASSWORD=notipass
+      - MONGO_INITDB_DATABASE=notification-db
+    networks:
+      - smiletogether-network
+
+  mongo-express-history:
+    image: mongo-express:latest
+    container_name: mongo-express-history
+    restart: always
+    ports:
+      - 20001:8081
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=histuser
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=histpass
+      - ME_CONFIG_MONGODB_SERVER=mongodb-history
+    depends_on:
+      - mongodb-history
+    networks:
+      - smiletogether-network
+
+  mongo-express-notification:
+    image: mongo-express:latest
+    container_name: mongo-express-notification
+    restart: always
+    ports:
+      - 20002:8081
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=notiuser
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=notipass
+      - ME_CONFIG_MONGODB_SERVER=mongodb-notification
+    depends_on:
+      - mongodb-notification
+    networks:
+      - smiletogether-network
+
+networks:
+  smiletogether-network:
+    name: smiletogether-network
+    driver: bridge
+
+volumes:
+  data-history:
+  data-notification:
