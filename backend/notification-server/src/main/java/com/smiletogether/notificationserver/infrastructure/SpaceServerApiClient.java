@@ -38,7 +38,7 @@ public class SpaceServerApiClient {
         log.info("🔧 [REQUEST URI] {}", uri);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token);
+        headers.set("Authorization", token);
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(List.of(MediaType.APPLICATION_JSON));
 

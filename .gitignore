@@ -29,3 +29,6 @@ dist-ssr
 smiletogether-1fe9a-firebase-adminsdk-fbsvc-0ecde2f4db.json
 
 test
+
+application-dev.yml
+application-prod.yml
