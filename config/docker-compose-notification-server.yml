@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  notification-server:
+    image: imjanghyeok/smiletogether-notification-server:latest
+    container_name: notification-server
+    restart: always
+    ports:
+      - "8087:8087"
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://notiuser:notipass@mongodb-notification:27017/notification-db?authSource=admin
+    depends_on:
+      - mongodb-notification
+    networks:
+      - smiletogether-network
+
+networks:
+  smiletogether-network:
+    name: smiletogether-network
+    driver: bridge
