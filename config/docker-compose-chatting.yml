@@ -34,9 +34,7 @@ services:
     container_name: history-server
     restart: always
     ports:
-      - "8083:8083"
-    environment:
-      - SPRING_DATA_MONGODB_URI=mongodb://rootuser:rootpass@mongodb:27017/history-db?authSource=admin
+      - "8084:8084"
     depends_on:
       - mongodb
     networks:
