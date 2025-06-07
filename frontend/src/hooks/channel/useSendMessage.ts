@@ -25,7 +25,7 @@ export const useSendMessage = ({
     setMessage(e.target.value);
   };
 
-  const sendMessage = useCallback(() => {
+  const sendMessage = useCallback(async () => {
     if (isSending) {
       return;
     }

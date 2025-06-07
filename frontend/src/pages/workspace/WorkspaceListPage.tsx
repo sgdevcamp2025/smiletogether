@@ -4,12 +4,14 @@ import useUserWorkspacesQuery from '@/hooks/workspace/useUserWorkspacesQuery';
 import WorkspaceListItem from '@/components/workspace/WorkspaceListItem';
 import { useNavigate } from 'react-router';
 import { userOriginStore } from '@/stores/userOriginStore';
+import { usePushTokenInit } from '@/hooks/alarm.ts/usePushTokenInit';
 
 const WorkSpaceListPage = () => {
   const navigate = useNavigate();
   const { workspacesInfo, isWorkspacesError, isWorkspacesLoading } =
     useUserWorkspacesQuery();
   const { user } = userOriginStore();
+  usePushTokenInit({ user });
 
   if (isWorkspacesLoading) return <div>로딩중...</div>;
   if (isWorkspacesError) return <div>에러 발생</div>;
