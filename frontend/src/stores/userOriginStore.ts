@@ -1,15 +1,16 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-interface User {
+export interface ORIGIN_USER {
   createdAt: string;
   email: string;
   id: string;
   updatedAt: string;
   username: string;
 }
+
 interface UserState {
-  user: User;
+  user: ORIGIN_USER;
   setUser: (user: Partial<UserState['user']>) => void;
 }
 

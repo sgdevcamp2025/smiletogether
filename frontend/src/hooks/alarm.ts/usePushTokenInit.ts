@@ -1,16 +1,16 @@
 import { postFirebaseToken } from '@/apis/alarm';
 import { messaging } from '@/fcmConfig';
-import { User } from '@/types/user';
+import { ORIGIN_USER } from '@/stores/userOriginStore';
 import { getToken } from 'firebase/messaging';
 import { useEffect } from 'react';
 
 interface Props {
-  user: User;
+  user: ORIGIN_USER;
 }
 
 export const usePushTokenInit = ({ user }: Props) => {
   useEffect(() => {
-    if (!user?.userId) return;
+    if (!user?.id) return;
     Notification.requestPermission()
       .then(permission => {
         if (permission === 'granted') {
@@ -23,7 +23,7 @@ export const usePushTokenInit = ({ user }: Props) => {
             // localstorage에 없거나 있어도 fcm에서 발급받은것과 저장된것이 같다면 서버에 업데이트 해줄 필요가 없음
             if (!exsiting_token || fmc_responsed_token !== exsiting_token) {
               return postFirebaseToken({
-                userId: user.userId,
+                userId: user.id,
                 token: fmc_responsed_token,
                 expiredAt: expiredAt.toISOString(),
               }).then(() => {
@@ -38,5 +38,5 @@ export const usePushTokenInit = ({ user }: Props) => {
       .catch(err => {
         console.error('에러 log', err);
       });
-  }, [user?.userId]);
+  }, [user?.id]);
 };
